@@ -2,7 +2,7 @@
 module.exports = {
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './components/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   darkMode: 'class',
@@ -14,8 +14,14 @@ module.exports = {
         text: 'rgb(var(--color-text) / <alpha-value>)',
         'text-secondary': 'rgb(var(--color-text-secondary) / <alpha-value>)',
         accent: 'rgb(var(--color-accent) / <alpha-value>)',
+        'accent-light': 'rgb(var(--color-accent-light) / <alpha-value>)',
         'accent-dark': 'rgb(var(--color-accent-dark) / <alpha-value>)',
+        'accent-subtle': 'rgb(var(--color-accent-subtle) / <alpha-value>)',
+        'accent-hover': 'rgb(var(--color-accent-hover) / <alpha-value>)',
         muted: 'rgb(var(--color-muted) / <alpha-value>)',
+        success: 'rgb(var(--color-success) / <alpha-value>)',
+        warning: 'rgb(var(--color-warning) / <alpha-value>)',
+        error: 'rgb(var(--color-error) / <alpha-value>)',
       },
       fontFamily: {
         display: 'var(--font-display)',

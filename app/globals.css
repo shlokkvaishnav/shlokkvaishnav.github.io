@@ -9,9 +9,15 @@
     --color-surface: 255 255 255;         /* #FFFFFF */
     --color-text: 24 24 27;               /* #18181B - Zinc-900 */
     --color-text-secondary: 82 82 91;     /* #52525B - Zinc-600 */
-    --color-accent: 59 130 246;           /* #3B82F6 - Blue-500 */
+    --color-accent: 37 99 235;            /* #2563EB - Blue-600 (better contrast for WCAG AAA) */
+    --color-accent-light: 147 197 253;    /* #93C5FD - Blue-300 */
     --color-accent-dark: 29 78 216;       /* #1D4ED8 - Blue-700 */
+    --color-accent-subtle: 219 234 254;   /* #DBEAFE - Blue-100 */
+    --color-accent-hover: 37 99 235;      /* #2563EB - Blue-600 */
     --color-muted: 228 228 231;           /* #E4E4E7 - Zinc-200 */
+    --color-success: 34 197 94;           /* #22C55E - Green-500 */
+    --color-warning: 245 158 11;          /* #F59E0B - Amber-500 */
+    --color-error: 239 68 68;             /* #EF4444 - Red-500 */
 
     /* Typography */
     --font-display: var(--font-space-grotesk), 'Space Grotesk', system-ui, sans-serif;
@@ -70,8 +76,14 @@
     --color-text: 250 250 250;            /* #FAFAFA - Zinc-50 */
     --color-text-secondary: 161 161 170;  /* #A1A1AA - Zinc-400 */
     --color-accent: 96 165 250;           /* #60A5FA - Blue-400 */
+    --color-accent-light: 147 197 253;    /* #93C5FD - Blue-300 */
     --color-accent-dark: 59 130 246;      /* #3B82F6 - Blue-500 */
+    --color-accent-subtle: 30 58 138;     /* #1E3A8A - Blue-900 */
+    --color-accent-hover: 59 130 246;     /* #3B82F6 - Blue-500 */
     --color-muted: 39 39 42;              /* #27272A - Zinc-800 */
+    --color-success: 34 197 94;           /* #22C55E - Green-500 */
+    --color-warning: 251 191 36;          /* #FBBF24 - Amber-400 */
+    --color-error: 248 113 113;           /* #F87171 - Red-400 */
 
     /* Shadows - Reduced opacity for dark mode */
     --shadow-subtle: 0 1px 2px 0 rgb(0 0 0 / 0.1);
@@ -97,6 +109,7 @@
   /* Base styles */
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 80px; /* Account for fixed navbar */
   }
 
   body {
@@ -106,5 +119,68 @@
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Screen reader only utility */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  .sr-only:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: inherit;
+    margin: inherit;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+  }
+
+  /* Global focus styles */
+  *:focus-visible {
+    outline: 2px solid rgb(var(--color-accent));
+    outline-offset: 2px;
+  }
+
+  /* Performance optimization */
+  .will-animate {
+    will-change: transform, opacity;
+    contain: layout style;
+  }
+
+  /* Touch target utilities */
+  .touch-target-min {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  /* Shimmer animation for skeletons */
+  @keyframes shimmer {
+    0% {
+      background-position: -1000px 0;
+    }
+    100% {
+      background-position: 1000px 0;
+    }
+  }
+
+  .shimmer {
+    animation: shimmer 2s infinite linear;
+    background: linear-gradient(
+      90deg,
+      rgb(var(--color-muted)) 0%,
+      rgb(var(--color-surface)) 50%,
+      rgb(var(--color-muted)) 100%
+    );
+    background-size: 1000px 100%;
   }
 }
