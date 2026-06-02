@@ -1,0 +1,73 @@
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    './pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './components/**/*.{js,ts,jsx,tsx,mdx}',
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
+  ],
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        background: 'rgb(var(--color-background) / <alpha-value>)',
+        surface: 'rgb(var(--color-surface) / <alpha-value>)',
+        text: 'rgb(var(--color-text) / <alpha-value>)',
+        'text-secondary': 'rgb(var(--color-text-secondary) / <alpha-value>)',
+        accent: 'rgb(var(--color-accent) / <alpha-value>)',
+        'accent-dark': 'rgb(var(--color-accent-dark) / <alpha-value>)',
+        muted: 'rgb(var(--color-muted) / <alpha-value>)',
+      },
+      fontFamily: {
+        display: 'var(--font-display)',
+        body: 'var(--font-body)',
+        mono: 'var(--font-mono)',
+      },
+      spacing: {
+        'xs': 'var(--space-xs)',
+        'sm': 'var(--space-sm)',
+        'md': 'var(--space-md)',
+        'base': 'var(--space-base)',
+        'lg': 'var(--space-lg)',
+        'xl': 'var(--space-xl)',
+        '2xl': 'var(--space-2xl)',
+        '3xl': 'var(--space-3xl)',
+        '4xl': 'var(--space-4xl)',
+        '5xl': 'var(--space-5xl)',
+        '6xl': 'var(--space-6xl)',
+      },
+      borderRadius: {
+        'sm': 'var(--radius-sm)',
+        'base': 'var(--radius-base)',
+        'md': 'var(--radius-md)',
+        'lg': 'var(--radius-lg)',
+        'xl': 'var(--radius-xl)',
+        'full': 'var(--radius-full)',
+      },
+      boxShadow: {
+        'subtle': 'var(--shadow-subtle)',
+        'sm': 'var(--shadow-sm)',
+        'base': 'var(--shadow-base)',
+        'md': 'var(--shadow-md)',
+        'lg': 'var(--shadow-lg)',
+        'hover': 'var(--shadow-hover)',
+      },
+      transitionDuration: {
+        'instant': 'var(--duration-instant)',
+        'fast': 'var(--duration-fast)',
+        'base': 'var(--duration-base)',
+        'slow': 'var(--duration-slow)',
+        'slower': 'var(--duration-slower)',
+        'slowest': 'var(--duration-slowest)',
+      },
+      transitionTimingFunction: {
+        'default': 'var(--ease-default)',
+        'in': 'var(--ease-in)',
+        'out': 'var(--ease-out)',
+        'in-out': 'var(--ease-in-out)',
+        'bounce': 'var(--ease-bounce)',
+        'spring': 'var(--ease-spring)',
+      },
+    },
+  },
+  plugins: [],
+}

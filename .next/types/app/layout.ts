@@ -1,4 +1,4 @@
-// File: C:\Users\shlok\Documents\Projects\shlok-portfolio\app\layout.js
+// File: C:\Users\shlok\Documents\Projects\shlok-portfolio\app\layout.tsx
 import * as entry from '../../../app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
