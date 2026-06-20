@@ -23,12 +23,10 @@ export const config = {
   ],
 
   projects: [
-    { title: 'E-Commerce Platform', desc: 'A full-featured e-commerce platform with product catalog, shopping cart, payment integration, and admin dashboard.', tags: ['Next.js', 'TypeScript', 'PostgreSQL'], featured: true, demo: 'https://demo.example.com', github: 'https://github.com/shlokkvaishnav/ecommerce' },
-    { title: 'AI Image Classifier', desc: 'Machine learning model for image classification using convolutional neural networks with 95% accuracy.', tags: ['Python', 'TensorFlow', 'Keras'], featured: true, demo: null, github: 'https://github.com/shlokkvaishnav/image-classifier' },
-    { title: 'Real-Time Chat App', desc: 'WebSocket-based real-time messaging app with rooms, typing indicators, and message history.', tags: ['React', 'Node.js', 'Socket.io'], featured: true, demo: 'https://chat.example.com', github: 'https://github.com/shlokkvaishnav/chat-app' },
-    { title: 'Task Management Dashboard', desc: 'Productivity tool with kanban boards, time tracking, and team collaboration features.', tags: ['Vue.js', 'Firebase', 'Tailwind'], featured: false, demo: null, github: 'https://github.com/shlokkvaishnav/task-manager' },
-    { title: 'Portfolio Website Builder', desc: 'No-code platform for developers to create and customize their portfolio websites.', tags: ['React', 'Node.js', 'AWS'], featured: false, demo: 'https://builder.example.com', github: null },
-    { title: 'Weather Forecast App', desc: 'Mobile-first weather application with location-based forecasts and weather alerts.', tags: ['React Native', 'TypeScript', 'Redux'], featured: false, demo: null, github: 'https://github.com/shlokkvaishnav/weather-app' },
+    { title: 'NanoDB', desc: 'Persistent Vector Search Engine built from scratch featuring disk-based HNSW indexing, AVX2 optimization, multi-threaded insertion, and Python bindings.', tags: ['C++', 'SIMD', 'HNSW'], featured: true, demo: null, github: 'https://github.com/shlokkvaishnav/nano-db' },
+    { title: 'Climate Equation Discovery', desc: 'An autonomous agent for discovering physics-validated climate equations using symbolic reasoning, dynamic memory pruning, and Bayesian regime tracking.', tags: ['Python', 'Symbolic AI', 'PySR'], featured: true, demo: null, github: 'https://github.com/shlokkvaishnav/climate-equation-discovery' },
+    { title: 'Meridian Analytics', desc: 'A privacy-focused engineering intelligence platform that surfaces PR bottlenecks, optimizes team velocity, and proactively prevents developer burnout.', tags: ['TypeScript', 'ML', 'Full Stack'], featured: true, demo: 'https://meridian-analytics.vercel.app', github: 'https://github.com/shlokkvaishnav/meridian-analytics' },
+    { title: 'Cardiovascular Risk', desc: 'Production-grade ML system for heart disease prediction featuring a modular ETL pipeline, FastAPI backend, MLflow tracking, and Docker-ready deployment.', tags: ['Python', 'FastAPI', 'MLOps'], featured: false, demo: 'https://cardiovascular-risk.vercel.app', github: 'https://github.com/shlokkvaishnav/cardiovascular-risk' },
   ],
 
   skills: [
