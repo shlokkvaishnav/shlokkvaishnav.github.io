@@ -47,7 +47,7 @@ export const config = {
     { title: 'After Hours', artist: 'The Weeknd', glyph: 'I', color: '#7c3b2e', cover: 'https://upload.wikimedia.org/wikipedia/en/c/c1/The_Weeknd_-_After_Hours.png', spotifyTrack: '0VjIjW4GlUZAMYd2vXMi3b' },
     { title: 'AM', artist: 'Arctic Monkeys', glyph: 'II', color: '#5e6b3a', cover: 'https://upload.wikimedia.org/wikipedia/en/0/04/Arctic_Monkeys_-_AM.png', spotifyTrack: '5XeFesFbtLpXzIVDNQP22n' },
     { title: 'Cigarettes After Sex', artist: 'Cigarettes After Sex', glyph: 'III', color: '#3e5c63', cover: 'https://upload.wikimedia.org/wikipedia/en/9/9f/Cigarettes_After_Sex_%28album%29.jpg', spotifyTrack: '2eiOkwpnBpaEkhHoSRDOyr' },
-    { title: 'The Stranger', artist: 'Billy Joel', glyph: 'IV', color: '#445a44', cover: 'https://upload.wikimedia.org/wikipedia/en/0/0e/Billy_Joel_-_The_Stranger.jpg', spotifyTrack: '1Iq0TBCruBFm2RqPNqmuHq' },
+    { title: 'The Stranger', artist: 'Billy Joel', glyph: 'IV', color: '#445a44', cover: 'https://upload.wikimedia.org/wikipedia/en/0/0e/Billy_Joel_-_The_Stranger.jpg', spotifyTrack: '4U45aEWtQhrm8A5mxPaFZ7' },
     { title: 'Viva la Vida', artist: 'Coldplay', glyph: 'V', color: '#6b3f55', cover: 'https://upload.wikimedia.org/wikipedia/en/b/b2/Viva_la_Vida_or_Death_and_All_His_Friends.jpg', spotifyTrack: '1mea3bSkSGXuIRvnWJo9Id' },
   ],
 
