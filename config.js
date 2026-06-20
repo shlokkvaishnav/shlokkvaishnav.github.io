@@ -46,11 +46,8 @@ export const config = {
   albums: [
     { title: 'After Hours', artist: 'The Weeknd', glyph: 'I', color: '#7c3b2e', cover: 'https://upload.wikimedia.org/wikipedia/en/c/c1/The_Weeknd_-_After_Hours.png' },
     { title: 'AM', artist: 'Arctic Monkeys', glyph: 'II', color: '#5e6b3a', cover: 'https://upload.wikimedia.org/wikipedia/en/0/04/Arctic_Monkeys_-_AM.png' },
-    { title: 'Cigarettes After Sex', artist: 'Cigarettes After Sex', glyph: 'III', color: '#3e5c63', cover: 'https://upload.wikimedia.org/wikipedia/en/8/86/Cigarettes_After_Sex_%28album%29.png' },
-    { title: 'Graduation', artist: 'Kanye West', glyph: 'IV', color: '#7a5a2e', cover: 'https://upload.wikimedia.org/wikipedia/en/7/70/Graduation_%28album%29.png' },
-    { title: '1989', artist: 'Taylor Swift', glyph: 'V', color: '#6b3f55', cover: 'https://upload.wikimedia.org/wikipedia/en/f/f6/Taylor_Swift_-_1989.png' },
-    { title: 'The Stranger', artist: 'Billy Joel', glyph: 'VI', color: '#445a44', cover: 'https://upload.wikimedia.org/wikipedia/en/2/2e/Billy_Joel_-_The_Stranger.jpg' },
-    { title: 'Blonde', artist: 'Frank Ocean', glyph: 'VII', color: '#4a5a6a', cover: 'https://upload.wikimedia.org/wikipedia/en/a/a0/Blonde_-_Frank_Ocean.jpeg' },
+    { title: 'Cigarettes After Sex', artist: 'Cigarettes After Sex', glyph: 'III', color: '#3e5c63', cover: '' },
+    { title: 'The Stranger', artist: 'Billy Joel', glyph: 'IV', color: '#445a44', cover: '' },
   ],
 
   movies: [
