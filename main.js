@@ -111,7 +111,7 @@ function render() {
       ${navItems.map(item => `<a href="#${item.id}" data-navlink="${item.id}" data-go="${item.id}" style="font-family:'Cinzel',serif;font-size:12.5px;font-weight:600;letter-spacing:0.13em;text-transform:uppercase;color:#5a4a36;text-decoration:none;padding-bottom:3px;transition:color .3s ease">${item.label}</a>`).join('')}
     </nav>
     <div style="display:flex;align-items:center;gap:12px">
-      <a href="${social.resume}" style="font-family:'Cinzel',serif;font-size:12.5px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;color:#3b3024;border:1.5px solid #8f6f33;padding:9px 18px;border-radius:2px;background:transparent;transition:background .3s ease,color .3s ease">Resume</a>
+      <a href="${social.resume}" data-resume style="font-family:'Cinzel',serif;font-size:12.5px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;color:#3b3024;border:1.5px solid #8f6f33;padding:9px 18px;border-radius:2px;background:transparent;transition:background .3s ease,color .3s ease">Resume</a>
       <button data-mobile-toggle aria-label="Open menu" style="display:none;flex-direction:column;gap:4px;width:42px;height:42px;align-items:center;justify-content:center;background:transparent;border:1.5px solid rgba(90,70,45,.3);border-radius:2px;cursor:pointer">
         <span style="width:18px;height:2px;background:#3b3024;display:block"></span>
         <span style="width:18px;height:2px;background:#3b3024;display:block"></span>
@@ -134,14 +134,14 @@ function render() {
   <!-- ========== HERO / SANCTUARY ========== -->
   <section id="sanctuary" data-section style="position:relative;overflow:hidden;padding:0 clamp(20px,5vw,48px)">
     <div data-hero-grid style="max-width:1180px;margin:0 auto;min-height:100vh;display:grid;grid-template-columns:1.05fr 0.95fr;align-items:center;gap:40px;padding:128px 0 96px">
-      <div style="position:relative;z-index:2;text-align:left">
+      <div data-hero-text style="position:relative;z-index:2;text-align:left">
         <p style="font-family:'Cinzel',serif;font-size:clamp(11px,1.4vw,14px);letter-spacing:0.42em;text-transform:uppercase;color:#8f6f33;margin:0">${personal.tagline}</p>
         <div aria-hidden="true" style="height:16px;width:180px;opacity:.6;margin:16px 0 22px"></div>
         <h1 style="font-family:'Cinzel',serif;font-weight:900;font-size:clamp(46px,8.4vw,128px);line-height:0.94;letter-spacing:0.015em;margin:0;color:#352b20;text-shadow:0 2px 0 rgba(255,252,244,.55),0 -2px 2px rgba(60,40,20,.26)">SHLOK<br>VAISHNAV</h1>
         <p style="max-width:520px;margin:28px 0 0;font-size:clamp(16px,1.9vw,20px);color:#5e4f3a;line-height:1.7">${personal.bio}</p>
         <div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:36px">
-          <a href="#quest-log" data-go="quest-log" style="font-family:'Cinzel',serif;font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;color:#f4ecda;background:#8f6f33;padding:14px 28px;border-radius:2px;box-shadow:0 12px 26px -14px rgba(60,42,20,.7);transition:transform .25s ease">Enter the Quest Log</a>
-          <a href="#gathering" data-go="gathering" style="font-family:'Cinzel',serif;font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;color:#3b3024;border:1.5px solid #8f6f33;padding:14px 28px;border-radius:2px;transition:background .25s ease,color .25s ease">Make Contact</a>
+          <a href="#quest-log" data-go="quest-log" data-btn-primary style="font-family:'Cinzel',serif;font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;color:#f4ecda;background:#8f6f33;padding:14px 28px;border-radius:2px;box-shadow:0 12px 26px -14px rgba(60,42,20,.7);transition:transform .25s ease">Enter the Quest Log</a>
+          <a href="#gathering" data-go="gathering" data-btn-outline style="font-family:'Cinzel',serif;font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;color:#3b3024;border:1.5px solid #8f6f33;padding:14px 28px;border-radius:2px;transition:background .25s ease,color .25s ease">Make Contact</a>
         </div>
       </div>
       <div data-hero-art style="position:relative;height:clamp(380px,62vh,560px)">
@@ -159,14 +159,14 @@ function render() {
   <!-- ========== QUEST LOG ========== -->
   <section id="quest-log" data-section style="position:relative;padding:clamp(80px,12vh,150px) clamp(20px,5vw,48px);background:#ece2cf;overflow:hidden">
     <div style="max-width:1180px;margin:0 auto;position:relative;z-index:1">
-      <div style="margin-bottom:56px">
+      <div data-reveal style="margin-bottom:56px">
         <p style="font-family:'Cinzel',serif;font-size:13px;letter-spacing:0.34em;text-transform:uppercase;color:#8f6f33;margin:0 0 12px">II · The Quest Log</p>
         <h2 style="font-family:'Cinzel',serif;font-weight:800;font-size:clamp(34px,5.5vw,64px);line-height:1.02;margin:0;color:#352b20;text-shadow:0 1px 0 rgba(255,252,244,.5)">Completed Campaigns</h2>
         <p style="max-width:620px;margin:16px 0 0;font-size:17px;color:#5e4f3a">Each tablet records a finished undertaking — the problem faced, the tools wielded, and what was left standing.</p>
       </div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:28px">
         ${projects.map((p, i) => `
-        <article style="position:relative;background:#f3ead8;border:1px solid rgba(90,70,45,.2);border-radius:3px;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 20px 40px -26px rgba(60,42,20,.55),0 2px 6px rgba(60,42,20,.1);transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s ease">
+        <article data-card data-reveal style="position:relative;background:#f3ead8;border:1px solid rgba(90,70,45,.2);border-radius:3px;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 20px 40px -26px rgba(60,42,20,.55),0 2px 6px rgba(60,42,20,.1);transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s ease">
           <div style="position:relative;aspect-ratio:16/10;overflow:hidden;display:grid;place-items:center;background:repeating-linear-gradient(135deg,#dccbab 0 14px,#d2c09e 14px 28px);border-bottom:1px solid rgba(90,70,45,.16)">
             <span style="position:absolute;top:14px;left:14px;font-family:'Cinzel',serif;font-size:11px;font-weight:700;letter-spacing:0.18em;color:#f4ecda;background:rgba(53,43,32,.82);padding:6px 11px;border-radius:2px">QUEST ${String(i + 1).padStart(2, '0')}</span>
             ${p.featured ? `<span title="Featured" style="position:absolute;top:12px;right:12px;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#dcbb66,#8f6f33);color:#2f2517;font-size:15px;box-shadow:0 3px 8px rgba(60,42,20,.4),inset 0 1px 0 rgba(255,255,255,.4)">★</span>` : ''}
@@ -179,8 +179,8 @@ function render() {
               ${p.tags.map(t => `<span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:0.04em;color:#5e4f3a;background:rgba(109,84,54,.1);border:1px solid rgba(109,84,54,.2);padding:4px 9px;border-radius:2px">${t}</span>`).join('')}
             </div>
             <div style="display:flex;gap:18px;border-top:1px solid rgba(90,70,45,.16);padding-top:14px">
-              <a href="${p.demo || p.github || '#'}" target="_blank" rel="noopener noreferrer" style="font-family:'Cinzel',serif;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#8f6f33;text-decoration:none">View Relic ↗</a>
-              ${p.github ? `<a href="${p.github}" target="_blank" rel="noopener noreferrer" style="font-family:'Cinzel',serif;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#7a6a52;text-decoration:none">Inscriptions</a>` : ''}
+              <a href="${p.demo || p.github || '#'}" target="_blank" rel="noopener noreferrer" data-link style="font-family:'Cinzel',serif;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#8f6f33;text-decoration:none">View Relic ↗</a>
+              ${p.github ? `<a href="${p.github}" target="_blank" rel="noopener noreferrer" data-link style="font-family:'Cinzel',serif;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#7a6a52;text-decoration:none">Inscriptions</a>` : ''}
             </div>
           </div>
         </article>`).join('')}
@@ -191,7 +191,7 @@ function render() {
   <!-- ========== ARMORY ========== -->
   <section id="armory" data-section style="position:relative;padding:clamp(80px,12vh,150px) clamp(20px,5vw,48px);background:#e4d6bc;overflow:hidden">
     <div style="max-width:1180px;margin:0 auto;position:relative;z-index:1">
-      <div style="margin-bottom:56px">
+      <div data-reveal style="margin-bottom:56px">
         <p style="font-family:'Cinzel',serif;font-size:13px;letter-spacing:0.34em;text-transform:uppercase;color:#8f6f33;margin:0 0 12px">III · The Armory</p>
         <h2 style="font-family:'Cinzel',serif;font-weight:800;font-size:clamp(34px,5.5vw,64px);line-height:1.02;margin:0;color:#352b20;text-shadow:0 1px 0 rgba(255,252,244,.5)">Tools of the Trade</h2>
         <p style="max-width:620px;margin:16px 0 0;font-size:17px;color:#5e4f3a">The inventory carried into every campaign — sharpened through use, each marked by its honed edge.</p>
@@ -221,7 +221,7 @@ function render() {
   <!-- ========== JOURNEY ========== -->
   <section id="journey" data-section style="position:relative;padding:clamp(80px,12vh,150px) clamp(20px,5vw,48px);background:#ece2cf;overflow:hidden">
     <div style="max-width:1020px;margin:0 auto;position:relative;z-index:1">
-      <div style="margin-bottom:42px">
+      <div data-reveal style="margin-bottom:42px">
         <p style="font-family:'Cinzel',serif;font-size:13px;letter-spacing:0.34em;text-transform:uppercase;color:#8f6f33;margin:0 0 12px">IV · The Journey</p>
         <h2 style="font-family:'Cinzel',serif;font-weight:800;font-size:clamp(34px,5.5vw,64px);line-height:1.02;margin:0;color:#352b20;text-shadow:0 1px 0 rgba(255,252,244,.5)">The Excavation</h2>
         <p style="max-width:620px;margin:16px 0 0;font-size:17px;color:#5e4f3a">A cross-section of the career, read like a dig site — the present lies at the surface; descend through the strata to reach where it began.</p>
@@ -259,7 +259,7 @@ function render() {
   <!-- ========== ELYSIUM ========== -->
   <section id="elysium" data-section style="position:relative;padding:clamp(80px,12vh,150px) clamp(20px,5vw,48px);background:#e4d6bc;overflow:hidden">
     <div style="max-width:1180px;margin:0 auto;position:relative;z-index:1">
-      <div style="margin-bottom:48px">
+      <div data-reveal style="margin-bottom:48px">
         <p style="font-family:'Cinzel',serif;font-size:13px;letter-spacing:0.34em;text-transform:uppercase;color:#8f6f33;margin:0 0 12px">V · Elysium</p>
         <h2 style="font-family:'Cinzel',serif;font-weight:800;font-size:clamp(34px,5.5vw,64px);line-height:1.02;margin:0;color:#352b20;text-shadow:0 1px 0 rgba(255,252,244,.5)">Beyond the Work</h2>
         <p style="max-width:620px;margin:16px 0 0;font-size:17px;color:#5e4f3a">Set a relic on the platter, drop the needle, and let it spin — the fields where the mind wanders when the tools are set down.</p>
@@ -336,13 +336,13 @@ function render() {
 
   <!-- ========== GATHERING ========== -->
   <section id="gathering" data-section style="position:relative;padding:clamp(80px,12vh,150px) clamp(20px,5vw,48px) 0;background:#ece2cf;overflow:hidden">
-    <div style="max-width:760px;margin:0 auto;text-align:center;position:relative;z-index:1;padding-bottom:clamp(80px,12vh,140px)">
+    <div data-reveal style="max-width:760px;margin:0 auto;text-align:center;position:relative;z-index:1;padding-bottom:clamp(80px,12vh,140px)">
       <p style="font-family:'Cinzel',serif;font-size:13px;letter-spacing:0.34em;text-transform:uppercase;color:#8f6f33;margin:0 0 12px">VI · The Gathering</p>
       <h2 style="font-family:'Cinzel',serif;font-weight:800;font-size:clamp(36px,6vw,72px);line-height:1.02;margin:0;color:#352b20;text-shadow:0 2px 0 rgba(255,252,244,.55),0 -1px 1px rgba(60,40,20,.25)">Meet at the Forum</h2>
       <p style="max-width:540px;margin:18px auto 38px;font-size:17px;color:#5e4f3a">Whether you are raising something new or restoring what stands — send word. The gates are open.</p>
       <a href="mailto:${personal.email}" style="display:inline-block;font-family:'Cinzel',serif;font-size:14px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;color:#f4ecda;background:#8f6f33;padding:16px 34px;border-radius:2px;box-shadow:0 16px 30px -16px rgba(60,42,20,.7);transition:transform .25s ease">Send a Message</a>
       <div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:40px">
-        ${contacts.map(c => `<a href="${c.href}" target="_blank" rel="noopener noreferrer" style="display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-width:150px;text-decoration:none;background:#f3ead8;border:1px solid rgba(90,70,45,.2);border-radius:3px;padding:14px 18px;box-shadow:inset 0 1px 0 rgba(255,255,255,.55);transition:transform .25s ease"><span style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#8f6f33">${c.label}</span><span style="font-size:14px;font-weight:600;color:#46392a">${c.value}</span></a>`).join('')}
+        ${contacts.map(c => `<a href="${c.href}" target="_blank" rel="noopener noreferrer" data-contact-card style="display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-width:150px;text-decoration:none;background:#f3ead8;border:1px solid rgba(90,70,45,.2);border-radius:3px;padding:14px 18px;box-shadow:inset 0 1px 0 rgba(255,255,255,.55);transition:transform .25s ease"><span style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#8f6f33">${c.label}</span><span style="font-size:14px;font-weight:600;color:#46392a">${c.value}</span></a>`).join('')}
       </div>
     </div>
     <footer style="border-top:1px solid rgba(90,70,45,.2);padding:26px clamp(20px,5vw,48px);text-align:center;position:relative;z-index:1">
@@ -378,6 +378,24 @@ function render() {
   })
 
   setupScrollSpy()
+  setupReveal()
+}
+
+function setupReveal() {
+  const els = document.querySelectorAll('[data-reveal]')
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    els.forEach(el => el.classList.add('visible'))
+    return
+  }
+  const io = new IntersectionObserver((ents) => {
+    ents.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible')
+        io.unobserve(e.target)
+      }
+    })
+  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' })
+  els.forEach(el => io.observe(el))
 }
 
 render()

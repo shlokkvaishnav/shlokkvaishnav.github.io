@@ -32,15 +32,17 @@ export const config = {
   ],
 
   skills: [
-    { name: 'Languages', items: [{ n: 'JavaScript', v: 90 }, { n: 'TypeScript', v: 85 }, { n: 'Python', v: 80 }, { n: 'Java', v: 70 }, { n: 'SQL', v: 75 }] },
-    { name: 'Frontend', items: [{ n: 'React', v: 90 }, { n: 'Next.js', v: 85 }, { n: 'HTML/CSS', v: 95 }, { n: 'Tailwind', v: 90 }] },
-    { name: 'Backend', items: [{ n: 'Node.js', v: 85 }, { n: 'Express', v: 85 }, { n: 'PostgreSQL', v: 80 }, { n: 'MongoDB', v: 75 }] },
-    { name: 'Tools & AI', items: [{ n: 'Git', v: 90 }, { n: 'Docker', v: 75 }, { n: 'AWS', v: 70 }, { n: 'Machine Learning', v: 75 }] },
+    { name: 'Languages', items: [{ n: 'C++', v: 88 }, { n: 'Python', v: 85 }, { n: 'JavaScript', v: 80 }, { n: 'SQL', v: 75 }] },
+    { name: 'ML & Research', items: [{ n: 'Machine Learning', v: 88 }, { n: 'Computer Vision', v: 85 }, { n: 'Deep Learning', v: 82 }, { n: 'PyTorch', v: 78 }] },
+    { name: 'Web Dev', items: [{ n: 'React', v: 80 }, { n: 'Node.js', v: 75 }, { n: 'Next.js', v: 72 }, { n: 'Tailwind', v: 78 }] },
+    { name: 'Tools', items: [{ n: 'Git', v: 90 }, { n: 'Linux', v: 78 }, { n: 'Docker', v: 72 }, { n: 'GCP', v: 68 }] },
   ],
 
   experience: [
-    { dates: 'JUN 2025 — AUG 2025', role: 'Software Development Intern', company: 'Tech Company', detail: 'Worked on full-stack web development projects using modern technologies.', find: 'bronze stylus' },
-    { dates: 'JAN 2024 — PRESENT', role: 'Frontend Developer', company: 'Freelance', detail: 'Building custom websites and web applications for clients worldwide.', find: 'clay seal' },
+    { dates: 'APR 2026 — PRESENT', role: 'Software Development Intern', company: 'Bull Agritech', detail: 'Building a crop classification system using satellite imagery and deep learning to detect castor fields and estimate planted acreage across farm boundaries.', find: 'satellite shard' },
+    { dates: 'FEB 2026 — PRESENT', role: 'Undergraduate Research Fellow', company: 'CSE Dept, Nirma University (ISRO)', detail: 'Conducting morphometric analysis of lunar impact craters under an ISRO-funded project, processing Chandrayaan DEM data to extract shape parameters.', find: 'lunar fragment' },
+    { dates: 'SEP 2025 — PRESENT', role: 'Technical Team Member', company: 'Data Science Club, Nirma', detail: 'Presented ML workshops for 60+ students, co-organized HACKaMINeD 2026 with 1000+ participants, and run bi-weekly Kaggle sessions.', find: 'iron compass' },
+    { dates: 'SEP 2025 — PRESENT', role: 'Promotions & Publication Head', company: 'IEEE Computer Society, Nirma', detail: 'Coordinated AI workshops with Google Cloud India, built promotional workflows, and ran campaigns for events including the IEEE Carnival.', find: 'clay seal' },
   ],
 
   albums: [

@@ -1,9 +1,102 @@
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
+html{scroll-behavior:smooth}
 body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 ::selection{background:rgba(143,111,51,.22)}
+
+/* Animations */
 @keyframes ruinFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
 @keyframes vinylSpin{to{transform:rotate(360deg)}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* Scroll reveal */
+[data-reveal]{
+  opacity:0;
+  transform:translateY(30px);
+  transition:opacity .9s ease,transform .9s cubic-bezier(.2,.7,.2,1);
+}
+[data-reveal].visible{
+  opacity:1;
+  transform:none;
+}
+
+/* Hover effects for cards */
+[data-card]{
+  transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s ease;
+}
+[data-card]:hover{
+  transform:translateY(-7px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 34px 54px -28px rgba(60,42,20,.6),0 4px 10px rgba(60,42,20,.14)!important;
+}
+
+/* Contact card hover */
+[data-contact-card]{
+  transition:transform .25s ease;
+}
+[data-contact-card]:hover{
+  transform:translateY(-3px);
+}
+
+/* Button hover effects */
+[data-btn-primary]:hover{
+  transform:translateY(-2px);
+}
+[data-btn-outline]:hover{
+  background:#8f6f33!important;
+  color:#f4ecda!important;
+}
+
+/* Nav link hover */
+[data-navlink]:hover{
+  color:#8f6f33!important;
+}
+
+/* Album card hover */
+[data-album-card]:hover [data-album-inner]{
+  transform:translateY(-4px);
+}
+
+/* Resume button hover */
+[data-resume]:hover{
+  background:#8f6f33!important;
+  color:#f4ecda!important;
+}
+
+/* Play button hover */
+[data-play-btn]:hover{
+  transform:translateY(-2px);
+}
+
+/* Eject button hover */
+[data-eject-btn]:hover{
+  background:rgba(200,164,92,.18)!important;
+}
+
+/* Link hover */
+[data-link]:hover{
+  opacity:.65;
+}
+
+/* Hero entrance animation */
+[data-hero-text]{
+  animation:fadeInUp .8s cubic-bezier(.22,1,.36,1) both;
+}
+[data-hero-art]{
+  animation:fadeIn 1s ease .3s both;
+}
+
+/* Stagger children */
+[data-hero-text] > *:nth-child(1){animation-delay:.1s}
+[data-hero-text] > *:nth-child(2){animation-delay:.2s}
+[data-hero-text] > *:nth-child(3){animation-delay:.3s}
+[data-hero-text] > *:nth-child(4){animation-delay:.5s}
+[data-hero-text] > *:nth-child(5){animation-delay:.7s}
+
+[data-hero-text] > *{
+  opacity:0;
+  animation:fadeInUp .7s cubic-bezier(.22,1,.36,1) both;
+}
 
 /* Responsive overrides */
 @media(max-width:1023px){
@@ -18,4 +111,15 @@ body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 }
 @media(min-width:1024px){
   [data-mobile-toggle]{display:none!important}
+}
+
+/* Reduced motion */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.01ms!important;
+    scroll-behavior:auto!important;
+  }
+  [data-reveal]{opacity:1;transform:none}
 }
