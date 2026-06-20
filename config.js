@@ -46,9 +46,9 @@ export const config = {
   albums: [
     { title: 'After Hours', artist: 'The Weeknd', glyph: 'I', color: '#7c3b2e', cover: 'https://i.scdn.co/image/ab67616d0000b2738863bc11d2aa12b54f5aeb36', spotifyTrack: '0VjIjW4GlUZAMYd2vXMi3b' },
     { title: 'AM', artist: 'Arctic Monkeys', glyph: 'II', color: '#5e6b3a', cover: 'https://i.scdn.co/image/ab67616d0000b2734ae1c4c5c45aabe565499163', spotifyTrack: '5XeFesFbtLpXzIVDNQP22n' },
-    { title: 'Cigarettes After Sex', artist: 'Cigarettes After Sex', glyph: 'III', color: '#3e5c63', cover: 'https://i.scdn.co/image/ab67616d0000b2739e495fb707973f3390850eea', spotifyTrack: '2eiOkwpnBpaEkhHoSRDOyr' },
-    { title: 'The Stranger', artist: 'Billy Joel', glyph: 'IV', color: '#445a44', cover: 'https://i.scdn.co/image/ab67616d0000b2736ce61113662ecf693b605ee5', spotifyTrack: '4U45aEWtQhrm8A5mxPaFZ7' },
-    { title: 'Viva la Vida', artist: 'Coldplay', glyph: 'V', color: '#6b3f55', cover: 'https://i.scdn.co/image/ab67616d0000b273a108e07c661f9fc54de9c43a', spotifyTrack: '1mea3bSkSGXuIRvnWJo9Id' },
+    { title: 'The Stranger', artist: 'Billy Joel', glyph: 'III', color: '#445a44', cover: 'https://i.scdn.co/image/ab67616d0000b2736ce61113662ecf693b605ee5', spotifyTrack: '4U45aEWtQhrm8A5mxPaFZ7' },
+    { title: 'Blonde', artist: 'Frank Ocean', glyph: 'IV', color: '#3e5c63', cover: 'https://i.scdn.co/image/ab67616d0000b273c5649add07ed3720be9d5526', spotifyTrack: '3cKFleEWJ2ZyJMbyKJSlb2' },
+    { title: 'A Rush of Blood', artist: 'Coldplay', glyph: 'V', color: '#6b3f55', cover: 'https://i.scdn.co/image/ab67616d0000b273de09e02aa7febf30b7c02d82', spotifyTrack: '0RiRZpuVRbi7oqRdSMwhQY' },
   ],
 
   movies: [
