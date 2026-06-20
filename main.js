@@ -73,8 +73,8 @@ function updateTurntable() {
   // Spotify embed
   const container = document.querySelector('[data-spotify-container]')
   if (container) {
-    if (hasRecord && playing && current?.spotifyId) {
-      const src = `https://open.spotify.com/embed/album/${current.spotifyId}?utm_source=generator&theme=0`
+    if (hasRecord && playing && current?.spotifyTrack) {
+      const src = `https://open.spotify.com/embed/track/${current.spotifyTrack}?utm_source=generator&theme=0`
       const existing = container.querySelector('iframe')
       if (!existing || existing.src !== src) {
         container.innerHTML = `<iframe src="${src}" width="100%" height="152" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" style="border-radius:12px;display:block"></iframe>`
