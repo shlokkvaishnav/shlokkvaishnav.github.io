@@ -320,7 +320,7 @@ function render() {
           <div style="background:#f3ead8;border:1px solid rgba(90,70,45,.2);border-radius:3px;padding:24px;box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 18px 36px -26px rgba(60,42,20,.5)">
             <h3 style="font-family:'Cinzel',serif;font-weight:700;font-size:15px;letter-spacing:0.12em;text-transform:uppercase;margin:0 0 16px;color:#352b20">Sacred Reels</h3>
             <div style="display:flex;flex-direction:column;gap:12px">
-              ${movies.map(m => `<div style="display:flex;align-items:center;gap:12px"><span style="width:8px;height:8px;flex:none;border-radius:1px;background:#8f6f33;transform:rotate(45deg)"></span><span style="font-size:14px;color:#46392a;font-weight:600">${m}</span></div>`).join('')}
+              ${movies.map(m => `<div style="display:flex;align-items:center;gap:12px"><span style="width:8px;height:8px;flex:none;border-radius:1px;background:#8f6f33;transform:rotate(45deg)"></span><span style="font-size:14px;color:#46392a;font-weight:500">${m}</span></div>`).join('')}
             </div>
           </div>
           <div style="background:#f3ead8;border:1px solid rgba(90,70,45,.2);border-radius:3px;padding:24px;box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 18px 36px -26px rgba(60,42,20,.5)">
