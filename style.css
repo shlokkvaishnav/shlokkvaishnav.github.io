@@ -1,0 +1,21 @@
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+::selection{background:rgba(143,111,51,.22)}
+@keyframes ruinFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
+@keyframes vinylSpin{to{transform:rotate(360deg)}}
+
+/* Responsive overrides */
+@media(max-width:1023px){
+  [data-hero-grid]{grid-template-columns:1fr!important}
+  [data-hero-art]{display:none!important}
+  [data-elysium-grid]{grid-template-columns:1fr!important}
+  [data-desktop-nav]{display:none!important}
+  [data-mobile-toggle]{display:flex!important}
+}
+@media(max-width:767px){
+  [data-sidenav]{display:none!important}
+}
+@media(min-width:1024px){
+  [data-mobile-toggle]{display:none!important}
+}
