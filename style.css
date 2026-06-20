@@ -105,6 +105,9 @@ body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
   [data-elysium-grid]{grid-template-columns:1fr!important}
   [data-desktop-nav]{display:none!important}
   [data-mobile-toggle]{display:flex!important}
+  [data-est]{display:none!important}
+  [data-resume]{display:none!important}
+  [data-logo]{font-size:16px!important;letter-spacing:0.1em!important}
 }
 @media(max-width:767px){
   [data-sidenav]{display:none!important}

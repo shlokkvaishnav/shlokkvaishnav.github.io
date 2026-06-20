@@ -1,6 +1,6 @@
 import { config } from './config.js'
 
-const { personal, social, navItems, projects, skills, experience, albums, games, travel, contacts } = config
+const { personal, social, navItems, projects, skills, experience, albums, movies, philosophies, contacts } = config
 
 // Helpers
 const mk = (n, v) => ({ n, v, pct: v + '%', label: v >= 90 ? 'Legendary' : v >= 80 ? 'Honed' : v >= 70 ? 'Tempered' : 'Forged' })
@@ -104,8 +104,8 @@ function render() {
   <!-- TOP NAV -->
   <header style="position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:14px clamp(18px,4vw,42px);background:rgba(236,226,207,0.78);backdrop-filter:blur(10px);border-bottom:1px solid rgba(90,70,45,0.16)">
     <a href="#sanctuary" data-go="sanctuary" style="display:flex;align-items:baseline;gap:10px;text-decoration:none;color:inherit">
-      <span style="font-family:'Cinzel',serif;font-weight:800;font-size:19px;letter-spacing:0.16em;color:#3b3024">SHLOK&nbsp;VAISHNAV</span>
-      <span style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.28em;color:#8f6f33;opacity:.8">EST·MMXXVI</span>
+      <span data-logo style="font-family:'Cinzel',serif;font-weight:800;font-size:19px;letter-spacing:0.16em;color:#3b3024">SHLOK&nbsp;VAISHNAV</span>
+      <span data-est style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.28em;color:#8f6f33;opacity:.8">EST·MMXXVI</span>
     </a>
     <nav data-desktop-nav aria-label="Sections" style="display:flex;align-items:center;gap:clamp(14px,2vw,30px)">
       ${navItems.map(item => `<a href="#${item.id}" data-navlink="${item.id}" data-go="${item.id}" style="font-family:'Cinzel',serif;font-size:12.5px;font-weight:600;letter-spacing:0.13em;text-transform:uppercase;color:#5a4a36;text-decoration:none;padding-bottom:3px;transition:color .3s ease">${item.label}</a>`).join('')}
@@ -124,6 +124,7 @@ function render() {
   <div data-mobile-menu style="display:none;position:fixed;inset:0;z-index:60;background:rgba(236,226,207,0.97);backdrop-filter:blur(8px);flex-direction:column;align-items:center;justify-content:center;gap:8px">
     <button data-close-mobile aria-label="Close menu" style="position:absolute;top:20px;right:22px;width:42px;height:42px;font-size:26px;line-height:1;background:transparent;border:none;color:#3b3024;cursor:pointer">×</button>
     ${navItems.map(item => `<a href="#${item.id}" data-go="${item.id}" style="font-family:'Cinzel',serif;font-size:24px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#3b3024;text-decoration:none;padding:10px">${item.label}</a>`).join('')}
+    <a href="${social.resume}" style="font-family:'Cinzel',serif;font-size:20px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#8f6f33;text-decoration:none;padding:10px;margin-top:12px;border:1.5px solid #8f6f33;border-radius:2px;padding:12px 24px">Resume</a>
   </div>
 
   <!-- Side Markers -->
@@ -307,9 +308,8 @@ function render() {
           <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:12px">
             ${albums.map((al, i) => `
             <button data-album-card data-album-idx="${i}" title="${al.title}" style="display:block;border:none;background:transparent;padding:0;cursor:pointer;text-align:left">
-              <div data-album-inner style="position:relative;aspect-ratio:1;border-radius:2px;display:grid;place-items:center;background:repeating-linear-gradient(135deg,#dccbab 0 10px,#d2c09e 10px 20px);border:1px solid rgba(90,70,45,.2);box-shadow:inset 0 1px 0 rgba(255,255,255,.4);transition:transform .25s ease,box-shadow .25s ease">
-                <div style="position:absolute;inset:18% auto 18% 0;width:5px;background:${al.color}"></div>
-                <span style="font-family:'Cinzel',serif;font-size:18px;color:rgba(53,43,32,.5)">${al.glyph}</span>
+              <div data-album-inner style="position:relative;aspect-ratio:1;border-radius:2px;overflow:hidden;border:1px solid rgba(90,70,45,.2);box-shadow:inset 0 1px 0 rgba(255,255,255,.4);transition:transform .25s ease,box-shadow .25s ease">
+                <img src="${al.cover}" alt="${al.title}" style="width:100%;height:100%;object-fit:cover;display:block" loading="lazy">
               </div>
               <p style="margin:7px 0 0;font-size:11.5px;font-weight:600;color:#46392a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${al.title}</p>
             </button>`).join('')}
@@ -318,15 +318,15 @@ function render() {
         <!-- Sidebar -->
         <div style="display:flex;flex-direction:column;gap:24px">
           <div style="background:#f3ead8;border:1px solid rgba(90,70,45,.2);border-radius:3px;padding:24px;box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 18px 36px -26px rgba(60,42,20,.5)">
-            <h3 style="font-family:'Cinzel',serif;font-weight:700;font-size:15px;letter-spacing:0.12em;text-transform:uppercase;margin:0 0 16px;color:#352b20">Trials &amp; Games</h3>
+            <h3 style="font-family:'Cinzel',serif;font-weight:700;font-size:15px;letter-spacing:0.12em;text-transform:uppercase;margin:0 0 16px;color:#352b20">Sacred Reels</h3>
             <div style="display:flex;flex-direction:column;gap:12px">
-              ${games.map(g => `<div style="display:flex;align-items:center;gap:12px"><span style="width:8px;height:8px;flex:none;border-radius:1px;background:#8f6f33;transform:rotate(45deg)"></span><span style="font-size:14px;color:#46392a;font-weight:600">${g}</span></div>`).join('')}
+              ${movies.map(m => `<div style="display:flex;align-items:center;gap:12px"><span style="width:8px;height:8px;flex:none;border-radius:1px;background:#8f6f33;transform:rotate(45deg)"></span><span style="font-size:14px;color:#46392a;font-weight:600">${m}</span></div>`).join('')}
             </div>
           </div>
           <div style="background:#f3ead8;border:1px solid rgba(90,70,45,.2);border-radius:3px;padding:24px;box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 18px 36px -26px rgba(60,42,20,.5)">
-            <h3 style="font-family:'Cinzel',serif;font-weight:700;font-size:15px;letter-spacing:0.12em;text-transform:uppercase;margin:0 0 16px;color:#352b20">Lands Wandered</h3>
+            <h3 style="font-family:'Cinzel',serif;font-weight:700;font-size:15px;letter-spacing:0.12em;text-transform:uppercase;margin:0 0 16px;color:#352b20">Philosophies</h3>
             <div style="display:flex;flex-direction:column;gap:14px">
-              ${travel.map(tr => `<div><p style="margin:0 0 2px;font-family:'Cinzel',serif;font-size:14px;font-weight:600;color:#352b20">${tr.place}</p><p style="margin:0;font-size:13px;color:#7a6a52;line-height:1.5">${tr.note}</p></div>`).join('')}
+              ${philosophies.map(p => `<div><p style="margin:0 0 2px;font-family:'Cinzel',serif;font-size:14px;font-weight:600;color:#352b20">${p.title}</p><p style="margin:0;font-size:13px;color:#7a6a52;line-height:1.5">${p.note}</p></div>`).join('')}
             </div>
           </div>
         </div>

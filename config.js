@@ -44,25 +44,25 @@ export const config = {
   ],
 
   albums: [
-    { title: 'Random Access Memories', artist: 'Daft Punk', glyph: 'I', color: '#7c3b2e' },
-    { title: 'Good Kid, M.A.A.D City', artist: 'Kendrick Lamar', glyph: 'II', color: '#5e6b3a' },
-    { title: 'Currents', artist: 'Tame Impala', glyph: 'III', color: '#3e5c63' },
-    { title: 'Dark Side of the Moon', artist: 'Pink Floyd', glyph: 'IV', color: '#7a5a2e' },
-    { title: 'Blonde', artist: 'Frank Ocean', glyph: 'V', color: '#6b3f55' },
-    { title: 'The Wall', artist: 'Pink Floyd', glyph: 'VI', color: '#445a44' },
+    { title: 'After Hours', artist: 'The Weeknd', glyph: 'I', color: '#7c3b2e', cover: 'https://i.scdn.co/image/ab67616d0000b2738863bc11d2aa12b54f5aeb36' },
+    { title: 'AM', artist: 'Arctic Monkeys', glyph: 'II', color: '#5e6b3a', cover: 'https://i.scdn.co/image/ab67616d0000b273e8dd4db47e7177c63b0b7364' },
+    { title: 'Cigarettes After Sex', artist: 'Cigarettes After Sex', glyph: 'III', color: '#3e5c63', cover: 'https://i.scdn.co/image/ab67616d0000b2739e495fb707973f3390850eea' },
+    { title: 'MBDTF', artist: 'Kanye West', glyph: 'IV', color: '#7a5a2e', cover: 'https://i.scdn.co/image/ab67616d0000b2732188f587a8f5b04de2daa4c3' },
+    { title: 'Folklore', artist: 'Taylor Swift', glyph: 'V', color: '#6b3f55', cover: 'https://i.scdn.co/image/ab67616d0000b273c288028c2592f400dd0b9233' },
+    { title: 'Starboy', artist: 'The Weeknd', glyph: 'VI', color: '#445a44', cover: 'https://i.scdn.co/image/ab67616d0000b2734718e2b124f79258be7bc452' },
   ],
 
-  games: [
-    'The Legend of Zelda: BOTW',
-    'Hades',
-    'Hollow Knight',
-    'Celeste',
+  movies: [
+    'The Shawshank Redemption',
+    'Into the Wild',
+    'The Pianist',
+    'The Pursuit of Happyness',
   ],
 
-  travel: [
-    { place: 'Greece', note: 'Explored ancient ruins and modern culture' },
-    { place: 'Japan', note: 'Experienced the blend of tradition and technology' },
-    { place: 'Iceland', note: 'Witnessed breathtaking natural wonders' },
+  philosophies: [
+    { title: 'Memento Mori', note: 'Remember you will die — so make every line of code count.' },
+    { title: 'Amor Fati', note: 'Love your fate — embrace the bugs, the failures, the refactors.' },
+    { title: 'Arete', note: 'Excellence as a habit — not an act, but a practice.' },
   ],
 
   contacts: [
