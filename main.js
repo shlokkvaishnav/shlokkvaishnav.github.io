@@ -69,6 +69,24 @@ function updateTurntable() {
       inner.style.transform = 'none'
     }
   })
+
+  // Spotify embed
+  const container = document.querySelector('[data-spotify-container]')
+  if (container) {
+    if (hasRecord && playing && current?.spotifyId) {
+      const src = `https://open.spotify.com/embed/album/${current.spotifyId}?utm_source=generator&theme=0`
+      const existing = container.querySelector('iframe')
+      if (!existing || existing.src !== src) {
+        container.innerHTML = `<iframe src="${src}" width="100%" height="152" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" style="border-radius:12px;display:block"></iframe>`
+      }
+      container.style.maxHeight = '168px'
+      container.style.opacity = '1'
+    } else {
+      container.style.maxHeight = '0'
+      container.style.opacity = '0'
+      if (!hasRecord) container.innerHTML = ''
+    }
+  }
 }
 
 function setupScrollSpy() {
@@ -304,6 +322,7 @@ function render() {
               </div>
             </div>
           </div>
+          <div data-spotify-container style="margin:16px 0 0;overflow:hidden;border-radius:12px;transition:max-height .4s ease,opacity .4s ease;max-height:0;opacity:0"></div>
           <p style="margin:22px 0 12px;font-family:'Cinzel',serif;font-size:12px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:#7a6a52">The Crate — pick a relic</p>
           <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:12px">
             ${albums.map((al, i) => `

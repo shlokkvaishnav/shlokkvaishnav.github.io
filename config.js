@@ -44,10 +44,10 @@ export const config = {
   ],
 
   albums: [
-    { title: 'After Hours', artist: 'The Weeknd', glyph: 'I', color: '#7c3b2e', cover: 'https://upload.wikimedia.org/wikipedia/en/c/c1/The_Weeknd_-_After_Hours.png' },
-    { title: 'AM', artist: 'Arctic Monkeys', glyph: 'II', color: '#5e6b3a', cover: 'https://upload.wikimedia.org/wikipedia/en/0/04/Arctic_Monkeys_-_AM.png' },
-    { title: 'Cigarettes After Sex', artist: 'Cigarettes After Sex', glyph: 'III', color: '#3e5c63', cover: '' },
-    { title: 'The Stranger', artist: 'Billy Joel', glyph: 'IV', color: '#445a44', cover: '' },
+    { title: 'After Hours', artist: 'The Weeknd', glyph: 'I', color: '#7c3b2e', cover: 'https://upload.wikimedia.org/wikipedia/en/c/c1/The_Weeknd_-_After_Hours.png', spotifyId: '4yP0hdKOZPNshxUOjY0cZj' },
+    { title: 'AM', artist: 'Arctic Monkeys', glyph: 'II', color: '#5e6b3a', cover: 'https://upload.wikimedia.org/wikipedia/en/0/04/Arctic_Monkeys_-_AM.png', spotifyId: '78bpIziExqiI9qztvNFlQu' },
+    { title: 'Cigarettes After Sex', artist: 'Cigarettes After Sex', glyph: 'III', color: '#3e5c63', cover: '', spotifyId: '45UEGksDEEidJBRe5SMIF4' },
+    { title: 'The Stranger', artist: 'Billy Joel', glyph: 'IV', color: '#445a44', cover: '', spotifyId: '69ilDBRS6TiSjaYFEjYLa4' },
   ],
 
   movies: [
