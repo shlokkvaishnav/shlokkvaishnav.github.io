@@ -3,7 +3,7 @@ export const config = {
     name: 'Shlok Vaishnav',
     email: 'shlok9640@gmail.com',
     tagline: 'Software Engineer · Builder of Systems',
-    bio: 'Crafting resilient software the way the ancients raised monuments — built to endure, shaped with intention, and standing long after the scaffolding is gone.',
+    bio: 'I build resilient software with intention — systems designed to hold up under real use, not just in the demo.',
   },
 
   social: {
@@ -14,12 +14,12 @@ export const config = {
   },
 
   navItems: [
-    { id: 'sanctuary', label: 'Sanctuary' },
-    { id: 'quest-log', label: 'Quest Log' },
-    { id: 'armory', label: 'Armory' },
-    { id: 'journey', label: 'Journey' },
-    { id: 'elysium', label: 'Elysium' },
-    { id: 'gathering', label: 'Gathering' },
+    { id: 'home', label: 'Home' },
+    { id: 'work', label: 'Work' },
+    { id: 'skills', label: 'Skills' },
+    { id: 'experience', label: 'Experience' },
+    { id: 'interests', label: 'Interests' },
+    { id: 'contact', label: 'Contact' },
   ],
 
   projects: [
