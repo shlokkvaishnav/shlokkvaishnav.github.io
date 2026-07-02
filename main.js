@@ -1,4 +1,9 @@
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import Lenis from 'lenis'
 import { config } from './config.js'
+
+gsap.registerPlugin(ScrollTrigger)
 
 const { personal, social, navItems, projects, skills, experience, albums, movies, philosophies, contacts } = config
 
@@ -6,18 +11,28 @@ const { personal, social, navItems, projects, skills, experience, albums, movies
 const mk = (n, v) => ({ n, v, pct: v + '%' })
 const timeline = experience.map((j, i) => ({ ...j, index: i + 1 }))
 const skillsData = skills.map(cat => ({ name: cat.name, items: cat.items.map(s => mk(s.n, s.v)) }))
+const marqueeItems = skills.flatMap(cat => cat.items.map(s => s.n))
+const firstFeaturedIndex = projects.findIndex(p => p.featured)
+
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+const pointerFine = window.matchMedia('(pointer: fine)').matches
 
 // State
 let mobileOpen = false
 let record = null
 let playing = false
+let lenis = null
 
 function go(id, e) {
   if (e) e.preventDefault()
   const t = document.getElementById(id)
   if (!t) return
-  const y = t.getBoundingClientRect().top + window.scrollY - 64
-  window.scrollTo({ top: y, behavior: 'smooth' })
+  if (lenis) {
+    lenis.scrollTo(t, { offset: -64 })
+  } else {
+    const y = t.getBoundingClientRect().top + window.scrollY - 64
+    window.scrollTo({ top: y, behavior: reducedMotion ? 'auto' : 'smooth' })
+  }
   if (mobileOpen) { mobileOpen = false; updateMobile() }
 }
 
@@ -112,11 +127,115 @@ function setupScrollSpy() {
   sections.forEach(s => io.observe(s))
 }
 
+// ============ MOTION ============
+function setupLenis() {
+  if (reducedMotion) return
+  lenis = new Lenis({ duration: 1.1, smoothWheel: true })
+  lenis.on('scroll', ScrollTrigger.update)
+  gsap.ticker.add((time) => lenis.raf(time * 1000))
+  gsap.ticker.lagSmoothing(0)
+}
+
+function setupReveal() {
+  const els = gsap.utils.toArray('[data-reveal]')
+  if (reducedMotion) {
+    gsap.set(els, { opacity: 1, y: 0 })
+    return
+  }
+  gsap.set(els, { opacity: 0, y: 24 })
+  ScrollTrigger.batch(els, {
+    start: 'top 88%',
+    once: true,
+    onEnter: (batch) => gsap.to(batch, { opacity: 1, y: 0, duration: 0.7, stagger: 0.12, ease: 'power3.out', overwrite: true }),
+  })
+}
+
+function splitChars(el) {
+  const text = el.textContent
+  el.innerHTML = text.split('').map(ch => ch === ' ' ? ' ' : `<span class="inline-block will-change-transform">${ch}</span>`).join('')
+  return el.querySelectorAll('span')
+}
+
+function setupHeroReveal() {
+  const heading = document.querySelector('[data-hero-heading]')
+  const eyebrow = document.querySelector('[data-hero-eyebrow]')
+  const rest = document.querySelectorAll('[data-hero-fade]')
+  if (reducedMotion || !heading) return
+  const chars = splitChars(heading)
+  gsap.set(chars, { opacity: 0, y: 24 })
+  gsap.set(eyebrow, { opacity: 0, y: 12 })
+  gsap.set(rest, { opacity: 0, y: 16 })
+  gsap.timeline({ delay: 0.15 })
+    .to(eyebrow, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' })
+    .to(chars, { opacity: 1, y: 0, duration: 0.6, stagger: 0.025, ease: 'power3.out' }, '-=0.25')
+    .to(rest, { opacity: 1, y: 0, duration: 0.5, stagger: 0.12, ease: 'power3.out' }, '-=0.3')
+}
+
+function setupParallax() {
+  if (reducedMotion) return
+  const blob = document.querySelector('[data-parallax-blob]')
+  if (!blob) return
+  gsap.to(blob, {
+    yPercent: 30,
+    ease: 'none',
+    scrollTrigger: { trigger: '#home', start: 'top top', end: 'bottom top', scrub: true },
+  })
+}
+
+function setupCursor() {
+  const dot = document.querySelector('[data-cursor-dot]')
+  const ring = document.querySelector('[data-cursor-ring]')
+  if (!dot || !ring) return
+  document.documentElement.classList.add('has-custom-cursor')
+  gsap.set([dot, ring], { xPercent: -50, yPercent: -50 })
+  const dotX = gsap.quickTo(dot, 'x', { duration: 0.15, ease: 'power3' })
+  const dotY = gsap.quickTo(dot, 'y', { duration: 0.15, ease: 'power3' })
+  const ringX = gsap.quickTo(ring, 'x', { duration: 0.5, ease: 'power3' })
+  const ringY = gsap.quickTo(ring, 'y', { duration: 0.5, ease: 'power3' })
+  window.addEventListener('mousemove', (e) => {
+    dotX(e.clientX); dotY(e.clientY)
+    ringX(e.clientX); ringY(e.clientY)
+  })
+  document.addEventListener('mouseover', (e) => {
+    if (e.target.closest('a, button, [data-card]')) ring.classList.add('cursor-hover')
+  })
+  document.addEventListener('mouseout', (e) => {
+    if (e.target.closest('a, button, [data-card]')) ring.classList.remove('cursor-hover')
+  })
+}
+
+function setupMagnetic() {
+  document.querySelectorAll('[data-magnetic]').forEach(btn => {
+    const xTo = gsap.quickTo(btn, 'x', { duration: 0.4, ease: 'power3' })
+    const yTo = gsap.quickTo(btn, 'y', { duration: 0.4, ease: 'power3' })
+    btn.addEventListener('mousemove', (e) => {
+      const r = btn.getBoundingClientRect()
+      xTo((e.clientX - r.left - r.width / 2) * 0.35)
+      yTo((e.clientY - r.top - r.height / 2) * 0.35)
+    })
+    btn.addEventListener('mouseleave', () => { xTo(0); yTo(0) })
+  })
+}
+
+function setupGlow() {
+  document.querySelectorAll('[data-glow]').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const r = card.getBoundingClientRect()
+      card.style.setProperty('--x', ((e.clientX - r.left) / r.width * 100) + '%')
+      card.style.setProperty('--y', ((e.clientY - r.top) / r.height * 100) + '%')
+    })
+  })
+}
+
 // ============ RENDER ============
 function render() {
   const root = document.getElementById('root')
   root.innerHTML = `
 <div class="relative min-h-screen bg-bg text-text font-sans overflow-x-hidden" style="line-height:1.6">
+
+  <!-- Custom Cursor -->
+  <div data-cursor-dot aria-hidden="true"></div>
+  <div data-cursor-ring aria-hidden="true"></div>
 
   <!-- TOP NAV -->
   <header class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between gap-5 px-5 sm:px-10 py-4 bg-bg/80 backdrop-blur-md border-b border-border">
@@ -127,7 +246,7 @@ function render() {
       ${navItems.map(item => `<a href="#${item.id}" data-navlink="${item.id}" data-go="${item.id}" class="relative text-[13px] font-semibold tracking-wide text-text-muted no-underline pb-1" style="transition:color .25s ease">${item.label}<span data-underline class="absolute left-0 -bottom-px h-px w-full bg-accent" style="transform:scaleX(0);transform-origin:left"></span></a>`).join('')}
     </nav>
     <div class="flex items-center gap-3">
-      <a href="${social.resume}" data-resume class="text-[13px] font-semibold tracking-wide no-underline text-text border border-border-strong px-4 py-2 rounded-md" style="transition:background-color .25s ease,border-color .25s ease">Resume</a>
+      <a href="${social.resume}" data-resume data-magnetic class="text-[13px] font-semibold tracking-wide no-underline text-text border border-border-strong px-4 py-2 rounded-md" style="transition:background-color .25s ease,border-color .25s ease">Resume</a>
       <button data-mobile-toggle aria-label="Open menu" class="hidden flex-col gap-1 w-10 h-10 items-center justify-center bg-transparent border border-border-strong rounded-md cursor-pointer">
         <span class="w-4 h-px bg-text block"></span>
         <span class="w-4 h-px bg-text block"></span>
@@ -150,18 +269,26 @@ function render() {
 
   <!-- ========== HOME ========== -->
   <section id="home" data-section class="relative overflow-hidden px-5 sm:px-10">
+    <div data-parallax-blob aria-hidden="true" class="absolute pointer-events-none" style="top:-10%;right:-8%;width:560px;height:560px;background:radial-gradient(circle,var(--color-accent) 0%,transparent 70%);opacity:.1;filter:blur(90px);border-radius:50%"></div>
     <div class="max-w-[880px] mx-auto min-h-screen flex flex-col justify-center gap-0" style="padding:128px 0 96px">
-      <div data-hero-text>
-        <p class="text-accent text-[13px] font-semibold tracking-[0.2em] uppercase m-0">${personal.tagline}</p>
-        <h1 class="font-extrabold m-0 text-text" style="font-size:clamp(40px,8vw,92px);line-height:1.02;letter-spacing:-0.02em;margin-top:18px">Shlok Vaishnav</h1>
-        <p class="max-w-[560px] text-text-muted m-0" style="font-size:clamp(16px,1.6vw,19px);line-height:1.7;margin-top:22px">${personal.bio}</p>
-        <div class="flex flex-wrap gap-3" style="margin-top:34px">
-          <a href="#work" data-go="work" data-btn-primary class="text-[13px] font-semibold no-underline text-bg bg-text px-6 py-3 rounded-md" style="transition:opacity .25s ease">View Work</a>
-          <a href="#contact" data-go="contact" data-btn-outline class="text-[13px] font-semibold no-underline text-text border border-border-strong px-6 py-3 rounded-md" style="transition:background-color .25s ease,border-color .25s ease">Get in Touch</a>
+      <div data-hero-text class="relative z-10">
+        <p data-hero-eyebrow class="text-accent text-[13px] font-semibold tracking-[0.2em] uppercase m-0">${personal.tagline}</p>
+        <h1 data-hero-heading class="font-extrabold m-0 text-text" style="font-size:clamp(40px,8vw,92px);line-height:1.02;letter-spacing:-0.02em;margin-top:18px">Shlok Vaishnav</h1>
+        <p data-hero-fade class="max-w-[560px] text-text-muted m-0" style="font-size:clamp(16px,1.6vw,19px);line-height:1.7;margin-top:22px">${personal.bio}</p>
+        <div data-hero-fade class="flex flex-wrap gap-3" style="margin-top:34px">
+          <a href="#work" data-go="work" data-btn-primary data-magnetic class="inline-block text-[13px] font-semibold no-underline text-bg bg-text px-6 py-3 rounded-md" style="transition:opacity .25s ease">View Work</a>
+          <a href="#contact" data-go="contact" data-btn-outline data-magnetic class="inline-block text-[13px] font-semibold no-underline text-text border border-border-strong px-6 py-3 rounded-md" style="transition:background-color .25s ease,border-color .25s ease">Get in Touch</a>
         </div>
       </div>
     </div>
   </section>
+
+  <!-- ========== SKILLS MARQUEE ========== -->
+  <div data-marquee-wrap aria-hidden="true" class="relative overflow-hidden border-y border-border" style="padding:16px 0">
+    <div data-marquee class="flex items-center gap-8" style="width:max-content;animation:marqueeScroll 32s linear infinite">
+      ${[...marqueeItems, ...marqueeItems].map(name => `<span class="flex items-center gap-8"><span class="font-mono text-[13px] uppercase tracking-[0.14em] text-text-faint">${name}</span><span class="text-accent" style="font-size:10px">✦</span></span>`).join('')}
+    </div>
+  </div>
 
   <!-- ========== WORK ========== -->
   <section id="work" data-section class="relative px-5 sm:px-10" style="padding-top:clamp(80px,12vh,140px);padding-bottom:clamp(80px,12vh,140px)">
@@ -172,8 +299,9 @@ function render() {
         <p class="max-w-[560px] text-text-muted m-0" style="font-size:16px;margin-top:14px">A few things I've built and shipped.</p>
       </div>
       <div class="grid gap-6" style="grid-template-columns:repeat(auto-fill,minmax(320px,1fr))">
-        ${projects.map((p) => `
-        <article data-card data-reveal class="relative bg-bg-raised border border-border rounded-lg overflow-hidden" style="padding:26px 24px">
+        ${projects.map((p, i) => `
+        <article data-card data-reveal data-glow ${i === firstFeaturedIndex ? 'data-bento="feature"' : ''} class="relative bg-bg-raised border border-border rounded-lg overflow-hidden" style="padding:26px 24px">
+          <div class="glow-layer" aria-hidden="true"></div>
           <div class="flex items-start justify-between gap-3" style="margin-bottom:14px">
             <h3 class="font-bold text-text m-0" style="font-size:19px">${p.title}</h3>
             ${p.featured ? `<span class="text-[10px] font-semibold tracking-[0.12em] uppercase text-accent border border-accent/30 rounded-full flex-none" style="padding:3px 9px;background:var(--color-accent-soft)">Featured</span>` : ''}
@@ -200,7 +328,8 @@ function render() {
       </div>
       <div class="grid gap-5" style="grid-template-columns:repeat(auto-fit,minmax(248px,1fr))">
         ${skillsData.map(cat => `
-        <div data-reveal class="bg-bg border border-border rounded-lg" style="padding:22px 20px">
+        <div data-reveal data-glow class="relative bg-bg border border-border rounded-lg overflow-hidden" style="padding:22px 20px">
+          <div class="glow-layer" aria-hidden="true"></div>
           <h3 class="font-bold text-[13px] tracking-[0.1em] uppercase text-text-muted m-0" style="margin-bottom:18px">${cat.name}</h3>
           <div class="flex flex-col gap-4">
             ${cat.items.map(s => `
@@ -326,7 +455,7 @@ function render() {
       <p class="text-accent text-[13px] font-semibold tracking-[0.2em] uppercase m-0">Contact</p>
       <h2 class="font-extrabold text-text m-0" style="font-size:clamp(32px,5.5vw,56px);line-height:1.05;margin-top:10px">Let's build something</h2>
       <p class="max-w-[460px] mx-auto text-text-muted m-0" style="font-size:16px;margin:16px auto 32px">Have a project in mind or just want to say hi? My inbox is open.</p>
-      <a href="mailto:${personal.email}" class="inline-block text-[14px] font-semibold no-underline text-bg bg-text rounded-md" style="padding:14px 30px;transition:opacity .25s ease">Say hello</a>
+      <a href="mailto:${personal.email}" data-magnetic class="inline-block text-[14px] font-semibold no-underline text-bg bg-text rounded-md" style="padding:14px 30px;transition:opacity .25s ease">Say hello</a>
       <div class="flex flex-wrap gap-3 justify-center" style="margin-top:36px">
         ${contacts.map(c => `<a href="${c.href}" target="_blank" rel="noopener noreferrer" data-contact-card class="flex flex-col items-start gap-0.5 no-underline bg-bg-raised border border-border rounded-lg" style="min-width:150px;padding:12px 16px"><span class="font-mono uppercase text-text-faint" style="font-size:10px;letter-spacing:0.1em">${c.label}</span><span class="text-[14px] font-medium text-text">${c.value}</span></a>`).join('')}
       </div>
@@ -364,26 +493,16 @@ function render() {
   })
 
   setupScrollSpy()
-  setupReveal()
-}
-
-function setupReveal() {
-  const els = document.querySelectorAll('[data-reveal]')
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    els.forEach(el => el.classList.add('visible'))
-    return
-  }
-  const io = new IntersectionObserver((ents) => {
-    ents.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible')
-        io.unobserve(e.target)
-      }
-    })
-  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' })
-  els.forEach(el => io.observe(el))
 }
 
 window.history.scrollRestoration = 'manual'
 window.scrollTo(0, 0)
 render()
+setupLenis()
+setupReveal()
+setupHeroReveal()
+setupParallax()
+setupGlow()
+if (pointerFine && !reducedMotion) setupCursor()
+if (!reducedMotion) setupMagnetic()
+window.addEventListener('load', () => ScrollTrigger.refresh())
