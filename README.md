@@ -1,5 +1,7 @@
 # shlokkvaishnav.dev
 
+![CI](https://github.com/shlokkvaishnav/shlokkvaishnav.github.io/actions/workflows/deploy.yml/badge.svg) ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
+
 Personal portfolio of **Shlok Vaishnav** — software engineer working across machine learning and systems. A space-instrument take on a portfolio: near-black sky, one gold telemetry accent, hairline rules, and a procedural starfield that responds to how you scroll.
 
 **Live:** [shlokkvaishnav.dev](https://shlokkvaishnav.dev)
@@ -46,3 +48,7 @@ Deployed to GitHub Pages by `.github/workflows/deploy.yml` on every push to `mai
 ## Colophon
 
 Type: Instrument Serif, Inter, IBM Plex Mono (OFL, via Fontsource). Lunar phase and meteor-shower windows are computed locally — the site makes no network requests beyond its own assets.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
