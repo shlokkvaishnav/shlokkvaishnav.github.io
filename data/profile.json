@@ -35,10 +35,6 @@
     }
   ],
   "avatar": "/assets/avatar.jpg",
-  "funFact": {
-    "text": "Fun fact: part of my job is asking a neural network where the Moon's craters are",
-    "emoji": "🛰️"
-  },
   "subtitles": {
     "experience": {
       "text": "Where I have worked",

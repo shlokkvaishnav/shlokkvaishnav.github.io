@@ -136,7 +136,6 @@ export function indexPage({ site, profile, icon, experience, leadership, private
 <div class="who">
 <h1>${esc(profile.name)}</h1>
 <p class="role">${esc(profile.role)}</p>
-${profile.tagline ? `<p class="tagline">${fun(profile.tagline)}</p>` : ''}
 </div>
 <ul class="affil">
 <li>${icon('mortarboard')} ${esc(profile.education.institution)}</li>
@@ -155,7 +154,6 @@ ${profile.bio
   .slice(1)
   .map((p) => `<p>${esc(p)}</p>`)
   .join('\n')}
-${profile.funFact ? `<p class="funfact">${fun(profile.funFact)}</p>` : ''}
 </div>
 
 <section id="experience">

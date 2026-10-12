@@ -225,7 +225,7 @@ test('the Research list has a short line and a tag for each item, and no names',
 test('the intro is a single paragraph', () => {
   const html = indexPage(ctx)
   const bio = html.slice(html.indexOf('<div class="bio">'), html.indexOf('<section id="experience">'))
-  assert.equal((bio.match(/<p(?! class="funfact")/g) ?? []).length, 1) // the fun-fact line is separate
+  assert.equal((bio.match(/<p/g) ?? []).length, 1)
   assert.doesNotMatch(html, /I build systems from scratch|I am a computer vision researcher/)
 })
 
@@ -234,7 +234,7 @@ const emojiIn = (html) => [...html.matchAll(/<span class="emoji" aria-hidden="tr
 test('the fun lines are in the places I agreed on', () => {
   const html = indexPage(ctx)
   assert.doesNotMatch(html, /class="tagline"|Teaching computers to find craters/) // the line under the name was removed
-  assert.match(html, /<p class="funfact">Fun fact: part of my job is asking a neural network where the Moon&#39;s craters are/)
+  assert.doesNotMatch(html, /class="funfact"|Fun fact/) // the fun-fact line was removed
   assert.match(html, /<p class="note">Open to internships and research collaborations&nbsp;<span class="emoji"/)
   for (const line of ['Where I have worked', 'Clubs I have helped lead', 'Things I have built', 'Questions I am chasing']) {
     assert.match(html, new RegExp(`<p class="subtitle">${line.replace(/'/g, '&#39;')}&nbsp;<span class="emoji"`), line)
@@ -249,7 +249,7 @@ test('the fun lines are in the places I agreed on', () => {
 test('every emoji is hidden from screen readers, and none is in the title or description', () => {
   const html = indexPage(ctx)
   const all = [...html.matchAll(/\p{Extended_Pictographic}/gu)].length
-  assert.equal(emojiIn(html).length >= 9, true)
+  assert.equal(emojiIn(html).length >= 7, true)
   // Each emoji character in the page sits inside an aria-hidden span.
   const outside = html.replace(/<span class="emoji" aria-hidden="true">[^<]+<\/span>/g, '').match(/\p{Extended_Pictographic}/gu)
   assert.equal(outside, null)
@@ -264,10 +264,10 @@ test('the removed grey line under Projects is gone', () => {
 
 test('the fun lines are optional: without them the page still builds', () => {
   const bare = { ...profile }
-  for (const k of ['tagline', 'funFact', 'availability', 'subtitles', 'footerLine', 'notFoundLine']) delete bare[k]
+  for (const k of ['availability', 'subtitles', 'footerLine', 'notFoundLine']) delete bare[k]
   const noEmoji = ctx.privateWork.map(({ emoji, ...rest }) => rest)
   const html = indexPage({ ...ctx, profile: bare, privateWork: noEmoji })
-  assert.doesNotMatch(html, /class="tagline"|class="funfact"|class="subtitle"|class="emoji"/)
+  assert.doesNotMatch(html, /class="subtitle"|class="emoji"/)
   assert.match(notFoundPage({ site, profile: bare, icon }), /This page does not exist\./)
 })
 
