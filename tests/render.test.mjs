@@ -151,11 +151,12 @@ test('the Data Science Club shows both roles under one organization, newest firs
   assert.match(club, /<li class="position current">/) // the role held now
 })
 
-test('IEEE CS is its own entry with a single role', () => {
+test('IEEE CS is its own entry with a single role and no connecting line', () => {
   const html = section(indexPage(ctx), 'leadership')
   const ieee = html.slice(html.indexOf('IEEE Computer Society'))
   assert.match(ieee, /Founding Board Member/)
   assert.equal((ieee.match(/<li class="position/g) ?? []).length, 1)
+  assert.doesNotMatch(ieee, /positions linked/)
 })
 
 test('periods and durations come from the dates (build date is 12 Oct 2026)', () => {
@@ -176,9 +177,16 @@ test('nobody is marked "Promoted"', () => {
   assert.doesNotMatch(indexPage(ctx), /Promoted|chip-accent/)
 })
 
-test('Experience and Leadership use the same timeline look for every organization', () => {
+test('only an organization with several roles gets the connecting line', () => {
   const html = indexPage(ctx)
-  assert.equal((html.match(/<ol class="positions linked">/g) ?? []).length, 4) // 2 + 2 organizations
+  assert.equal((html.match(/<ol class="positions linked">/g) ?? []).length, 1) // the Data Science Club
+  assert.equal((html.match(/<ol class="positions">/g) ?? []).length, 3) // ISRO, Bull Agritech, IEEE CS
+})
+
+test('a role in a single-role organization has no dot or line to look unfinished', () => {
+  const css = readFileSync(new URL('assets/style.css', root), 'utf8')
+  assert.match(css, /\.positions\.linked \.position::before/) // dots only inside a linked list
+  assert.doesNotMatch(css, /(^|\n)\.position::before/)
 })
 
 test('a future position at the same organization joins the same timeline', () => {

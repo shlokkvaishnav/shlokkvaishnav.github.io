@@ -7,7 +7,7 @@
         "title": "Computer Vision Researcher",
         "start": "2026-02",
         "end": null,
-        "summary": "Designed and trained a two-stage crater detection and segmentation pipeline on Chandrayaan-2 terrain-model (DTM) imagery. It reaches 0.83 mIoU on lunar crater tiles."
+        "summary": "Detecting and characterizing lunar craters from OHRC images and elevation models, using image processing and deep learning. I designed a two-stage detection and segmentation pipeline on Chandrayaan-2 terrain models that reaches 0.83 mIoU on crater tiles."
       }
     ]
   },
@@ -19,7 +19,7 @@
         "title": "Software Engineering Intern",
         "start": "2026-04",
         "end": "2026-09",
-        "summary": "Built XGBoost price-forecasting models for non-perishable commodities across the APMC markets of Gujarat. They beat the seasonal-naive baseline by 40% on held-out seasons. I also developed procurement-timing signals for 20 collection centers, and shipped a daily pipeline that ingests arrivals and prices for 200+ commodity-market pairs."
+        "summary": "Applied machine learning for the agricultural commodity markets of Gujarat. I built XGBoost price-forecasting models for non-perishable commodities that beat a seasonal-naive baseline by 40% on held-out seasons, and procurement-timing signals from price z-scores and crop-arrival data across 20 collection centers. I also shipped a daily pipeline over 200+ commodity-market pairs and backtested weather-driven supply-shock indicators on five seasons, to flag procurement risk early."
       }
     ]
   }

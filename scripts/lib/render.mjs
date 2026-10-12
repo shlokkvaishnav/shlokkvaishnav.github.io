@@ -71,8 +71,9 @@ ${license && project.license ? `<span class="fact muted">${esc(project.license)}
 }
 
 // One organization with its roles, newest first, like the Experience section on LinkedIn.
-// Every organization uses the same look: a line with a dot for each role, newest first. A new position at the
-// same organization is one more entry at the top of its `roles` list, and it joins the line.
+// Roles are listed newest first. An organization with several roles shows a line with a dot for each role, like
+// LinkedIn, so a promotion is easy to see. An organization with one role is a plain entry. A new position at the
+// same organization is one more entry at the top of its `roles` list, and the line appears.
 function roleItem(role, now) {
   const duration = formatDuration(monthsBetween(role.start, role.end, now))
   return `<li class="position${role.end ? '' : ' current'}">
@@ -91,7 +92,7 @@ function orgItem(group, now) {
   return `<li class="org">
 <div class="org-head"><span class="org-name">${esc(group.org)}</span>${total ? `<span class="org-total">${esc(total)}</span>` : ''}</div>
 ${group.location ? `<p class="org-place">${esc(group.location)}</p>` : ''}
-<ol class="positions linked">
+<ol class="positions${multi ? ' linked' : ''}">
 ${group.roles.map((r) => roleItem(r, now)).join('\n')}
 </ol>
 </li>`

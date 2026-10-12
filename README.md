@@ -40,7 +40,7 @@ The build fails if GitHub returns no repositories or a request fails. A failed b
 | Which repositories show, order, live links | `data/config.json` |
 | Look | `assets/style.css`. Icons, fonts and their licences: `assets/CREDITS.md` |
 
-**Add a position.** At an organization that is already listed, add one more entry at the top of its `roles` list, with `title`, `start` (`YYYY-MM`), `end` (`YYYY-MM`, or `null` while I still hold it) and `summary`. It joins the same timeline, and the durations are worked out from the dates. For a new organization, add a new object with `org` and `roles`.
+**Add a position.** At an organization that is already listed, add one more entry at the top of its `roles` list, with `title`, `start` (`YYYY-MM`), `end` (`YYYY-MM`, or `null` while I still hold it) and `summary`. The roles then show on a connecting line, like on LinkedIn, and the durations are worked out from the dates. An organization with only one role is shown as a plain entry. For a new organization, add a new object with `org` and `roles`.
 
 `data/config.json`:
 
