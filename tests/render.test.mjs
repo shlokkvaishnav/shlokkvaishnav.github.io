@@ -24,9 +24,6 @@ const ctx = {
   projects,
 }
 
-// The HTML blocks of the organizations in one section of the home page.
-const orgBlocks = (html, id) => section(html, id).split('<li class="org">').slice(1)
-
 // The HTML of one section of the home page.
 const section = (html, id) => {
   const start = html.indexOf(`<section id="${id}">`)
@@ -152,18 +149,20 @@ test('Leadership is a separate section with the Data Science Club and IEEE CS', 
 })
 
 test('the Data Science Club shows both roles under one organization, newest first', () => {
-  const [club] = orgBlocks(indexPage(ctx), 'leadership')
-  assert.match(club, /Data Science Club, Nirma University/)
+  const html = section(indexPage(ctx), 'leadership')
+  const club = html.slice(html.indexOf('Data Science Club'), html.indexOf('IEEE Computer Society'))
   assert.equal((club.match(/<li class="position/g) ?? []).length, 2)
   assert.ok(club.indexOf('President') < club.indexOf('Technical Team Member'))
+  assert.match(club, /<ol class="positions linked">/)
   assert.match(club, /<li class="position current">/) // the role held now
 })
 
-test('IEEE CS is its own entry with a single role', () => {
-  const [, ieee] = orgBlocks(indexPage(ctx), 'leadership')
-  assert.match(ieee, /IEEE Computer Society, Nirma University/)
+test('IEEE CS is its own entry with a single role and no connecting line', () => {
+  const html = section(indexPage(ctx), 'leadership')
+  const ieee = html.slice(html.indexOf('IEEE Computer Society'))
   assert.match(ieee, /Founding Board Member/)
   assert.equal((ieee.match(/<li class="position/g) ?? []).length, 1)
+  assert.doesNotMatch(ieee, /positions linked/)
 })
 
 test('periods and durations come from the dates (build date is 12 Oct 2026)', () => {
@@ -172,6 +171,7 @@ test('periods and durations come from the dates (build date is 12 Oct 2026)', ()
   assert.match(html, /Apr 2026 to Sep 2026<\/span><span>6 mos/) // Bull Agritech
   assert.match(html, /Sep 2026 to now<\/span><span>2 mos/) // President
   assert.match(html, /Sep 2025 to Aug 2026<\/span><span>1 yr/) // Technical Team Member and IEEE CS
+  assert.match(html, /<span class="org-total">1 yr 2 mos<\/span>/) // the club in total
 })
 
 test('projects have no topic tags', () => {
@@ -181,6 +181,36 @@ test('projects have no topic tags', () => {
 
 test('nobody is marked "Promoted"', () => {
   assert.doesNotMatch(indexPage(ctx), /Promoted|chip-accent/)
+})
+
+test('only an organization with several roles gets the connecting line', () => {
+  const html = indexPage(ctx)
+  assert.equal((html.match(/<ol class="positions linked">/g) ?? []).length, 1) // the Data Science Club
+  assert.equal((html.match(/<ol class="positions">/g) ?? []).length, 3) // ISRO, Bull Agritech, IEEE CS
+})
+
+test('a role in a single-role organization has no dot or line to look unfinished', () => {
+  const css = readFileSync(new URL('assets/style.css', root), 'utf8')
+  assert.match(css, /\.positions\.linked \.position::before/) // dots only inside a linked list
+  assert.doesNotMatch(css, /(^|\n)\.position::before/)
+})
+
+test('a future position at the same organization joins the same timeline', () => {
+  const experience = [
+    {
+      org: 'Example Lab',
+      roles: [
+        { title: 'Senior Researcher', start: '2026-08', end: null, summary: 'Newer role.' },
+        { title: 'Researcher', start: '2026-01', end: '2026-07', summary: 'Older role.' },
+      ],
+    },
+  ]
+  const html = section(indexPage({ ...ctx, experience }), 'experience')
+  assert.equal((html.match(/class="org"/g) ?? []).length, 1) // one organization
+  assert.equal((html.match(/<li class="position/g) ?? []).length, 2) // two roles under it
+  assert.ok(html.indexOf('Senior Researcher') < html.indexOf('>Researcher<'))
+  assert.match(html, /<span class="org-total">10 mos<\/span>/) // Jan to Oct 2026
+  assert.match(html, /<li class="position current">/)
 })
 
 test('the Research list has a short line and a tag for each item, and no names', () => {
@@ -249,50 +279,8 @@ test('Research is a list of points, one bullet per item', () => {
   assert.doesNotMatch(list, /class="project"|class="desc"/)
 })
 
-
-test('each position is one row with its dates, title, organization and text', () => {
-  const html = section(indexPage(ctx), 'experience')
-  const row = html.slice(html.indexOf('<li class="position'), html.indexOf('</li>', html.indexOf('<li class="position')))
-  assert.match(row, /<p class="position-when"><span>Feb 2026 to now<\/span><span>9 mos<\/span><\/p>/)
-  assert.match(row, /<p class="position-title"><strong>Computer Vision Researcher<\/strong><\/p>/)
-  assert.match(row, /<p class="position-org">Space Applications Centre, ISRO<\/p>/)
-  assert.match(row, /<p class="position-text">/)
-})
-
-test('a promotion is two rows with the same organization name, newest first', () => {
-  const [club] = orgBlocks(indexPage(ctx), 'leadership')
-  assert.equal((club.match(/<p class="position-org">Data Science Club, Nirma University<\/p>/g) ?? []).length, 2)
-  assert.ok(club.indexOf('President') < club.indexOf('Technical Team Member'))
-})
-
-test('a future position at an organization is one more row under the same organization', () => {
-  const experience = [
-    {
-      org: 'Example Lab',
-      roles: [
-        { title: 'Senior Researcher', start: '2026-08', end: null, summary: 'Newer role.' },
-        { title: 'Researcher', start: '2026-01', end: '2026-07', summary: 'Older role.' },
-      ],
-    },
-  ]
-  const html = section(indexPage({ ...ctx, experience }), 'experience')
-  assert.equal((html.match(/class="org"/g) ?? []).length, 1) // one organization
-  assert.equal((html.match(/<li class="position/g) ?? []).length, 2) // two rows
-  assert.ok(html.indexOf('Senior Researcher') < html.indexOf('>Researcher<'))
-  assert.match(html, /Aug 2026 to now<\/span><span>3 mos/)
-  assert.match(html, /Jan 2026 to Jul 2026<\/span><span>7 mos/)
-})
-
-test('Experience and Leadership have no lines and no dots between entries', () => {
+test('the roles of one organization have dots but no connecting line', () => {
   const css = readFileSync(new URL('assets/style.css', root), 'utf8')
-  assert.doesNotMatch(css, /\.positions\.linked|\.org-head|\.org-total|\.org-place/)
-  const org = css.match(/\n\.org \{[^}]*\}/)[0]
-  assert.doesNotMatch(org, /border/)
-  const position = css.match(/\n\.position \{[^}]*\}/)[0]
-  assert.doesNotMatch(position, /border/)
-  assert.doesNotMatch(css, /\.position::before/)
-})
-
-test('the place line is not shown', () => {
-  assert.doesNotMatch(indexPage(ctx), /org-place|Ahmedabad, India<\/p>/)
+  const rule = css.match(/\.positions\.linked \{[^}]*\}/)[0]
+  assert.doesNotMatch(rule, /border-left/)
 })
