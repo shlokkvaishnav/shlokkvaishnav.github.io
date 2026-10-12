@@ -47,11 +47,10 @@ export async function build({ client, root = ROOT, outDir = path.join(root, 'dis
   const experience = readJson('experience.json')
   const leadership = readJson('leadership.json')
   const privateWork = readJson('private-work.json')
-  const languageColors = readJson('language-colors.json')
   const icon = createIcons(path.join(root, 'assets', 'icons'))
 
   const repos = await client.listPublicRepos(config.owner)
-  const projects = selectProjects(repos, config, now, languageColors)
+  const projects = selectProjects(repos, config)
   if (projects.length === 0) {
     throw new Error('GitHub returned no public repositories. Not building an empty site.')
   }

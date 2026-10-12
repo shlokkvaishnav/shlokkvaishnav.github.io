@@ -60,14 +60,10 @@ function chips(project) {
   return out.join('')
 }
 
-// Small facts about a project: language, licence, last push. Each fact has a dot or text, no separators.
+// The only fact shown about a project is its licence, and only on the project page.
 function facts(project, { license = false } = {}) {
-  const dot = project.languageColor ? ` style="--dot:${esc(project.languageColor)}"` : ''
-  return `<div class="facts">
-${project.language ? `<span class="fact"><i class="dot"${dot}></i>${esc(project.language)}</span>` : ''}
-${license && project.license ? `<span class="fact muted">${esc(project.license)} licence</span>` : ''}
-<span class="fact muted">Updated ${esc(formatDate(project.pushedAt))}</span>
-</div>`
+  if (!license || !project.license) return ''
+  return `<div class="facts"><span class="fact muted">${esc(project.license)} licence</span></div>`
 }
 
 // One organization with its roles, newest first, like the Experience section on LinkedIn.

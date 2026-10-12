@@ -13,7 +13,7 @@ const config = { ...json('data/config.json'), pin: ['quorum'], liveOverride: {} 
 const now = new Date('2026-10-12T00:00:00Z')
 const site = { url: 'https://example.test', builtAt: now.toISOString(), sourceUrl: 'https://example.test/src' }
 const icon = createIcons(new URL('assets/icons/', root).pathname)
-const projects = selectProjects(repos, config, now, { Python: '#3572A5' })
+const projects = selectProjects(repos, config)
 const ctx = {
   site,
   profile,
@@ -79,11 +79,17 @@ test('the home page has no News, Recently or search bar', () => {
   assert.doesNotMatch(html, /News|Recently|type="search"|<script src=/)
 })
 
-test('project rows show the language colour, the status and icon links', () => {
+test('project rows show only the name, the text and the links: no language, no date', () => {
   const html = indexPage(ctx)
-  assert.match(html, /<i class="dot" style="--dot:#3572A5"><\/i>Python/)
-  assert.doesNotMatch(html, /status-|>active<|>stable<|>dormant</)
-  assert.match(html, /<svg class="icon"[^>]*>[\s\S]*?<\/svg> Code/)
+  const list = html.slice(html.indexOf('<ul class="projects">'), html.indexOf('</ul>', html.indexOf('<ul class="projects">')))
+  assert.doesNotMatch(list, /Python|Updated|class="dot"|class="facts"/)
+  assert.match(list, /<svg class="icon"[^>]*>[\s\S]*?<\/svg> Code/)
+})
+
+test('a project page shows the licence but no language and no update date', () => {
+  const page = projectPage({ site, profile, icon, project: projects.find((p) => p.name === 'quorum'), readmeHtml: '' })
+  assert.match(page, /MIT licence/)
+  assert.doesNotMatch(page, /Python|Updated|class="dot"/)
 })
 
 test('the portrait has an alt text and a size, so the page does not jump', () => {
