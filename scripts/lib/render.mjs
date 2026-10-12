@@ -184,14 +184,9 @@ ${
   privateWork.length
     ? `<h3>${icon('lightbulb')} Research</h3>
 ${profile.subtitles?.research ? `<p class="subtitle">${fun(profile.subtitles.research)}</p>` : ''}
-<ul class="projects">
+<ul class="points">
 ${privateWork
-  .map(
-    (w) => `<li class="project">
-<p class="desc">${esc(w.summary)}</p>
-<div class="facts"><span class="chip">${fun({ text: w.tag, emoji: w.emoji })}</span></div>
-</li>`,
-  )
+  .map((w) => `<li>${esc(w.summary)} <span class="chip">${fun({ text: w.tag, emoji: w.emoji })}</span></li>`)
   .join('\n')}
 </ul>`
     : ''

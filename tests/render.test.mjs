@@ -264,3 +264,11 @@ test('the fun lines are optional: without them the page still builds', () => {
   assert.doesNotMatch(html, /class="tagline"|class="funfact"|class="subtitle"|class="emoji"/)
   assert.match(notFoundPage({ site, profile: bare, icon }), /This page does not exist\./)
 })
+
+test('Research is a list of points, one bullet per item', () => {
+  const html = indexPage(ctx)
+  const list = html.slice(html.indexOf('<ul class="points">'), html.indexOf('</ul>', html.indexOf('<ul class="points">')))
+  assert.equal((list.match(/<li>/g) ?? []).length, 2)
+  assert.match(list, /<li>Seeing how nodes diverge in a replicated vector index\. <span class="chip">Currently ongoing/)
+  assert.doesNotMatch(list, /class="project"|class="desc"/)
+})

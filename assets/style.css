@@ -166,6 +166,11 @@ a.name:hover { color: var(--accent); text-decoration: underline; }
 .readme .anchor, .readme svg.octicon { display: none; }
 .readme .markdown-heading { margin: 0; }
 .prose ul { padding-left: 1.2rem; }
+/* Research: a plain list of points with an accent marker. */
+.points { margin: .5rem 0 0; padding-left: 1.3rem; }
+.points li { margin: .7rem 0; padding-left: .2rem; }
+.points li::marker { color: var(--accent); }
+.points .chip { margin-left: .4rem; vertical-align: .05em; white-space: nowrap; }
 .prose h2 { margin-top: 2rem; }
 
 @media (max-width: 60rem) {
