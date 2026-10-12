@@ -1,11 +1,11 @@
 [
   {
-    "summary": "Seeing how nodes diverge in a replicated vector index.",
+    "summary": "I am working on whether a replicated approximate-nearest-neighbour index silently diverges in search quality across replicas under node failure, and whether that divergence persists after recovery.",
     "tag": "Currently ongoing",
     "emoji": "🔬"
   },
   {
-    "summary": "Testing whether neural architecture search beats random search.",
+    "summary": "I am working on whether neural architecture search controllers actually beat budget-matched random-search restarts, and whether a scaffold's contribution can be audited mechanically before publication.",
     "tag": "Currently ongoing",
     "emoji": "🔬"
   }
