@@ -64,13 +64,13 @@ a:hover { text-decoration-thickness: 2px; }
 .skip:focus { left: 1rem; top: 1rem; z-index: 1; background: var(--paper); padding: .35rem .7rem; }
 
 /* Icons are inline SVG. They take the colour of the text around them. */
-.icon { width: 1.05em; height: 1.05em; fill: currentColor; flex: none; }
+.icon { display: inline-block; width: 1.1em; height: 1.1em; vertical-align: -.15em; fill: currentColor; flex: none; overflow: visible; }
 .ilink {
   display: inline-flex; align-items: center; gap: .45rem;
   font: 500 .92rem/1.4 var(--sans); color: var(--ink); text-decoration: none;
 }
-.ilink .icon { color: var(--muted); transition: color .15s; }
-.ilink:hover, .ilink:hover .icon { color: var(--accent); }
+.ilink .icon { color: var(--ink); opacity: .72; transition: color .15s, opacity .15s; }
+.ilink:hover, .ilink:hover .icon { color: var(--accent); opacity: 1; }
 
 /* Top of the page */
 .masthead { display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: center; }

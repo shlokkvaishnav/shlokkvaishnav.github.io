@@ -9,9 +9,9 @@ const real = new URL('../assets/icons/', import.meta.url).pathname
 
 test('an icon becomes an inline SVG that is hidden from screen readers', () => {
   const svg = createIcons(real)('github')
-  assert.match(svg, /^<svg class="icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path /)
+  assert.match(svg, /^<svg class="icon" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path /)
   assert.match(svg, /<\/svg>$/)
-  assert.doesNotMatch(svg, /width=|height=|class="bi/)
+  assert.doesNotMatch(svg, /class="bi/)
 })
 
 test('a missing icon is a build error, not a gap in the page', () => {
