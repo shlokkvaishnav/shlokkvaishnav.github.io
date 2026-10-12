@@ -240,7 +240,15 @@ export function cvPage({ site, profile, icon, experience, privateWork, projects 
 ${profile.bio.map((p) => `<p>${esc(p)}</p>`).join('\n')}
 
 <h2>Education</h2>
-<p><strong>${esc(profile.education.program)}</strong>, ${esc(profile.education.institution)}, ${esc(profile.education.location)}</p>
+<div class="entry">
+<p><strong>${esc(profile.education.program)}</strong>, ${esc(profile.education.institution)}, ${esc(profile.education.location)}${
+    profile.education.period
+      ? ` <span class="when">${esc(monthOf(profile.education.period.start))} to ${esc(monthOf(profile.education.period.end))}</span>`
+      : ''
+  }</p>
+${profile.education.cgpa ? `<p>CGPA: ${esc(profile.education.cgpa)}</p>` : ''}
+${profile.education.coursework ? `<p>Relevant coursework: ${esc(profile.education.coursework)}.</p>` : ''}
+</div>
 
 <h2>Experience</h2>
 ${experience
@@ -251,6 +259,9 @@ ${experience
 </div>`,
   )
   .join('\n')}
+
+<h2>Technical skills</h2>
+${(profile.skills ?? []).map((g) => `<p class="entry"><strong>${esc(g.label)}:</strong> ${g.items.map(esc).join(', ')}</p>`).join('\n')}
 
 <h2>Selected projects</h2>
 ${picks

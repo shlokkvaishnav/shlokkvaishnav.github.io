@@ -1,17 +1,17 @@
 [
   {
-    "start": "2026-04",
-    "end": null,
-    "role": "Software Development Intern",
-    "org": "Bull Agritech",
-    "summary": "Building a crop-classification system that maps castor fields from multispectral satellite imagery. It uses deep-learning segmentation with geospatial post-processing to estimate planted acreage across farm boundaries."
-  },
-  {
     "start": "2026-02",
     "end": null,
-    "role": "Undergraduate Research Fellow",
-    "org": "CSE Department, Nirma University (ISRO-funded)",
-    "summary": "Morphometric analysis of lunar impact craters. I process Chandrayaan elevation data to extract depth, diameter and degradation parameters at scale."
+    "role": "Computer Vision Researcher",
+    "org": "Space Applications Centre, ISRO",
+    "summary": "Designed and trained a two-stage crater detection and segmentation pipeline on Chandrayaan-2 terrain-model (DTM) imagery. It reaches 0.83 mIoU on lunar crater tiles."
+  },
+  {
+    "start": "2026-04",
+    "end": "2026-09",
+    "role": "Software Engineering Intern",
+    "org": "Bull Agritech",
+    "summary": "Built XGBoost price-forecasting models for non-perishable commodities across the APMC markets of Gujarat. They beat the seasonal-naive baseline by 40% on held-out seasons. I also developed procurement-timing signals for 20 collection centers, and shipped a daily pipeline that ingests arrivals and prices for 200+ commodity-market pairs."
   },
   {
     "start": "2025-09",

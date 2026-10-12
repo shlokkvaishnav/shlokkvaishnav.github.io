@@ -1,12 +1,12 @@
 [
   {
-    "title": "NanoDB",
+    "title": "Replica recall divergence",
     "year": "2025",
-    "summary": "A disk-based vector search engine in C++: HNSW indexing that survives restarts, AVX2 distance kernels, multi-threaded insertion and Python bindings."
+    "summary": "A distributed vector database built from scratch (Raft, HNSW, gRPC replication, consistent hashing). It is a testbed for silent search-quality loss in replicated approximate indexes. Chaos tests on SIFT1M over 5 seeds show that node failures cause lasting recall divergence between replicas (p = 0.0079), while healthy replicas agree to 1e-4."
   },
   {
-    "title": "Climate equation discovery",
+    "title": "Null scaffold audit",
     "year": "2025",
-    "summary": "An autonomous agent that discovers physics-validated climate equations. It uses symbolic regression guided by dynamic memory pruning and Bayesian regime tracking."
+    "summary": "A pre-registered equivalence-testing audit (TOST, BCa bootstrap, Holm correction). It decides before publication whether a scaffolded NAS pipeline beats budget-matched restarts of its own bare searcher. Its 165-test suite at 98.23% coverage caught a fixed-seed bug in an in-house pipeline."
   }
 ]

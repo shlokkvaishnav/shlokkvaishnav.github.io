@@ -91,3 +91,23 @@ test('the home page has a side panel with the links, and the content next to it'
   assert.ok(html.indexOf('<div class="content">') < html.indexOf('id="experience"'))
   assert.ok(html.indexOf('</aside>') < html.indexOf('id="projects"'))
 })
+
+test('the CV shows the education details and the skills from the profile', () => {
+  const html = cvPage(ctx)
+  assert.match(html, /CGPA: 7\.58/)
+  assert.match(html, /Relevant coursework: Data Structures and Algorithms/)
+  assert.match(html, /<strong>Languages:<\/strong> C\+\+, Java, Python/)
+  assert.match(html, /Aug 2024 to May 2028/)
+})
+
+test('the home page and the CV show the current roles, not the old ones', () => {
+  const all = indexPage(ctx) + cvPage(ctx)
+  assert.match(all, /Computer Vision Researcher/)
+  assert.match(all, /Apr 2026 to Sep 2026/) // the Bull Agritech internship has ended
+  assert.doesNotMatch(all, /NanoDB|Climate equation discovery|castor/i)
+})
+
+test('no public page contains the phone number', () => {
+  const all = [indexPage(ctx), cvPage(ctx)].join('\n')
+  assert.doesNotMatch(all, /7984739443|\+91/)
+})
