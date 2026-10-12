@@ -10,7 +10,8 @@ export interface Project {
   year: string
   category: string
   status: string
-  github: string
+  /** Repository URL. null for a private repository: no link is shown. */
+  github: string | null
   demo: string | null
   exhibit: ExhibitKind
 }

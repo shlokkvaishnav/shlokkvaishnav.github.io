@@ -83,14 +83,16 @@ function ProjectCard({ project }: { project: Project }) {
       <div className="mt-8 grid gap-8 md:grid-cols-[1fr_auto] md:items-end">
         <SpectrumTags tags={project.tags} />
         <div className="flex gap-6">
-          <a
-            href={project.github}
-            target="_blank"
-            rel="noreferrer"
-            className="telemetry text-[11px] text-ink-mute transition-colors hover:text-ink"
-          >
-            GitHub ↗
-          </a>
+          {project.github && (
+            <a
+              href={project.github}
+              target="_blank"
+              rel="noreferrer"
+              className="telemetry text-[11px] text-ink-mute transition-colors hover:text-ink"
+            >
+              GitHub ↗
+            </a>
+          )}
           {project.demo && (
             <a
               href={project.demo}

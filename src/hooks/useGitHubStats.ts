@@ -30,11 +30,11 @@ function writeCache(cache: Cache): void {
  * The site's only network call: lazy, 24h-cached, and failure-silent —
  * returns null on any error or rate limit and the UI renders nothing.
  */
-export function useGitHubStats(repoUrl: string, enabled: boolean): GitHubStats | null {
+export function useGitHubStats(repoUrl: string | null, enabled: boolean): GitHubStats | null {
   const [stats, setStats] = useState<GitHubStats | null>(null)
 
   useEffect(() => {
-    if (!enabled) return
+    if (!enabled || !repoUrl) return
     const match = repoUrl.match(/github\.com\/([^/]+\/[^/]+)/)
     const slug = match?.[1]
     if (!slug) return

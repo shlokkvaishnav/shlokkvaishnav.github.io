@@ -46,7 +46,7 @@ function run(input: string, close: () => void): string[] {
     case 'about':
       return [site.positioning, `${site.education.program}, ${site.education.institution}.`]
     case 'projects':
-      return projects.map((p) => `  ${p.title.padEnd(28)} ${p.github}`)
+      return projects.map((p) => `  ${p.title.padEnd(28)} ${p.github ?? 'private repository'}`)
     case 'contact':
       return [`  email     ${site.email}`, ...socials.map((s) => `  ${s.label.toLowerCase().padEnd(9)} ${s.href}`)]
     case 'crater': {
