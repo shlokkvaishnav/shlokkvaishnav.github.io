@@ -142,14 +142,12 @@ test('Leadership is a separate section with the Data Science Club and IEEE CS', 
   assert.equal((html.match(/class="org"/g) ?? []).length, 2)
 })
 
-test('the Data Science Club shows both roles under one organization, newest first, with the promotion marked', () => {
+test('the Data Science Club shows both roles under one organization, newest first', () => {
   const html = section(indexPage(ctx), 'leadership')
   const club = html.slice(html.indexOf('Data Science Club'), html.indexOf('IEEE Computer Society'))
   assert.equal((club.match(/<li class="position/g) ?? []).length, 2)
   assert.ok(club.indexOf('President') < club.indexOf('Technical Team Member'))
   assert.match(club, /<ol class="positions linked">/)
-  assert.match(club, /President<\/strong><span class="chip chip-accent">Promoted<\/span>/)
-  assert.doesNotMatch(club.slice(club.indexOf('Technical Team Member')), /Promoted/)
   assert.match(club, /<li class="position current">/) // the role held now
 })
 
@@ -157,7 +155,7 @@ test('IEEE CS is its own entry with a single role', () => {
   const html = section(indexPage(ctx), 'leadership')
   const ieee = html.slice(html.indexOf('IEEE Computer Society'))
   assert.match(ieee, /Founding Board Member/)
-  assert.doesNotMatch(ieee, /positions linked/)
+  assert.equal((ieee.match(/<li class="position/g) ?? []).length, 1)
 })
 
 test('periods and durations come from the dates (build date is 12 Oct 2026)', () => {
@@ -172,4 +170,31 @@ test('periods and durations come from the dates (build date is 12 Oct 2026)', ()
 test('projects have no topic tags', () => {
   const html = indexPage(ctx) + projectPage({ site, profile, icon, project: projects[0], readmeHtml: '' })
   assert.doesNotMatch(html, /class="tags?"|data-topic|ai-agents|paged-attention/)
+})
+
+test('nobody is marked "Promoted"', () => {
+  assert.doesNotMatch(indexPage(ctx), /Promoted|chip-accent/)
+})
+
+test('Experience and Leadership use the same timeline look for every organization', () => {
+  const html = indexPage(ctx)
+  assert.equal((html.match(/<ol class="positions linked">/g) ?? []).length, 4) // 2 + 2 organizations
+})
+
+test('a future position at the same organization joins the same timeline', () => {
+  const experience = [
+    {
+      org: 'Example Lab',
+      roles: [
+        { title: 'Senior Researcher', start: '2026-08', end: null, summary: 'Newer role.' },
+        { title: 'Researcher', start: '2026-01', end: '2026-07', summary: 'Older role.' },
+      ],
+    },
+  ]
+  const html = section(indexPage({ ...ctx, experience }), 'experience')
+  assert.equal((html.match(/class="org"/g) ?? []).length, 1) // one organization
+  assert.equal((html.match(/<li class="position/g) ?? []).length, 2) // two roles under it
+  assert.ok(html.indexOf('Senior Researcher') < html.indexOf('>Researcher<'))
+  assert.match(html, /<span class="org-total">10 mos<\/span>/) // Jan to Oct 2026
+  assert.match(html, /<li class="position current">/)
 })

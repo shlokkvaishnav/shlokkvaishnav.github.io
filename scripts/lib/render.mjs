@@ -65,11 +65,12 @@ ${license && project.license ? `<span class="fact muted">${esc(project.license)}
 }
 
 // One organization with its roles, newest first, like the Experience section on LinkedIn.
-// An organization with several roles shows a line and dots that join them, so a promotion is easy to see.
+// Every organization uses the same look: a line with a dot for each role, newest first. A new position at the
+// same organization is one more entry at the top of its `roles` list, and it joins the line.
 function roleItem(role, now) {
   const duration = formatDuration(monthsBetween(role.start, role.end, now))
   return `<li class="position${role.end ? '' : ' current'}">
-<p class="position-title"><strong>${esc(role.title)}</strong>${role.promoted ? '<span class="chip chip-accent">Promoted</span>' : ''}</p>
+<p class="position-title"><strong>${esc(role.title)}</strong></p>
 <p class="position-when"><span>${esc(monthOf(role.start))} to ${role.end ? esc(monthOf(role.end)) : 'now'}</span><span>${esc(duration)}</span></p>
 <p class="position-text">${esc(role.summary)}</p>
 </li>`
@@ -84,7 +85,7 @@ function orgItem(group, now) {
   return `<li class="org">
 <div class="org-head"><span class="org-name">${esc(group.org)}</span>${total ? `<span class="org-total">${esc(total)}</span>` : ''}</div>
 ${group.location ? `<p class="org-place">${esc(group.location)}</p>` : ''}
-<ol class="positions${multi ? ' linked' : ''}">
+<ol class="positions linked">
 ${group.roles.map((r) => roleItem(r, now)).join('\n')}
 </ol>
 </li>`
