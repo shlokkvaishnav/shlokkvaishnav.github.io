@@ -1,8 +1,8 @@
 {
   "name": "Shlok Vaishnav",
-  "role": "Computer science undergraduate working on machine learning and systems",
+  "role": "Computer science undergraduate working on machine learning and quantitative research",
   "bio": [
-    "I am a computer science undergraduate at Nirma University. I work on machine learning and systems, and I like research ideas that are made fast, reliable and deployable.",
+    "I am a computer science undergraduate at Nirma University, interested in machine learning and quantitative research. I work on statistical learning, mathematical modeling and efficient computation, and I want models and systems that are rigorous, efficient and empirically validated.",
     "I am a computer vision researcher at the Space Applications Centre of ISRO. There I train a two-stage crater detection and segmentation pipeline on Chandrayaan-2 terrain models, which reaches 0.83 mIoU on lunar crater tiles.",
     "I build systems from scratch to understand them: a distributed vector database with Raft and HNSW, a pre-registered statistical audit for neural architecture search, and an LLM inference engine with a custom Triton kernel."
   ],

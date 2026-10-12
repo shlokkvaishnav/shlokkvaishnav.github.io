@@ -1,5 +1,12 @@
 [
   {
+    "start": "2026-09",
+    "end": null,
+    "role": "President",
+    "org": "Data Science Club, Nirma University",
+    "summary": "I lead the club: I set its direction and oversee its technical programs. I focus on giving students chances to learn, compete and work on practical problems in AI and data science."
+  },
+  {
     "start": "2026-02",
     "end": null,
     "role": "Computer Vision Researcher",
@@ -15,16 +22,16 @@
   },
   {
     "start": "2025-09",
-    "end": null,
+    "end": "2026-08",
     "role": "Technical Team Member",
     "org": "Data Science Club, Nirma University",
-    "summary": "Delivered machine-learning workshops to 60+ students, co-organized HACKaMINeD 2026 with 1,000+ participants, and ran bi-weekly Kaggle sessions."
+    "summary": "Co-organized HACKaMINeD 2026, a national hackathon with 1,000+ participants from across India. Helped deliver a two-day workshop on end-to-end machine learning and deep learning for 100+ students."
   },
   {
     "start": "2025-09",
-    "end": null,
-    "role": "Promotions and Publications Head",
+    "end": "2026-08",
+    "role": "Founding Board Member",
     "org": "IEEE Computer Society, Nirma University",
-    "summary": "Coordinated AI workshops with Google Cloud India and ran outreach campaigns for events including the IEEE Carnival."
+    "summary": "Helped found the chapter at Nirma University and shaped its technical direction around agentic AI. Led \"Hire Your First Research Agent\", a hands-on session for 50+ students on building and automating research workflows with n8n and Google ADK."
   }
 ]
