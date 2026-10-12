@@ -4,7 +4,10 @@
   "bio": [
     "I am a computer science undergraduate at Nirma University, interested in machine learning and quantitative research. I work on statistical learning, mathematical modeling and efficient computation, and I want models and systems that are rigorous, efficient and empirically validated."
   ],
-  "availability": "Open to internships and research collaborations.",
+  "availability": {
+    "text": "Open to internships and research collaborations",
+    "emoji": "🙌"
+  },
   "email": "shlok9640@gmail.com",
   "education": {
     "institution": "Nirma University",
@@ -31,5 +34,39 @@
       "icon": "twitter-x"
     }
   ],
-  "avatar": "/assets/avatar.jpg"
+  "avatar": "/assets/avatar.jpg",
+  "tagline": {
+    "text": "Teaching computers to find craters on the Moon",
+    "emoji": "🌙"
+  },
+  "funFact": {
+    "text": "Fun fact: part of my job is asking a neural network where the Moon's craters are",
+    "emoji": "🛰️"
+  },
+  "subtitles": {
+    "experience": {
+      "text": "Where I have worked",
+      "emoji": "💼"
+    },
+    "leadership": {
+      "text": "Clubs I have helped lead",
+      "emoji": "🤝"
+    },
+    "projects": {
+      "text": "Things I have built",
+      "emoji": "🧱"
+    },
+    "research": {
+      "text": "Questions I am chasing",
+      "emoji": "🔍"
+    }
+  },
+  "footerLine": {
+    "text": "Built from GitHub by a script that never sleeps",
+    "emoji": "☕"
+  },
+  "notFoundLine": {
+    "text": "This page got lost, like a rover on the Moon",
+    "emoji": "🌑"
+  }
 }

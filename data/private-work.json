@@ -1,10 +1,12 @@
 [
   {
     "summary": "Seeing how nodes diverge in a replicated vector index.",
-    "tag": "Currently ongoing"
+    "tag": "Currently ongoing",
+    "emoji": "🔬"
   },
   {
     "summary": "Testing whether neural architecture search beats random search.",
-    "tag": "Currently ongoing"
+    "tag": "Currently ongoing",
+    "emoji": "🔬"
   }
 ]

@@ -5,6 +5,12 @@ import { esc, formatDate, formatDuration, formatMonth, monthsBetween } from './h
 
 const monthOf = (ym) => formatMonth(`${ym}-01T00:00:00Z`)
 
+// A line of text with an emoji after it. The emoji only decorates, so screen readers skip it.
+// A non-breaking space keeps the emoji on the same line as the last word.
+function fun(item) {
+  return `${esc(item.text)}${item.emoji ? `&nbsp;<span class="emoji" aria-hidden="true">${item.emoji}</span>` : ''}`
+}
+
 function layout({ site, profile, icon, title, description, path, body, bodyClass = '', footer = true, jsonld = null }) {
   const url = `${site.url}${path}`
   const built = formatDate(site.builtAt)
@@ -37,7 +43,7 @@ ${body}
     footer
       ? `
 <footer>
-<p>Built ${esc(built)} from GitHub.</p>
+<p>Last built ${esc(built)}. ${profile.footerLine ? fun(profile.footerLine) : ''}</p>
 <p class="foot-links"><a class="ilink" href="/feed.xml">${icon('rss')} Feed</a> <a class="ilink" href="${esc(site.sourceUrl)}">${icon('github')} Source</a></p>
 </footer>`
       : ''
@@ -133,6 +139,7 @@ export function indexPage({ site, profile, icon, experience, leadership, private
 <div class="who">
 <h1>${esc(profile.name)}</h1>
 <p class="role">${esc(profile.role)}</p>
+${profile.tagline ? `<p class="tagline">${fun(profile.tagline)}</p>` : ''}
 </div>
 <ul class="affil">
 <li>${icon('mortarboard')} ${esc(profile.education.institution)}</li>
@@ -141,7 +148,7 @@ export function indexPage({ site, profile, icon, experience, leadership, private
 <nav class="links" aria-label="Contact and profiles">
 ${links.join('\n')}
 </nav>
-${profile.availability ? `<p class="note">${esc(profile.availability)}</p>` : ''}
+${profile.availability ? `<p class="note">${fun(profile.availability)}</p>` : ''}
 </aside>
 
 <div class="content">
@@ -151,33 +158,37 @@ ${profile.bio
   .slice(1)
   .map((p) => `<p>${esc(p)}</p>`)
   .join('\n')}
+${profile.funFact ? `<p class="funfact">${fun(profile.funFact)}</p>` : ''}
 </div>
 
 <section id="experience">
 <h2>${icon('briefcase')} Experience</h2>
+${profile.subtitles?.experience ? `<p class="subtitle">${fun(profile.subtitles.experience)}</p>` : ''}
 ${timeline(experience, site.builtAt)}
 </section>
 
 <section id="leadership">
 <h2>${icon('people')} Leadership</h2>
+${profile.subtitles?.leadership ? `<p class="subtitle">${fun(profile.subtitles.leadership)}</p>` : ''}
 ${timeline(leadership, site.builtAt)}
 </section>
 
 <section id="projects">
 <h2>${icon('braces')} Projects</h2>
-<p class="intro-note">This list is read from my public GitHub repositories each time the site is built.</p>
+${profile.subtitles?.projects ? `<p class="subtitle">${fun(profile.subtitles.projects)}</p>` : ''}
 <ul class="projects">
 ${projects.map((p) => projectItem(p, icon)).join('\n')}
 </ul>
 ${
   privateWork.length
     ? `<h3>${icon('lightbulb')} Research</h3>
+${profile.subtitles?.research ? `<p class="subtitle">${fun(profile.subtitles.research)}</p>` : ''}
 <ul class="projects">
 ${privateWork
   .map(
     (w) => `<li class="project">
 <p class="desc">${esc(w.summary)}</p>
-<div class="facts"><span class="chip">${esc(w.tag)}</span></div>
+<div class="facts"><span class="chip">${fun({ text: w.tag, emoji: w.emoji })}</span></div>
 </li>`,
   )
   .join('\n')}
@@ -233,7 +244,8 @@ export function notFoundPage({ site, profile, icon }) {
     description: 'This page does not exist.',
     path: '/404.html',
     body: `<h1>Page not found</h1>
-<p>This page does not exist. <a href="/">Go to the home page</a>.</p>`,
+<p>${profile.notFoundLine ? fun(profile.notFoundLine) : 'This page does not exist.'}</p>
+<p><a href="/">Take me home</a></p>`,
   })
 }
 
