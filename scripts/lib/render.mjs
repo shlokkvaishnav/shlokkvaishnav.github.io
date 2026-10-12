@@ -66,30 +66,26 @@ function facts(project, { license = false } = {}) {
   return `<div class="facts"><span class="fact muted">${esc(project.license)} licence</span></div>`
 }
 
-// One organization with its roles, newest first, like the Experience section on LinkedIn.
-// Roles are listed newest first. An organization with several roles shows a line with a dot for each role, like
-// LinkedIn, so a promotion is easy to see. An organization with one role is a plain entry. A new position at the
-// same organization is one more entry at the top of its `roles` list, and the line appears.
-function roleItem(role, now) {
+// Experience and Leadership. Each position is one row: its dates on the left, and on the right its title, its
+// organization and a short text. Several positions at one organization (a promotion) are several rows with the
+// same organization name, newest first, close together. A new position is one more entry at the top of the
+// organization's `roles` list. There are no lines and no dots, so the section reads as one list.
+function positionItem(org, role, now) {
   const duration = formatDuration(monthsBetween(role.start, role.end, now))
   return `<li class="position${role.end ? '' : ' current'}">
-<p class="position-title"><strong>${esc(role.title)}</strong></p>
 <p class="position-when"><span>${esc(monthOf(role.start))} to ${role.end ? esc(monthOf(role.end)) : 'now'}</span><span>${esc(duration)}</span></p>
+<div class="position-body">
+<p class="position-title"><strong>${esc(role.title)}</strong></p>
+<p class="position-org">${esc(org)}</p>
 <p class="position-text">${esc(role.summary)}</p>
+</div>
 </li>`
 }
 
 function orgItem(group, now) {
-  const multi = group.roles.length > 1
-  const first = group.roles.reduce((a, r) => (r.start < a ? r.start : a), group.roles[0].start)
-  const stillOpen = group.roles.some((r) => !r.end)
-  const last = stillOpen ? null : group.roles.reduce((a, r) => (r.end > a ? r.end : a), group.roles[0].end)
-  const total = multi ? formatDuration(monthsBetween(first, last, now)) : ''
   return `<li class="org">
-<div class="org-head"><span class="org-name">${esc(group.org)}</span>${total ? `<span class="org-total">${esc(total)}</span>` : ''}</div>
-${group.location ? `<p class="org-place">${esc(group.location)}</p>` : ''}
-<ol class="positions${multi ? ' linked' : ''}">
-${group.roles.map((r) => roleItem(r, now)).join('\n')}
+<ol class="positions">
+${group.roles.map((r) => positionItem(group.org, r, now)).join('\n')}
 </ol>
 </li>`
 }
