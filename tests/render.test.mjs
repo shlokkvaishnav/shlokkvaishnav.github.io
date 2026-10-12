@@ -80,5 +80,14 @@ test('project rows show the language colour, the status and icon links', () => {
 })
 
 test('the portrait has an alt text and a size, so the page does not jump', () => {
-  assert.match(indexPage(ctx), /<img class="avatar" src="\/assets\/avatar\.jpg" width="104" height="104" alt="Portrait of Shlok Vaishnav">/)
+  assert.match(indexPage(ctx), /<img class="avatar" src="\/assets\/avatar\.jpg" width="160" height="160" alt="Portrait of Shlok Vaishnav">/)
+})
+
+test('the home page has a side panel with the links, and the content next to it', () => {
+  const html = indexPage(ctx)
+  assert.match(html, /<body class="home">/)
+  assert.match(html, /<aside class="profile">[\s\S]*<nav class="links"[\s\S]*<\/aside>\s*<div class="content">/)
+  // The experience and projects are in the content column, not in the side panel.
+  assert.ok(html.indexOf('<div class="content">') < html.indexOf('id="experience"'))
+  assert.ok(html.indexOf('</aside>') < html.indexOf('id="projects"'))
 })

@@ -102,15 +102,24 @@ export function indexPage({ site, profile, icon, experience, privateWork, projec
     `<a class="ilink" href="/now/">${icon('compass')} Now</a>`,
   ]
 
-  const body = `<header class="masthead">
-<div class="intro">
+  const body = `<div class="layout">
+<aside class="profile">
+<img class="avatar" src="${esc(profile.avatar)}" width="160" height="160" alt="Portrait of ${esc(profile.name)}">
+<div class="who">
 <h1>${esc(profile.name)}</h1>
 <p class="role">${esc(profile.role)}</p>
-<p class="affil"><span class="item">${icon('mortarboard')} ${esc(profile.education.institution)}</span> <span class="item">${icon('geo-alt')} ${esc(profile.education.location)}</span></p>
 </div>
-<img class="avatar" src="${esc(profile.avatar)}" width="104" height="104" alt="Portrait of ${esc(profile.name)}">
-</header>
+<ul class="affil">
+<li>${icon('mortarboard')} ${esc(profile.education.institution)}</li>
+<li>${icon('geo-alt')} ${esc(profile.education.location)}</li>
+</ul>
+<nav class="links" aria-label="Contact and profiles">
+${links.join('\n')}
+</nav>
+${profile.availability ? `<p class="note">${esc(profile.availability)}</p>` : ''}
+</aside>
 
+<div class="content">
 <div class="bio">
 <p class="lead">${esc(profile.bio[0])}</p>
 ${profile.bio
@@ -118,10 +127,6 @@ ${profile.bio
   .map((p) => `<p>${esc(p)}</p>`)
   .join('\n')}
 </div>
-<nav class="links" aria-label="Contact and profiles">
-${links.join('\n')}
-</nav>
-${profile.availability ? `<p class="note">${esc(profile.availability)}</p>` : ''}
 
 <section id="experience">
 <h2>${icon('briefcase')} Experience</h2>
@@ -160,7 +165,9 @@ ${privateWork
 </ul>`
     : ''
 }
-</section>`
+</section>
+</div>
+</div>`
 
   return layout({
     site,
@@ -169,6 +176,7 @@ ${privateWork
     title: `${profile.name} — ${profile.role}`,
     description: profile.bio[0],
     path: '/',
+    bodyClass: 'home',
     body,
     jsonld: personJsonLd(site, profile),
   })
