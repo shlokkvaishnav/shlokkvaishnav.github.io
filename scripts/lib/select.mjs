@@ -23,7 +23,8 @@ export function liveUrlOf(repo, config) {
   return repo.homepage || null
 }
 
-export function selectProjects(repos, config, now = new Date()) {
+// `colors` maps a language name to a colour, for the dot in the project list.
+export function selectProjects(repos, config, now = new Date(), colors = {}) {
   const exclude = new Set(config.exclude ?? [])
   const ownForks = new Set(config.ownForks ?? [])
   const pin = config.pin ?? []
@@ -35,6 +36,7 @@ export function selectProjects(repos, config, now = new Date()) {
       name: r.name,
       description: r.description ?? '',
       language: r.language ?? null,
+      languageColor: colors[r.language] ?? null,
       topics: r.topics ?? [],
       codeUrl: r.html_url,
       liveUrl: liveUrlOf(r, config),

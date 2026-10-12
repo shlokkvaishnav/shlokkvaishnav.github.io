@@ -5,7 +5,7 @@ import { esc, formatDate, formatMonth } from './html.mjs'
 
 const monthOf = (ym) => formatMonth(`${ym}-01T00:00:00Z`)
 
-function layout({ site, profile, title, description, path, body, bodyClass = '', footer = true, jsonld = null }) {
+function layout({ site, profile, icon, title, description, path, body, bodyClass = '', footer = true, jsonld = null }) {
   const url = `${site.url}${path}`
   const built = formatDate(site.builtAt)
   return `<!doctype html>
@@ -23,6 +23,8 @@ function layout({ site, profile, title, description, path, body, bodyClass = '',
 <meta property="og:url" content="${esc(url)}">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="alternate" type="application/atom+xml" href="/feed.xml" title="Updates">
+<link rel="preload" href="/assets/fonts/literata.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/instrument-sans.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/style.css">${
     jsonld ? `\n<script type="application/ld+json">${JSON.stringify(jsonld).replace(/</g, '\\u003c')}</script>` : ''
   }
@@ -35,11 +37,11 @@ ${body}
     footer
       ? `
 <footer>
-<p>Built ${esc(built)} from GitHub. <a href="/feed.xml">Feed</a> · <a href="${esc(site.sourceUrl)}">Source</a></p>
+<p>Built ${esc(built)} from GitHub.</p>
+<p class="foot-links"><a class="ilink" href="/feed.xml">${icon('rss')} Feed</a> <a class="ilink" href="${esc(site.sourceUrl)}">${icon('github')} Source</a></p>
 </footer>`
       : ''
   }
-<script src="/assets/site.js" defer></script>
 </body>
 </html>
 `
@@ -47,26 +49,35 @@ ${body}
 
 function chips(project) {
   const out = []
-  if (!project.archived) out.push(`<span class="chip chip-${project.status}">${project.status}</span>`)
   if (project.archived) out.push('<span class="chip">archived</span>')
   if (project.isFork) out.push('<span class="chip">fork</span>')
   return out.join('')
 }
 
-function tags(project) {
-  if (!project.topics.length) return ''
-  return `<p class="tags">${project.topics.map((t) => `<span class="tag" data-topic="${esc(t)}">${esc(t)}</span>`).join('')}</p>`
+// Small facts about a project: language, status, licence, last push. Each fact has a dot or text, no separators.
+function facts(project, { license = false } = {}) {
+  const dot = project.languageColor ? ` style="--dot:${esc(project.languageColor)}"` : ''
+  return `<div class="facts">
+${project.language ? `<span class="fact"><i class="dot"${dot}></i>${esc(project.language)}</span>` : ''}
+<span class="fact status-${project.status}"><i class="dot"></i>${project.status}</span>
+${license && project.license ? `<span class="fact muted">${esc(project.license)} licence</span>` : ''}
+<span class="fact muted">Updated ${esc(formatDate(project.pushedAt))}</span>
+</div>`
 }
 
-function projectItem(project) {
-  const links = [`<a href="${esc(project.codeUrl)}">Code</a>`]
-  if (project.liveUrl) links.push(`<a href="${esc(project.liveUrl)}">Live</a>`)
-  const meta = [project.language, `Updated ${formatDate(project.pushedAt)}`].filter(Boolean).map(esc)
-  const search = [project.name, project.description, project.language, ...project.topics].join(' ').toLowerCase()
-  return `<li class="project" data-topics="${esc(project.topics.join(' '))}" data-search="${esc(search)}">
-<div class="head"><a class="name" href="/projects/${esc(project.name)}/">${esc(project.name)}</a> <span class="chips">${chips(project)}</span></div>
+function tags(project) {
+  if (!project.topics.length) return ''
+  return `<p class="tags">${project.topics.map((t) => `<span class="tag">${esc(t)}</span>`).join('')}</p>`
+}
+
+function projectItem(project, icon) {
+  return `<li class="project">
+<div class="head"><a class="name" href="/projects/${esc(project.name)}/">${esc(project.name)}</a>${chips(project)}</div>
 ${project.description ? `<p class="desc">${esc(project.description)}</p>` : ''}
-<p class="meta">${meta.join(' · ')} · ${links.join(' · ')}</p>
+${facts(project)}
+<div class="actions"><a class="ilink" href="${esc(project.codeUrl)}">${icon('github')} Code</a>${
+    project.liveUrl ? `<a class="ilink" href="${esc(project.liveUrl)}">${icon('box-arrow-up-right')} Live demo</a>` : ''
+  }</div>
 ${tags(project)}
 </li>`
 }
@@ -83,86 +94,78 @@ function personJsonLd(site, profile) {
   }
 }
 
-export function indexPage({ site, profile, experience, news, privateWork, projects, recent }) {
+export function indexPage({ site, profile, icon, experience, privateWork, projects }) {
   const links = [
-    `<a href="mailto:${esc(profile.email)}">Email</a>`,
-    '<a href="/cv.pdf">CV</a>',
-    ...profile.links.map((l) => `<a href="${esc(l.href)}">${esc(l.label)}</a>`),
-    '<a href="/now/">Now</a>',
+    `<a class="ilink" href="mailto:${esc(profile.email)}">${icon('envelope')} Email</a>`,
+    `<a class="ilink" href="/cv.pdf">${icon('file-earmark-person')} CV</a>`,
+    ...profile.links.map((l) => `<a class="ilink" href="${esc(l.href)}">${icon(l.icon)} ${esc(l.label)}</a>`),
+    `<a class="ilink" href="/now/">${icon('compass')} Now</a>`,
   ]
 
-  const body = `<header>
+  const body = `<header class="masthead">
+<div class="intro">
 <h1>${esc(profile.name)}</h1>
 <p class="role">${esc(profile.role)}</p>
-${profile.bio.map((p) => `<p>${esc(p)}</p>`).join('\n')}
-<p class="links">${links.join(' · ')}</p>
-${profile.availability ? `<p class="note">${esc(profile.availability)}</p>` : ''}
+<p class="affil"><span class="item">${icon('mortarboard')} ${esc(profile.education.institution)}</span> <span class="item">${icon('geo-alt')} ${esc(profile.education.location)}</span></p>
+</div>
+<img class="avatar" src="${esc(profile.avatar)}" width="104" height="104" alt="Portrait of ${esc(profile.name)}">
 </header>
 
-${
-  news.length
-    ? `<section id="news">
-<h2>News</h2>
-<ul class="plain">
-${news.map((n) => `<li><span class="when">${esc(monthOf(n.date))}</span><div>${esc(n.text)}</div></li>`).join('\n')}
-</ul>
-</section>`
-    : ''
-}
+<div class="bio">
+<p class="lead">${esc(profile.bio[0])}</p>
+${profile.bio
+  .slice(1)
+  .map((p) => `<p>${esc(p)}</p>`)
+  .join('\n')}
+</div>
+<nav class="links" aria-label="Contact and profiles">
+${links.join('\n')}
+</nav>
+${profile.availability ? `<p class="note">${esc(profile.availability)}</p>` : ''}
 
 <section id="experience">
-<h2>Experience</h2>
-<ul class="plain">
+<h2>${icon('briefcase')} Experience</h2>
+<ul class="entries">
 ${experience
   .map(
-    (e) => `<li><span class="when">${esc(monthOf(e.start))} – ${e.end ? esc(monthOf(e.end)) : 'now'}</span>
-<div><strong>${esc(e.role)}</strong>, ${esc(e.org)}. ${esc(e.summary)}</div></li>`,
+    (e) => `<li>
+<div class="when">${esc(monthOf(e.start))} to ${e.end ? esc(monthOf(e.end)) : 'now'}</div>
+<div class="what"><p class="title"><strong>${esc(e.role)}</strong> <span class="org">${esc(e.org)}</span></p>
+<p>${esc(e.summary)}</p></div>
+</li>`,
   )
   .join('\n')}
 </ul>
 </section>
 
 <section id="projects">
-<h2>Projects</h2>
-<p class="intro">Read from my public GitHub repositories each time this site is built.</p>
-<p class="filters" hidden><input type="search" id="q" placeholder="Filter projects (press /)" aria-label="Filter projects"></p>
+<h2>${icon('braces')} Projects</h2>
+<p class="intro-note">This list is read from my public GitHub repositories each time the site is built.</p>
 <ul class="projects">
-${projects.map(projectItem).join('\n')}
+${projects.map((p) => projectItem(p, icon)).join('\n')}
 </ul>
 ${
   privateWork.length
-    ? `<h3>Private research</h3>
-<ul class="plain block">
+    ? `<h3>${icon('lock')} Private research</h3>
+<ul class="projects">
 ${privateWork
   .map(
-    (w) =>
-      `<li><strong>${esc(w.title)}</strong> (${esc(w.year)}). ${esc(w.summary)} <span class="muted">The code is private.</span></li>`,
+    (w) => `<li class="project">
+<div class="head"><span class="name">${esc(w.title)}</span><span class="chip">private code</span></div>
+<p class="desc">${esc(w.summary)}</p>
+<div class="facts"><span class="fact muted">${esc(w.year)}</span></div>
+</li>`,
   )
   .join('\n')}
 </ul>`
     : ''
 }
-</section>
-
-${
-  recent.length
-    ? `<section id="recently">
-<h2>Recently</h2>
-<ul class="plain">
-${recent
-  .map(
-    (c) =>
-      `<li><span class="when">${esc(formatDate(c.date))}</span><div><a href="${esc(c.url)}">${esc(c.message.slice(0, 90))}</a> in <a href="/projects/${esc(c.repo)}/">${esc(c.repo)}</a></div></li>`,
-  )
-  .join('\n')}
-</ul>
 </section>`
-    : ''
-}`
 
   return layout({
     site,
     profile,
+    icon,
     title: `${profile.name} — ${profile.role}`,
     description: profile.bio[0],
     path: '/',
@@ -171,13 +174,13 @@ ${recent
   })
 }
 
-export function projectPage({ site, profile, project, readmeHtml }) {
-  const body = `<p class="crumb"><a href="/">← ${esc(profile.name)}</a></p>
-<h1>${esc(project.name)} <span class="chips">${chips(project)}</span></h1>
+export function projectPage({ site, profile, icon, project, readmeHtml }) {
+  const body = `<p class="crumb"><a class="ilink" href="/">${icon('arrow-left')} ${esc(profile.name)}</a></p>
+<h1>${esc(project.name)}${chips(project) ? ` <span class="chips">${chips(project)}</span>` : ''}</h1>
 ${project.description ? `<p class="lead">${esc(project.description)}</p>` : ''}
-<p class="meta">${[project.language, project.license, `Updated ${formatDate(project.pushedAt)}`].filter(Boolean).map(esc).join(' · ')}</p>
-<p class="buttons"><a class="btn" href="${esc(project.codeUrl)}">Code</a>${
-    project.liveUrl ? ` <a class="btn" href="${esc(project.liveUrl)}">Live demo</a>` : ''
+${facts(project, { license: true })}
+<p class="buttons"><a class="btn" href="${esc(project.codeUrl)}">${icon('github')} Code</a>${
+    project.liveUrl ? `<a class="btn" href="${esc(project.liveUrl)}">${icon('box-arrow-up-right')} Live demo</a>` : ''
   }</p>
 ${tags(project)}
 <article class="readme">
@@ -187,6 +190,7 @@ ${readmeHtml ?? '<p class="muted">This repository has no README.</p>'}
   return layout({
     site,
     profile,
+    icon,
     title: `${project.name} — ${profile.name}`,
     description: project.description || `${project.name}, a project by ${profile.name}.`,
     path: `/projects/${project.name}/`,
@@ -194,8 +198,8 @@ ${readmeHtml ?? '<p class="muted">This repository has no README.</p>'}
   })
 }
 
-export function nowPage({ site, profile, html, updated }) {
-  const body = `<p class="crumb"><a href="/">← ${esc(profile.name)}</a></p>
+export function nowPage({ site, profile, icon, html, updated }) {
+  const body = `<p class="crumb"><a class="ilink" href="/">${icon('arrow-left')} ${esc(profile.name)}</a></p>
 <h1>Now</h1>
 ${updated ? `<p class="meta">Updated ${esc(formatDate(updated))}</p>` : ''}
 <div class="prose">
@@ -204,6 +208,7 @@ ${html}
   return layout({
     site,
     profile,
+    icon,
     title: `Now — ${profile.name}`,
     description: `What ${profile.name} studies and builds at the moment.`,
     path: '/now/',
@@ -212,7 +217,7 @@ ${html}
 }
 
 // The CV page. The workflow prints it to cv.pdf with headless Chrome.
-export function cvPage({ site, profile, experience, privateWork, projects }) {
+export function cvPage({ site, profile, icon, experience, privateWork, projects }) {
   const picks = projects.filter((p) => p.isOwn && !p.archived).slice(0, 6)
   const contact = [
     esc(profile.email),
@@ -233,7 +238,7 @@ ${profile.bio.map((p) => `<p>${esc(p)}</p>`).join('\n')}
 ${experience
   .map(
     (e) => `<div class="entry">
-<p><strong>${esc(e.role)}</strong>, ${esc(e.org)} <span class="when">${esc(monthOf(e.start))} – ${e.end ? esc(monthOf(e.end)) : 'present'}</span></p>
+<p><strong>${esc(e.role)}</strong>, ${esc(e.org)} <span class="when">${esc(monthOf(e.start))} to ${e.end ? esc(monthOf(e.end)) : 'present'}</span></p>
 <p>${esc(e.summary)}</p>
 </div>`,
   )
@@ -260,6 +265,7 @@ ${privateWork
   return layout({
     site,
     profile,
+    icon,
     title: `CV — ${profile.name}`,
     description: `Curriculum vitae of ${profile.name}.`,
     path: '/cv/',
@@ -269,10 +275,11 @@ ${privateWork
   })
 }
 
-export function notFoundPage({ site, profile }) {
+export function notFoundPage({ site, profile, icon }) {
   return layout({
     site,
     profile,
+    icon,
     title: `Page not found — ${profile.name}`,
     description: 'This page does not exist.',
     path: '/404.html',

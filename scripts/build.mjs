@@ -13,6 +13,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 
 import { createClient } from './lib/github.mjs'
 import { createFixtureClient } from './lib/fixtures.mjs'
+import { createIcons } from './lib/icons.mjs'
 import { renderMarkdown } from './lib/markdown.mjs'
 import { rewriteReadmeHtml } from './lib/readme.mjs'
 import { cvPage, feedXml, indexPage, notFoundPage, nowPage, projectPage, sitemapXml } from './lib/render.mjs'
@@ -59,38 +60,29 @@ export async function build({ client, root = ROOT, outDir = path.join(root, 'dis
   const config = readJson('config.json')
   const profile = readJson('profile.json')
   const experience = readJson('experience.json')
-  const news = readJson('news.json')
   const privateWork = readJson('private-work.json')
+  const languageColors = readJson('language-colors.json')
+  const icon = createIcons(path.join(root, 'assets', 'icons'))
 
   const repos = await client.listPublicRepos(config.owner)
-  const projects = selectProjects(repos, config, now)
+  const projects = selectProjects(repos, config, now, languageColors)
   if (projects.length === 0) {
     throw new Error('GitHub returned no public repositories. Not building an empty site.')
   }
 
   const readmes = await mapLimit(projects, 4, (p) => client.getReadmeHtml(config.owner, p.name))
-  const commits = await mapLimit(
-    projects.filter((p) => p.isOwn && !p.archived),
-    4,
-    (p) => client.getLatestCommit(config.owner, p.name),
-  )
-  const recent = commits
-    .filter(Boolean)
-    .sort((a, b) => new Date(b.date) - new Date(a.date))
-    .slice(0, config.recentCount ?? 3)
-
   const site = {
     url: config.siteUrl,
     builtAt: now.toISOString(),
     sourceUrl: `https://github.com/${config.owner}/${config.owner}.github.io`,
   }
-  const shared = { site, profile }
+  const shared = { site, profile, icon }
   const tmp = `${outDir}.tmp`
   rmSync(tmp, { recursive: true, force: true })
   mkdirSync(tmp, { recursive: true })
 
   try {
-    write(tmp, 'index.html', indexPage({ ...shared, experience, news, privateWork, projects, recent }))
+    write(tmp, 'index.html', indexPage({ ...shared, experience, privateWork, projects }))
     projects.forEach((project, i) => {
       const readmeHtml = readmes[i]
         ? rewriteReadmeHtml(readmes[i], { owner: config.owner, repo: project.name, branch: project.defaultBranch })
@@ -104,7 +96,11 @@ export async function build({ client, root = ROOT, outDir = path.join(root, 'dis
     write(tmp, 'feed.xml', feedXml({ ...shared, projects }))
     write(tmp, 'robots.txt', `User-agent: *\nAllow: /\nSitemap: ${site.url}/sitemap.xml\n`)
     write(tmp, '.nojekyll', '')
-    cpSync(path.join(root, 'assets'), path.join(tmp, 'assets'), { recursive: true })
+    // The icons are put into the pages, so the icon files are not copied.
+    cpSync(path.join(root, 'assets'), path.join(tmp, 'assets'), {
+      recursive: true,
+      filter: (source) => path.relative(path.join(root, 'assets'), source) !== 'icons',
+    })
     cpSync(path.join(root, 'assets', 'favicon.svg'), path.join(tmp, 'favicon.svg'))
   } catch (error) {
     rmSync(tmp, { recursive: true, force: true })
@@ -113,7 +109,7 @@ export async function build({ client, root = ROOT, outDir = path.join(root, 'dis
 
   rmSync(outDir, { recursive: true, force: true })
   renameSync(tmp, outDir)
-  return { projects: projects.length, recent: recent.length, outDir }
+  return { projects: projects.length, outDir }
 }
 
 // Command line
@@ -128,7 +124,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   try {
     const client = offline ? createFixtureClient(path.resolve(offline)) : createClient()
     const result = await build({ client, ...(out ? { outDir: path.resolve(out) } : {}) })
-    console.log(`Built ${result.projects} project pages and ${result.recent} recent commits into ${result.outDir}`)
+    console.log(`Built ${result.projects} project pages into ${result.outDir}`)
   } catch (error) {
     console.error(`Build failed: ${error.message}`)
     process.exit(1)

@@ -63,21 +63,5 @@ export function createClient({
         as: 'text',
       })
     },
-
-    // The newest commit by a person. Skips bot commits such as Dependabot.
-    async getLatestCommit(owner, repo) {
-      const commits = await request(`/repos/${owner}/${repo}/commits?per_page=10`)
-      if (!commits) return null
-      const found = commits.find(
-        (c) => c.author?.type !== 'Bot' && !/^(Bump |build\(deps|chore\(deps)/.test(c.commit.message),
-      )
-      if (!found) return null
-      return {
-        repo,
-        message: found.commit.message.split('\n')[0],
-        date: found.commit.author.date,
-        url: found.html_url,
-      }
-    },
   }
 }

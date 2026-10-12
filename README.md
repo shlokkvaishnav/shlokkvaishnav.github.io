@@ -16,8 +16,7 @@ GitHub API    ─┘   (public data only)
 
 - **Projects.** Every public repository becomes a row on the home page. The repository description is the project text. Each repository also gets its own page at `/projects/<repo>/`, made from its README.
 - **Live demo links.** A project shows "Live" if its repository has a GitHub Pages site, or a homepage address.
-- **Status chip.** `active` means a push in the last 90 days. `stable` means in the last year. Older is `dormant`.
-- **Recently.** The three newest commits (by a person, not a bot) across my own public repositories.
+- **Status.** `active` means a push in the last 90 days. `stable` means in the last year. Older is `dormant`.
 - **CV.** `/cv/` is a print page made from the same data. The workflow prints it to `cv.pdf` with headless Chrome.
 - **Feed.** `/feed.xml` is an Atom feed of project updates.
 
@@ -36,11 +35,11 @@ The build fails if GitHub returns no repositories or a request fails. A failed b
 | What | Where |
 |---|---|
 | Name, bio, links, email | `data/profile.json` |
-| Experience and news | `data/experience.json`, `data/news.json` |
+| Experience | `data/experience.json` |
 | Research with no public code | `data/private-work.json` |
 | The `/now` page | `content/now.md` (first line: `updated: YYYY-MM-DD`) |
 | Which repositories show, order, live links | `data/config.json` |
-| Look | `assets/style.css` |
+| Look | `assets/style.css`. Icons, fonts and their licences: `assets/CREDITS.md` |
 
 `data/config.json`:
 

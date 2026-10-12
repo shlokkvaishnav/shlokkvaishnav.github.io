@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs'
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { cvPage, feedXml, indexPage, projectPage, sitemapXml } from '../scripts/lib/render.mjs'
+import { createIcons } from '../scripts/lib/icons.mjs'
 import { selectProjects } from '../scripts/lib/select.mjs'
 
 const root = new URL('../', import.meta.url)
@@ -11,8 +12,9 @@ const profile = json('data/profile.json')
 const config = { ...json('data/config.json'), pin: ['quorum'], liveOverride: {} }
 const now = new Date('2026-10-12T00:00:00Z')
 const site = { url: 'https://example.test', builtAt: now.toISOString(), sourceUrl: 'https://example.test/src' }
-const projects = selectProjects(repos, config, now)
-const ctx = { site, profile, experience: json('data/experience.json'), news: json('data/news.json'), privateWork: json('data/private-work.json'), projects, recent: [] }
+const icon = createIcons(new URL('assets/icons/', root).pathname)
+const projects = selectProjects(repos, config, now, { Python: '#3572A5' })
+const ctx = { site, profile, icon, experience: json('data/experience.json'), privateWork: json('data/private-work.json'), projects }
 
 test('the home page lists every selected project and links to its page', () => {
   const html = indexPage(ctx)
@@ -24,20 +26,20 @@ test('text from GitHub is escaped everywhere', () => {
   const html = indexPage(ctx)
   assert.ok(!html.includes('<script>alert("x")</script>'))
   assert.match(html, /&lt;script&gt;alert\(&quot;x&quot;\)&lt;\/script&gt; &amp; &quot;quotes&quot;/)
-  const page = projectPage({ site, profile, project: projects.find((p) => p.name === 'old-project'), readmeHtml: null })
+  const page = projectPage({ site, profile, icon, project: projects.find((p) => p.name === 'old-project'), readmeHtml: null })
   assert.ok(!page.includes('<script>alert("x")</script>'))
 })
 
 test('a project page without a README says so', () => {
-  const html = projectPage({ site, profile, project: projects[0], readmeHtml: null })
+  const html = projectPage({ site, profile, icon, project: projects[0], readmeHtml: null })
   assert.match(html, /no README/)
 })
 
 test('the live link appears only when there is one', () => {
   const quorum = projects.find((p) => p.name === 'quorum')
-  assert.match(projectPage({ site, profile, project: quorum, readmeHtml: '' }), /Live demo/)
+  assert.match(projectPage({ site, profile, icon, project: quorum, readmeHtml: '' }), /Live demo/)
   const none = projects.find((p) => p.name === 'llm-inference-engine')
-  assert.doesNotMatch(projectPage({ site, profile, project: none, readmeHtml: '' }), /Live demo/)
+  assert.doesNotMatch(projectPage({ site, profile, icon, project: none, readmeHtml: '' }), /Live demo/)
 })
 
 test('the sitemap lists the home page, /now/ and every project page', () => {
@@ -63,4 +65,20 @@ test('the CV lists contact details, education and experience', () => {
 test('the site never mentions the old custom domain', () => {
   const all = [indexPage(ctx), cvPage(ctx), sitemapXml({ site, projects })].join('\n')
   assert.doesNotMatch(all, /shlokkvaishnav\.dev/)
+})
+
+test('the home page has no News, Recently or search bar', () => {
+  const html = indexPage(ctx)
+  assert.doesNotMatch(html, /News|Recently|type="search"|<script src=/)
+})
+
+test('project rows show the language colour, the status and icon links', () => {
+  const html = indexPage(ctx)
+  assert.match(html, /<i class="dot" style="--dot:#3572A5"><\/i>Python/)
+  assert.match(html, /class="fact status-active"/)
+  assert.match(html, /<svg class="icon"[^>]*>[\s\S]*?<\/svg> Code/)
+})
+
+test('the portrait has an alt text and a size, so the page does not jump', () => {
+  assert.match(indexPage(ctx), /<img class="avatar" src="\/assets\/avatar\.jpg" width="104" height="104" alt="Portrait of Shlok Vaishnav">/)
 })

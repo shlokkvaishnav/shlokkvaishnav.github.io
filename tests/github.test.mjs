@@ -58,17 +58,3 @@ test('reads all pages of the repo list', async () => {
   assert.equal((await client.listPublicRepos('me')).length, 101)
   assert.match(urls[1], /page=2/)
 })
-
-test('the newest commit skips bot commits and returns the first line only', async () => {
-  const commits = [
-    { author: { type: 'Bot' }, commit: { message: 'Bump x from 1 to 2', author: { date: '2026-10-11T00:00:00Z' } }, html_url: 'u1' },
-    { author: { type: 'User' }, commit: { message: 'Fix the gate\n\nlong body', author: { date: '2026-10-10T00:00:00Z' } }, html_url: 'u2' },
-  ]
-  const client = createClient({ sleep: noSleep, fetchImpl: async () => reply(200, commits) })
-  assert.deepEqual(await client.getLatestCommit('me', 'repo'), {
-    repo: 'repo',
-    message: 'Fix the gate',
-    date: '2026-10-10T00:00:00Z',
-    url: 'u2',
-  })
-})

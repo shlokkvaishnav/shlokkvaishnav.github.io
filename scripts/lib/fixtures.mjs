@@ -1,5 +1,5 @@
 // A stand-in for the GitHub client. It reads saved answers from a folder.
-// Files: repos.json, readme-<repo>.html, commit-<repo>.json. A missing file means "not found".
+// Files: repos.json and readme-<repo>.html. A missing file means "not found".
 
 import { existsSync, readFileSync } from 'node:fs'
 import path from 'node:path'
@@ -12,10 +12,6 @@ export function createFixtureClient(dir) {
     },
     async getReadmeHtml(_owner, repo) {
       return read(`readme-${repo}.html`)
-    },
-    async getLatestCommit(_owner, repo) {
-      const text = read(`commit-${repo}.json`)
-      return text ? JSON.parse(text) : null
     },
   }
 }
