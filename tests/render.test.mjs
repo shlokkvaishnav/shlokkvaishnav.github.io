@@ -14,7 +14,21 @@ const now = new Date('2026-10-12T00:00:00Z')
 const site = { url: 'https://example.test', builtAt: now.toISOString(), sourceUrl: 'https://example.test/src' }
 const icon = createIcons(new URL('assets/icons/', root).pathname)
 const projects = selectProjects(repos, config, now, { Python: '#3572A5' })
-const ctx = { site, profile, icon, experience: json('data/experience.json'), privateWork: json('data/private-work.json'), projects }
+const ctx = {
+  site,
+  profile,
+  icon,
+  experience: json('data/experience.json'),
+  leadership: json('data/leadership.json'),
+  privateWork: json('data/private-work.json'),
+  projects,
+}
+
+// The HTML of one section of the home page.
+const section = (html, id) => {
+  const start = html.indexOf(`<section id="${id}">`)
+  return html.slice(start, html.indexOf('</section>', start))
+}
 
 test('the home page lists every selected project and links to its page', () => {
   const html = indexPage(ctx)
@@ -108,4 +122,54 @@ test('the tab title of the home page is just the name', () => {
 
 test('the CV link opens the resume PDF', () => {
   assert.match(indexPage(ctx), /<a class="ilink" href="\/Shlok_Vaishnav_Resume\.pdf">/)
+})
+
+test('Experience has only ISRO and Bull Agritech', () => {
+  const html = section(indexPage(ctx), 'experience')
+  assert.match(html, /<h2>[\s\S]*Experience<\/h2>/)
+  assert.match(html, /Space Applications Centre, ISRO/)
+  assert.match(html, /Bull Agritech/)
+  assert.doesNotMatch(html, /Data Science Club|IEEE/)
+  assert.equal((html.match(/class="org"/g) ?? []).length, 2)
+})
+
+test('Leadership is a separate section with the Data Science Club and IEEE CS', () => {
+  const html = section(indexPage(ctx), 'leadership')
+  assert.match(html, /<h2>[\s\S]*Leadership<\/h2>/)
+  assert.match(html, /Data Science Club, Nirma University/)
+  assert.match(html, /IEEE Computer Society, Nirma University/)
+  assert.doesNotMatch(html, /Bull Agritech|ISRO/)
+  assert.equal((html.match(/class="org"/g) ?? []).length, 2)
+})
+
+test('the Data Science Club shows both roles under one organization, newest first, with the promotion marked', () => {
+  const html = section(indexPage(ctx), 'leadership')
+  const club = html.slice(html.indexOf('Data Science Club'), html.indexOf('IEEE Computer Society'))
+  assert.equal((club.match(/<li class="position/g) ?? []).length, 2)
+  assert.ok(club.indexOf('President') < club.indexOf('Technical Team Member'))
+  assert.match(club, /<ol class="positions linked">/)
+  assert.match(club, /President<\/strong><span class="chip chip-accent">Promoted<\/span>/)
+  assert.doesNotMatch(club.slice(club.indexOf('Technical Team Member')), /Promoted/)
+  assert.match(club, /<li class="position current">/) // the role held now
+})
+
+test('IEEE CS is its own entry with a single role', () => {
+  const html = section(indexPage(ctx), 'leadership')
+  const ieee = html.slice(html.indexOf('IEEE Computer Society'))
+  assert.match(ieee, /Founding Board Member/)
+  assert.doesNotMatch(ieee, /positions linked/)
+})
+
+test('periods and durations come from the dates (build date is 12 Oct 2026)', () => {
+  const html = indexPage(ctx)
+  assert.match(html, /Feb 2026 to now<\/span><span>9 mos/) // ISRO
+  assert.match(html, /Apr 2026 to Sep 2026<\/span><span>6 mos/) // Bull Agritech
+  assert.match(html, /Sep 2026 to now<\/span><span>2 mos/) // President
+  assert.match(html, /Sep 2025 to Aug 2026<\/span><span>1 yr/) // Technical Team Member and IEEE CS
+  assert.match(html, /<span class="org-total">1 yr 2 mos<\/span>/) // the club in total
+})
+
+test('projects have no topic tags', () => {
+  const html = indexPage(ctx) + projectPage({ site, profile, icon, project: projects[0], readmeHtml: '' })
+  assert.doesNotMatch(html, /class="tags?"|data-topic|ai-agents|paged-attention/)
 })

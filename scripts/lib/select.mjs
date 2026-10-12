@@ -30,7 +30,6 @@ export function selectProjects(repos, config, _now = new Date(), colors = {}) {
       description: r.description ?? '',
       language: r.language ?? null,
       languageColor: colors[r.language] ?? null,
-      topics: r.topics ?? [],
       codeUrl: r.html_url,
       liveUrl: liveUrlOf(r, config),
       isFork: Boolean(r.fork) && !ownForks.has(r.name),

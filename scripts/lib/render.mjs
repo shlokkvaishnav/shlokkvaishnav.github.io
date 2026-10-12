@@ -1,7 +1,7 @@
 // Page templates. Each function takes data and returns a string. Nothing here reads files or the network.
 // Every value that comes from outside (the GitHub API, the JSON files) goes through esc().
 
-import { esc, formatDate, formatMonth } from './html.mjs'
+import { esc, formatDate, formatDuration, formatMonth, monthsBetween } from './html.mjs'
 
 const monthOf = (ym) => formatMonth(`${ym}-01T00:00:00Z`)
 
@@ -64,9 +64,36 @@ ${license && project.license ? `<span class="fact muted">${esc(project.license)}
 </div>`
 }
 
-function tags(project) {
-  if (!project.topics.length) return ''
-  return `<p class="tags">${project.topics.map((t) => `<span class="tag">${esc(t)}</span>`).join('')}</p>`
+// One organization with its roles, newest first, like the Experience section on LinkedIn.
+// An organization with several roles shows a line and dots that join them, so a promotion is easy to see.
+function roleItem(role, now) {
+  const duration = formatDuration(monthsBetween(role.start, role.end, now))
+  return `<li class="position${role.end ? '' : ' current'}">
+<p class="position-title"><strong>${esc(role.title)}</strong>${role.promoted ? '<span class="chip chip-accent">Promoted</span>' : ''}</p>
+<p class="position-when"><span>${esc(monthOf(role.start))} to ${role.end ? esc(monthOf(role.end)) : 'now'}</span><span>${esc(duration)}</span></p>
+<p class="position-text">${esc(role.summary)}</p>
+</li>`
+}
+
+function orgItem(group, now) {
+  const multi = group.roles.length > 1
+  const first = group.roles.reduce((a, r) => (r.start < a ? r.start : a), group.roles[0].start)
+  const stillOpen = group.roles.some((r) => !r.end)
+  const last = stillOpen ? null : group.roles.reduce((a, r) => (r.end > a ? r.end : a), group.roles[0].end)
+  const total = multi ? formatDuration(monthsBetween(first, last, now)) : ''
+  return `<li class="org">
+<div class="org-head"><span class="org-name">${esc(group.org)}</span>${total ? `<span class="org-total">${esc(total)}</span>` : ''}</div>
+${group.location ? `<p class="org-place">${esc(group.location)}</p>` : ''}
+<ol class="positions${multi ? ' linked' : ''}">
+${group.roles.map((r) => roleItem(r, now)).join('\n')}
+</ol>
+</li>`
+}
+
+function timeline(groups, now) {
+  return `<ul class="timeline">
+${groups.map((g) => orgItem(g, now)).join('\n')}
+</ul>`
 }
 
 function projectItem(project, icon) {
@@ -77,7 +104,6 @@ ${facts(project)}
 <div class="actions"><a class="ilink" href="${esc(project.codeUrl)}">${icon('github')} Code</a>${
     project.liveUrl ? `<a class="ilink" href="${esc(project.liveUrl)}">${icon('box-arrow-up-right')} Live demo</a>` : ''
   }</div>
-${tags(project)}
 </li>`
 }
 
@@ -93,7 +119,7 @@ function personJsonLd(site, profile) {
   }
 }
 
-export function indexPage({ site, profile, icon, experience, privateWork, projects }) {
+export function indexPage({ site, profile, icon, experience, leadership, privateWork, projects }) {
   const links = [
     `<a class="ilink" href="mailto:${esc(profile.email)}">${icon('envelope')} Email</a>`,
     `<a class="ilink" href="/Shlok_Vaishnav_Resume.pdf">${icon('file-earmark-person')} CV</a>`,
@@ -128,17 +154,12 @@ ${profile.bio
 
 <section id="experience">
 <h2>${icon('briefcase')} Experience</h2>
-<ul class="entries">
-${experience
-  .map(
-    (e) => `<li>
-<div class="when">${esc(monthOf(e.start))} to ${e.end ? esc(monthOf(e.end)) : 'now'}</div>
-<div class="what"><p class="title"><strong>${esc(e.role)}</strong> <span class="org">${esc(e.org)}</span></p>
-<p>${esc(e.summary)}</p></div>
-</li>`,
-  )
-  .join('\n')}
-</ul>
+${timeline(experience, site.builtAt)}
+</section>
+
+<section id="leadership">
+<h2>${icon('people')} Leadership</h2>
+${timeline(leadership, site.builtAt)}
 </section>
 
 <section id="projects">
@@ -188,7 +209,6 @@ ${facts(project, { license: true })}
 <p class="buttons"><a class="btn" href="${esc(project.codeUrl)}">${icon('github')} Code</a>${
     project.liveUrl ? `<a class="btn" href="${esc(project.liveUrl)}">${icon('box-arrow-up-right')} Live demo</a>` : ''
   }</p>
-${tags(project)}
 <article class="readme">
 ${readmeHtml ?? '<p class="muted">This repository has no README.</p>'}
 </article>`

@@ -45,6 +45,7 @@ export async function build({ client, root = ROOT, outDir = path.join(root, 'dis
   const config = readJson('config.json')
   const profile = readJson('profile.json')
   const experience = readJson('experience.json')
+  const leadership = readJson('leadership.json')
   const privateWork = readJson('private-work.json')
   const languageColors = readJson('language-colors.json')
   const icon = createIcons(path.join(root, 'assets', 'icons'))
@@ -67,7 +68,7 @@ export async function build({ client, root = ROOT, outDir = path.join(root, 'dis
   mkdirSync(tmp, { recursive: true })
 
   try {
-    write(tmp, 'index.html', indexPage({ ...shared, experience, privateWork, projects }))
+    write(tmp, 'index.html', indexPage({ ...shared, experience, leadership, privateWork, projects }))
     projects.forEach((project, i) => {
       const readmeHtml = readmes[i]
         ? rewriteReadmeHtml(readmes[i], { owner: config.owner, repo: project.name, branch: project.defaultBranch })

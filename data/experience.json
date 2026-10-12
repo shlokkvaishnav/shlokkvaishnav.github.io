@@ -1,37 +1,26 @@
 [
   {
-    "start": "2026-09",
-    "end": null,
-    "role": "President",
-    "org": "Data Science Club, Nirma University",
-    "summary": "I lead the club: I set its direction and oversee its technical programs. I focus on giving students chances to learn, compete and work on practical problems in AI and data science."
-  },
-  {
-    "start": "2026-02",
-    "end": null,
-    "role": "Computer Vision Researcher",
     "org": "Space Applications Centre, ISRO",
-    "summary": "Designed and trained a two-stage crater detection and segmentation pipeline on Chandrayaan-2 terrain-model (DTM) imagery. It reaches 0.83 mIoU on lunar crater tiles."
+    "location": "Ahmedabad, India",
+    "roles": [
+      {
+        "title": "Computer Vision Researcher",
+        "start": "2026-02",
+        "end": null,
+        "summary": "Designed and trained a two-stage crater detection and segmentation pipeline on Chandrayaan-2 terrain-model (DTM) imagery. It reaches 0.83 mIoU on lunar crater tiles."
+      }
+    ]
   },
   {
-    "start": "2026-04",
-    "end": "2026-09",
-    "role": "Software Engineering Intern",
     "org": "Bull Agritech",
-    "summary": "Built XGBoost price-forecasting models for non-perishable commodities across the APMC markets of Gujarat. They beat the seasonal-naive baseline by 40% on held-out seasons. I also developed procurement-timing signals for 20 collection centers, and shipped a daily pipeline that ingests arrivals and prices for 200+ commodity-market pairs."
-  },
-  {
-    "start": "2025-09",
-    "end": "2026-08",
-    "role": "Technical Team Member",
-    "org": "Data Science Club, Nirma University",
-    "summary": "Co-organized HACKaMINeD 2026, a national hackathon with 1,000+ participants from across India. Helped deliver a two-day workshop on end-to-end machine learning and deep learning for 100+ students."
-  },
-  {
-    "start": "2025-09",
-    "end": "2026-08",
-    "role": "Founding Board Member",
-    "org": "IEEE Computer Society, Nirma University",
-    "summary": "Helped found the chapter at Nirma University and shaped its technical direction around agentic AI. Led \"Hire Your First Research Agent\", a hands-on session for 50+ students on building and automating research workflows with n8n and Google ADK."
+    "location": "Ahmedabad, India",
+    "roles": [
+      {
+        "title": "Software Engineering Intern",
+        "start": "2026-04",
+        "end": "2026-09",
+        "summary": "Built XGBoost price-forecasting models for non-perishable commodities across the APMC markets of Gujarat. They beat the seasonal-naive baseline by 40% on held-out seasons. I also developed procurement-timing signals for 20 collection centers, and shipped a daily pipeline that ingests arrivals and prices for 200+ commodity-market pairs."
+      }
+    ]
   }
 ]

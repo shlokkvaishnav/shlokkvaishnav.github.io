@@ -34,7 +34,8 @@ The build fails if GitHub returns no repositories or a request fails. A failed b
 | What | Where |
 |---|---|
 | Name, bio, links, email | `data/profile.json` |
-| Experience | `data/experience.json` |
+| Experience (organizations and roles) | `data/experience.json` |
+| Leadership (organizations and roles) | `data/leadership.json` |
 | Research with no public code | `data/private-work.json` |
 | Which repositories show, order, live links | `data/config.json` |
 | Look | `assets/style.css`. Icons, fonts and their licences: `assets/CREDITS.md` |
