@@ -35,10 +35,6 @@
     }
   ],
   "avatar": "/assets/avatar.jpg",
-  "tagline": {
-    "text": "Teaching computers to find craters on the Moon",
-    "emoji": "🌙"
-  },
   "funFact": {
     "text": "Fun fact: part of my job is asking a neural network where the Moon's craters are",
     "emoji": "🛰️"

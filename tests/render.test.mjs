@@ -231,9 +231,9 @@ test('the intro is a single paragraph', () => {
 
 const emojiIn = (html) => [...html.matchAll(/<span class="emoji" aria-hidden="true">([^<]+)<\/span>/g)].map((m) => m[1])
 
-test('the fun lines are in the seven places I agreed on', () => {
+test('the fun lines are in the places I agreed on', () => {
   const html = indexPage(ctx)
-  assert.match(html, /<p class="tagline">Teaching computers to find craters on the Moon&nbsp;<span class="emoji" aria-hidden="true">🌙<\/span><\/p>/)
+  assert.doesNotMatch(html, /class="tagline"|Teaching computers to find craters/) // the line under the name was removed
   assert.match(html, /<p class="funfact">Fun fact: part of my job is asking a neural network where the Moon&#39;s craters are/)
   assert.match(html, /<p class="note">Open to internships and research collaborations&nbsp;<span class="emoji"/)
   for (const line of ['Where I have worked', 'Clubs I have helped lead', 'Things I have built', 'Questions I am chasing']) {

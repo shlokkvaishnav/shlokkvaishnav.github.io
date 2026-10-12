@@ -33,7 +33,7 @@ The build fails if GitHub returns no repositories or a request fails. A failed b
 
 | What | Where |
 |---|---|
-| Name, bio, links, email, and the fun lines with emojis (tagline, fun fact, heading subtitles, footer, 404) | `data/profile.json` |
+| Name, bio, links, email, and the fun lines with emojis (fun fact, heading subtitles, footer, 404) | `data/profile.json` |
 | Experience (organizations and roles) | `data/experience.json` |
 | Leadership (organizations and roles) | `data/leadership.json` |
 | Research with no public code | `data/private-work.json` |
