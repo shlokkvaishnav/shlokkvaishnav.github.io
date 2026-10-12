@@ -115,10 +115,10 @@ h3 .icon { color: var(--accent); }
 .position-title strong { font-weight: 600; }
 .position-when { display: flex; flex-wrap: wrap; gap: .1rem .9rem; margin: .1rem 0 .4rem; font-variant-numeric: tabular-nums; }
 .position-text { margin: 0; max-width: 62ch; }
-/* A line and a dot for each role. The filled dot is the role I hold now. */
-.positions.linked { margin-left: .35rem; padding-left: 1.5rem; border-left: 2px solid var(--rule); }
+/* A dot for each role. The filled dot is the role I hold now. There is no line between them. */
+.positions.linked { margin-left: .35rem; padding-left: 1.5rem; }
 .positions.linked .position::before {
-  content: ""; position: absolute; left: calc(-1.5rem - 1px); top: .5rem; width: .7rem; height: .7rem;
+  content: ""; position: absolute; left: -1.5rem; top: .5rem; width: .7rem; height: .7rem;
   transform: translateX(-50%); border-radius: 50%; background: var(--paper); border: 2px solid var(--muted);
 }
 .positions.linked .position.current::before { background: var(--accent); border-color: var(--accent); }

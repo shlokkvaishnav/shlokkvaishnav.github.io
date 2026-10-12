@@ -278,3 +278,9 @@ test('Research is a list of points, one bullet per item', () => {
   assert.match(list, /<li>I am working on whether a replicated approximate-nearest-neighbour index silently diverges in search quality across replicas under node failure, and whether that divergence persists after recovery\. <span class="chip">Currently ongoing/)
   assert.doesNotMatch(list, /class="project"|class="desc"/)
 })
+
+test('the roles of one organization have dots but no connecting line', () => {
+  const css = readFileSync(new URL('assets/style.css', root), 'utf8')
+  const rule = css.match(/\.positions\.linked \{[^}]*\}/)[0]
+  assert.doesNotMatch(rule, /border-left/)
+})
