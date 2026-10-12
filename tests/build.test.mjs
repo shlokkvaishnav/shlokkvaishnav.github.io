@@ -13,7 +13,7 @@ test('builds the whole site from saved answers', async () => {
   const outDir = path.join(mkdtempSync(path.join(tmpdir(), 'site-')), 'dist')
   const result = await build({ client: createFixtureClient(fixtures), outDir, now })
   assert.equal(result.projects, 4) // kornia is a fork, so it is hidden
-  for (const f of ['index.html', '404.html', 'cv/index.html', 'sitemap.xml', 'feed.xml', 'robots.txt', 'favicon.svg', 'assets/style.css', 'assets/avatar.jpg', 'assets/fonts/literata.woff2', '.nojekyll', 'projects/quorum/index.html']) {
+  for (const f of ['index.html', '404.html', 'Shlok_Vaishnav_Resume.pdf', 'sitemap.xml', 'feed.xml', 'robots.txt', 'favicon.svg', 'assets/style.css', 'assets/avatar.jpg', 'assets/fonts/literata.woff2', '.nojekyll', 'projects/quorum/index.html']) {
     assert.ok(existsSync(path.join(outDir, f)), f)
   }
   assert.ok(!existsSync(path.join(outDir, 'projects/secret-research')))

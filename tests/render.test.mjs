@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { cvPage, feedXml, indexPage, projectPage, sitemapXml } from '../scripts/lib/render.mjs'
+import { feedXml, indexPage, projectPage, sitemapXml } from '../scripts/lib/render.mjs'
 import { createIcons } from '../scripts/lib/icons.mjs'
 import { selectProjects } from '../scripts/lib/select.mjs'
 
@@ -55,15 +55,8 @@ test('the feed is valid-looking Atom with one entry per project', () => {
   assert.equal((xml.match(/<entry>/g) ?? []).length, projects.length)
 })
 
-test('the CV lists contact details, education and experience', () => {
-  const html = cvPage(ctx)
-  assert.match(html, /shlok9640@gmail\.com/)
-  assert.match(html, /Nirma University/)
-  assert.match(html, /Bull Agritech/)
-})
-
 test('the site never mentions the old custom domain', () => {
-  const all = [indexPage(ctx), cvPage(ctx), sitemapXml({ site, projects })].join('\n')
+  const all = [indexPage(ctx), sitemapXml({ site, projects })].join('\n')
   assert.doesNotMatch(all, /shlokkvaishnav\.dev/)
 })
 
@@ -92,23 +85,15 @@ test('the home page has a side panel with the links, and the content next to it'
   assert.ok(html.indexOf('</aside>') < html.indexOf('id="projects"'))
 })
 
-test('the CV shows the education details and the skills from the profile', () => {
-  const html = cvPage(ctx)
-  assert.match(html, /CGPA: 7\.58/)
-  assert.match(html, /Relevant coursework: Data Structures and Algorithms/)
-  assert.match(html, /<strong>Languages:<\/strong> C\+\+, Java, Python/)
-  assert.match(html, /Aug 2024 to May 2028/)
-})
-
 test('the home page and the CV show the current roles, not the old ones', () => {
-  const all = indexPage(ctx) + cvPage(ctx)
+  const all = indexPage(ctx)
   assert.match(all, /Computer Vision Researcher/)
   assert.match(all, /Apr 2026 to Sep 2026/) // the Bull Agritech internship has ended
   assert.doesNotMatch(all, /NanoDB|Climate equation discovery|castor/i)
 })
 
 test('no public page contains the phone number', () => {
-  const all = [indexPage(ctx), cvPage(ctx)].join('\n')
+  const all = indexPage(ctx)
   assert.doesNotMatch(all, /7984739443|\+91/)
 })
 
@@ -119,4 +104,8 @@ test('the home page has no Now link', () => {
 test('the tab title of the home page is just the name', () => {
   assert.match(indexPage(ctx), /<title>Shlok Vaishnav<\/title>/)
   assert.match(indexPage(ctx), /<meta property="og:title" content="Shlok Vaishnav">/)
+})
+
+test('the CV link opens the resume PDF', () => {
+  assert.match(indexPage(ctx), /<a class="ilink" href="\/Shlok_Vaishnav_Resume\.pdf">/)
 })

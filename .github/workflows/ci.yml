@@ -22,4 +22,4 @@ jobs:
         run: node scripts/build.mjs --offline tests/fixtures --out "$RUNNER_TEMP/site"
 
       - name: Check the links
-        run: node scripts/check-links.mjs "$RUNNER_TEMP/site" --allow=/cv.pdf
+        run: node scripts/check-links.mjs "$RUNNER_TEMP/site"

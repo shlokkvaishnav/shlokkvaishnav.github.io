@@ -96,7 +96,7 @@ function personJsonLd(site, profile) {
 export function indexPage({ site, profile, icon, experience, privateWork, projects }) {
   const links = [
     `<a class="ilink" href="mailto:${esc(profile.email)}">${icon('envelope')} Email</a>`,
-    `<a class="ilink" href="/cv.pdf">${icon('file-earmark-person')} CV</a>`,
+    `<a class="ilink" href="/Shlok_Vaishnav_Resume.pdf">${icon('file-earmark-person')} CV</a>`,
     ...profile.links.map((l) => `<a class="ilink" href="${esc(l.href)}">${icon(l.icon)} ${esc(l.label)}</a>`),
   ]
 
@@ -201,76 +201,6 @@ ${readmeHtml ?? '<p class="muted">This repository has no README.</p>'}
     description: project.description || `${project.name}, a project by ${profile.name}.`,
     path: `/projects/${project.name}/`,
     body,
-  })
-}
-
-// The CV page. The workflow prints it to cv.pdf with headless Chrome.
-export function cvPage({ site, profile, icon, experience, privateWork, projects }) {
-  const picks = projects.filter((p) => p.isOwn && !p.archived).slice(0, 6)
-  const contact = [
-    esc(profile.email),
-    ...profile.links.map((l) => `${esc(l.label)}: ${esc(l.handle)}`),
-    esc(site.url.replace(/^https:\/\//, '')),
-  ]
-  const body = `<h1>${esc(profile.name)}</h1>
-<p class="role">${esc(profile.role)}</p>
-<p class="contact">${contact.join(' · ')}</p>
-
-<h2>Summary</h2>
-${profile.bio.map((p) => `<p>${esc(p)}</p>`).join('\n')}
-
-<h2>Education</h2>
-<div class="entry">
-<p><strong>${esc(profile.education.program)}</strong>, ${esc(profile.education.institution)}, ${esc(profile.education.location)}${
-    profile.education.period
-      ? ` <span class="when">${esc(monthOf(profile.education.period.start))} to ${esc(monthOf(profile.education.period.end))}</span>`
-      : ''
-  }</p>
-${profile.education.cgpa ? `<p>CGPA: ${esc(profile.education.cgpa)}</p>` : ''}
-${profile.education.coursework ? `<p>Relevant coursework: ${esc(profile.education.coursework)}.</p>` : ''}
-</div>
-
-<h2>Experience</h2>
-${experience
-  .map(
-    (e) => `<div class="entry">
-<p><strong>${esc(e.role)}</strong>, ${esc(e.org)} <span class="when">${esc(monthOf(e.start))} to ${e.end ? esc(monthOf(e.end)) : 'present'}</span></p>
-<p>${esc(e.summary)}</p>
-</div>`,
-  )
-  .join('\n')}
-
-<h2>Technical skills</h2>
-${(profile.skills ?? []).map((g) => `<p class="entry"><strong>${esc(g.label)}:</strong> ${g.items.map(esc).join(', ')}</p>`).join('\n')}
-
-<h2>Selected projects</h2>
-${picks
-  .map(
-    (p) => `<div class="entry">
-<p><strong>${esc(p.name)}</strong> <span class="when">${esc(p.codeUrl.replace(/^https:\/\//, ''))}</span></p>
-${p.description ? `<p>${esc(p.description)}</p>` : ''}
-</div>`,
-  )
-  .join('\n')}
-${privateWork
-  .map(
-    (w) => `<div class="entry">
-<p><strong>${esc(w.title)}</strong> <span class="when">${esc(w.year)} · private code</span></p>
-<p>${esc(w.summary)}</p>
-</div>`,
-  )
-  .join('\n')}`
-
-  return layout({
-    site,
-    profile,
-    icon,
-    title: `CV — ${profile.name}`,
-    description: `Curriculum vitae of ${profile.name}.`,
-    path: '/cv/',
-    body,
-    bodyClass: 'cv',
-    footer: false,
   })
 }
 

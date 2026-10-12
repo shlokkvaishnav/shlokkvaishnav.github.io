@@ -15,7 +15,7 @@ import { createClient } from './lib/github.mjs'
 import { createFixtureClient } from './lib/fixtures.mjs'
 import { createIcons } from './lib/icons.mjs'
 import { rewriteReadmeHtml } from './lib/readme.mjs'
-import { cvPage, feedXml, indexPage, notFoundPage, projectPage, sitemapXml } from './lib/render.mjs'
+import { feedXml, indexPage, notFoundPage, projectPage, sitemapXml } from './lib/render.mjs'
 import { selectProjects } from './lib/select.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
@@ -74,7 +74,8 @@ export async function build({ client, root = ROOT, outDir = path.join(root, 'dis
         : null
       write(tmp, `projects/${project.name}/index.html`, projectPage({ ...shared, project, readmeHtml }))
     })
-    write(tmp, 'cv/index.html', cvPage({ ...shared, experience, privateWork, projects }))
+    // The CV link opens my own resume. To update it, replace data/Shlok_Vaishnav_Resume.pdf.
+    cpSync(path.join(root, 'data', 'Shlok_Vaishnav_Resume.pdf'), path.join(tmp, 'Shlok_Vaishnav_Resume.pdf'))
     write(tmp, '404.html', notFoundPage(shared))
     write(tmp, 'sitemap.xml', sitemapXml({ site, projects }))
     write(tmp, 'feed.xml', feedXml({ ...shared, projects }))

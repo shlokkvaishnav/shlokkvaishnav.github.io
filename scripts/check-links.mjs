@@ -1,5 +1,5 @@
 // Checks the built site. Every internal link and file reference must point to a file in the output folder.
-//   node scripts/check-links.mjs [dist] [--allow=/cv.pdf] [--external]
+//   node scripts/check-links.mjs [dist] [--allow=/path] [--external]
 // Add --external to also check that external addresses answer (needs the network).
 
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
@@ -8,7 +8,7 @@ import path from 'node:path'
 const args = process.argv.slice(2)
 const dist = path.resolve(args.find((a) => !a.startsWith('--')) ?? 'dist')
 const checkExternal = args.includes('--external')
-// Files that a later build step creates (cv.pdf), for a check before that step.
+// Paths that a later build step creates. Use only for a check that runs before that step.
 const allowed = new Set(args.filter((a) => a.startsWith('--allow=')).map((a) => a.slice(8)))
 
 function* walk(dir) {

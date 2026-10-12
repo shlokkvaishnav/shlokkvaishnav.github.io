@@ -16,7 +16,7 @@ GitHub API    ─┘   (public data only)
 
 - **Projects.** Every public repository becomes a row on the home page. The repository description is the project text. Each repository also gets its own page at `/projects/<repo>/`, made from its README.
 - **Live demo links.** A project shows "Live" if its repository has a GitHub Pages site, or a homepage address.
-- **CV.** `/cv/` is a print page made from the same data. The workflow prints it to `cv.pdf` with headless Chrome.
+- **CV.** The CV link opens my resume, the file `data/Shlok_Vaishnav_Resume.pdf`. To update it, replace that file.
 - **Feed.** `/feed.xml` is an Atom feed of project updates.
 
 ## When it updates
@@ -57,7 +57,7 @@ Node 22 or newer. There is nothing to install.
 npm test                    # unit tests
 GITHUB_TOKEN=$(gh auth token) npm run build     # build from the live GitHub API into dist/
 npm run build:offline       # build from saved answers in tests/fixtures
-node scripts/check-links.mjs dist --allow=/cv.pdf
+node scripts/check-links.mjs dist
 python3 -m http.server --directory dist 8000    # open http://localhost:8000
 ```
 

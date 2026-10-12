@@ -11,13 +11,7 @@
   "education": {
     "institution": "Nirma University",
     "program": "B.Tech, Computer Science and Engineering",
-    "location": "Ahmedabad, India",
-    "period": {
-      "start": "2024-08",
-      "end": "2028-05"
-    },
-    "cgpa": "7.58",
-    "coursework": "Data Structures and Algorithms, Design and Analysis of Algorithms, Operating Systems, Computer Networks, Database Management Systems, Discrete Mathematics"
+    "location": "Ahmedabad, India"
   },
   "links": [
     {
@@ -39,61 +33,5 @@
       "icon": "twitter-x"
     }
   ],
-  "avatar": "/assets/avatar.jpg",
-  "skills": [
-    {
-      "label": "Languages",
-      "items": [
-        "C++",
-        "Java",
-        "Python",
-        "SQL",
-        "JavaScript",
-        "TypeScript",
-        "Bash"
-      ]
-    },
-    {
-      "label": "Frameworks and backend",
-      "items": [
-        "Django",
-        "DRF",
-        "FastAPI",
-        "Next.js",
-        "React",
-        "gRPC"
-      ]
-    },
-    {
-      "label": "Databases, infrastructure and ML",
-      "items": [
-        "PostgreSQL",
-        "Redis",
-        "Kafka",
-        "CUDA",
-        "PyTorch"
-      ]
-    },
-    {
-      "label": "Tools",
-      "items": [
-        "Git",
-        "Docker",
-        "GCP",
-        "DVC",
-        "GitHub Actions",
-        "Prometheus",
-        "Grafana"
-      ]
-    },
-    {
-      "label": "Core competencies",
-      "items": [
-        "Software design",
-        "Distributed systems",
-        "Performance optimization",
-        "Data structures and algorithms"
-      ]
-    }
-  ]
+  "avatar": "/assets/avatar.jpg"
 }
