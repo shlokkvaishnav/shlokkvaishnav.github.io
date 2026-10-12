@@ -171,14 +171,13 @@ ${projects.map((p) => projectItem(p, icon)).join('\n')}
 </ul>
 ${
   privateWork.length
-    ? `<h3>${icon('lock')} Private research</h3>
+    ? `<h3>${icon('lightbulb')} Research</h3>
 <ul class="projects">
 ${privateWork
   .map(
     (w) => `<li class="project">
-<div class="head"><span class="name">${esc(w.title)}</span><span class="chip">private code</span></div>
 <p class="desc">${esc(w.summary)}</p>
-<div class="facts"><span class="fact muted">${esc(w.year)}</span></div>
+<div class="facts"><span class="chip">${esc(w.tag)}</span></div>
 </li>`,
   )
   .join('\n')}

@@ -198,3 +198,19 @@ test('a future position at the same organization joins the same timeline', () =>
   assert.match(html, /<span class="org-total">10 mos<\/span>/) // Jan to Oct 2026
   assert.match(html, /<li class="position current">/)
 })
+
+test('the Research list has a short line and a tag for each item, and no names', () => {
+  const html = indexPage(ctx)
+  assert.match(html, /<h3>[\s\S]*?Research<\/h3>/)
+  assert.doesNotMatch(html, /Private research|private code/)
+  assert.match(html, /Seeing how nodes diverge in a replicated vector index\./)
+  assert.equal((html.match(/Currently ongoing/g) ?? []).length, 2)
+  assert.doesNotMatch(html, /Replica recall divergence|Null scaffold audit|replica-recall|null-scaffold/i)
+})
+
+test('the intro is a single paragraph', () => {
+  const html = indexPage(ctx)
+  const bio = html.slice(html.indexOf('<div class="bio">'), html.indexOf('<section id="experience">'))
+  assert.equal((bio.match(/<p/g) ?? []).length, 1)
+  assert.doesNotMatch(html, /I build systems from scratch|I am a computer vision researcher/)
+})
