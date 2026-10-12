@@ -1,46 +1,13 @@
 {
-  "name": "shlok-vaishnav-portfolio",
+  "name": "shlokkvaishnav-site",
   "private": true,
-  "version": "2.0.0",
+  "version": "3.0.0",
+  "description": "A minimal personal site. It is built from my public GitHub repositories.",
   "type": "module",
+  "engines": { "node": ">=22" },
   "scripts": {
-    "predev": "node scripts/sync-fonts.mjs",
-    "dev": "vite",
-    "prebuild": "node scripts/sync-fonts.mjs",
-    "build": "tsc -b && vite build",
-    "preview": "vite preview",
-    "lint": "eslint .",
-    "format": "prettier --write \"src/**/*.{ts,tsx,css}\""
-  },
-  "dependencies": {
-    "@react-three/fiber": "^9.8.1",
-    "gsap": "^3.15.0",
-    "lenis": "^1.3.26",
-    "react": "^19.3.0",
-    "react-dom": "^19.3.0",
-    "three": "^0.186.1",
-    "zustand": "^5.0.15"
-  },
-  "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "@fontsource-variable/inter": "^5.3.0",
-    "@fontsource/ibm-plex-mono": "^5.3.0",
-    "@fontsource/instrument-serif": "^5.3.0",
-    "@tailwindcss/vite": "^4.3.3",
-    "@types/node": "^26.6.4",
-    "@types/react": "^19.3.0",
-    "@types/react-dom": "^19.3.0",
-    "@types/three": "^0.186.0",
-    "@vitejs/plugin-react": "^4.7.0",
-    "eslint": "^10.12.0",
-    "eslint-plugin-react-hooks": "^7.1.1",
-    "eslint-plugin-react-refresh": "^0.5.7",
-    "globals": "^17.13.0",
-    "prettier": "^3.9.9",
-    "tailwindcss": "^4.3.2",
-    "typescript": "^6.0.3",
-    "typescript-eslint": "^8.71.1",
-    "vite": "^6.4.3",
-    "vite-plugin-glsl": "^1.6.2"
+    "test": "node --test \"tests/**/*.test.mjs\"",
+    "build": "node scripts/build.mjs",
+    "build:offline": "node scripts/build.mjs --offline tests/fixtures --out /tmp/site-offline"
   }
 }

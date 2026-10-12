@@ -1,0 +1,30 @@
+[
+  {
+    "start": "2026-04",
+    "end": null,
+    "role": "Software Development Intern",
+    "org": "Bull Agritech",
+    "summary": "Building a crop-classification system that maps castor fields from multispectral satellite imagery. It uses deep-learning segmentation with geospatial post-processing to estimate planted acreage across farm boundaries."
+  },
+  {
+    "start": "2026-02",
+    "end": null,
+    "role": "Undergraduate Research Fellow",
+    "org": "CSE Department, Nirma University (ISRO-funded)",
+    "summary": "Morphometric analysis of lunar impact craters. I process Chandrayaan elevation data to extract depth, diameter and degradation parameters at scale."
+  },
+  {
+    "start": "2025-09",
+    "end": null,
+    "role": "Technical Team Member",
+    "org": "Data Science Club, Nirma University",
+    "summary": "Delivered machine-learning workshops to 60+ students, co-organized HACKaMINeD 2026 with 1,000+ participants, and ran bi-weekly Kaggle sessions."
+  },
+  {
+    "start": "2025-09",
+    "end": null,
+    "role": "Promotions and Publications Head",
+    "org": "IEEE Computer Society, Nirma University",
+    "summary": "Coordinated AI workshops with Google Cloud India and ran outreach campaigns for events including the IEEE Carnival."
+  }
+]

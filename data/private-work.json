@@ -1,0 +1,12 @@
+[
+  {
+    "title": "NanoDB",
+    "year": "2025",
+    "summary": "A disk-based vector search engine in C++: HNSW indexing that survives restarts, AVX2 distance kernels, multi-threaded insertion and Python bindings."
+  },
+  {
+    "title": "Climate equation discovery",
+    "year": "2025",
+    "summary": "An autonomous agent that discovers physics-validated climate equations. It uses symbolic regression guided by dynamic memory pruning and Bayesian regime tracking."
+  }
+]

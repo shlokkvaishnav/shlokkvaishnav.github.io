@@ -1,24 +1,16 @@
 node_modules
 dist
-
-# Generated at dev/build time by scripts/sync-fonts.mjs
-public/fonts
-
-# Debug
-npm-debug.log*
+dist.tmp
 
 # Local env files
 .env
 .env*.local
+
+# Debug
+npm-debug.log*
 
 # Editor
 .vscode
 .idea
 .DS_Store
 *.sw?
-
-# Claude Code
-.claude
-
-# OS
-Thumbs.db

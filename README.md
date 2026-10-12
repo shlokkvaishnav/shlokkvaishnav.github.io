@@ -1,53 +1,73 @@
-# shlokkvaishnav.dev
+# shlokkvaishnav.github.io
 
-![CI](https://github.com/shlokkvaishnav/shlokkvaishnav.github.io/actions/workflows/deploy.yml/badge.svg) ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
+![Site](https://github.com/shlokkvaishnav/shlokkvaishnav.github.io/actions/workflows/site.yml/badge.svg) ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
 
-Personal portfolio of **Shlok Vaishnav** — software engineer working across machine learning and systems. A space-instrument take on a portfolio: near-black sky, one gold telemetry accent, hairline rules, and a procedural starfield that responds to how you scroll.
+The personal site of Shlok Vaishnav: <https://shlokkvaishnav.github.io>
 
-**Live:** [shlokkvaishnav.dev](https://shlokkvaishnav.dev)
+It is one plain page. It has no framework and no npm packages. A small Node script builds it from my public GitHub repositories, so the project list is never out of date.
 
-## Stack
-
-- **Vite 6 + React 19 + strict TypeScript** — single page, no router
-- **Tailwind CSS v4** — CSS-first `@theme` design tokens
-- **GSAP ScrollTrigger + Lenis** — one rAF owner; scroll progress flows through a transient zustand store so scrolling never re-renders React
-- **React Three Fiber** — orthographic point-sprite starfield with custom GLSL (develop-in, twinkle, velocity streaks, cursor gravity, depth grade); loaded in its own chunk on idle, after LCP
-- **Fontsource subsets** — Instrument Serif · Inter Variable · IBM Plex Mono, self-hosted with metric-compatible fallbacks
-
-## Architecture
+## How it works
 
 ```
-src/
-  content/     all copy and data, typed — the single source of truth
-  sections/    Hero, About, Experience, Projects, Skills, Contact
-  scene/       Canvas root, quality tiers (0–2), GLSL shaders
-  animation/   Lenis+ScrollTrigger spine, scroll store, choreography
-  exhibits/    one playable demo per project, lazy chunks
-  eggs/        discovery registry, terminal, constellation, detectors
-  components/  nav, progress rail, bracket engine, footer instruments
+data/*.json   ─┐
+content/*.md  ─┼─> scripts/build.mjs ──> dist/ ──> GitHub Pages
+GitHub API    ─┘   (public data only)
 ```
 
-Notable decisions:
+- **Projects.** Every public repository becomes a row on the home page. The repository description is the project text. Each repository also gets its own page at `/projects/<repo>/`, made from its README.
+- **Live demo links.** A project shows "Live" if its repository has a GitHub Pages site, or a homepage address.
+- **Status chip.** `active` means a push in the last 90 days. `stable` means in the last year. Older is `dormant`.
+- **Recently.** The three newest commits (by a person, not a bot) across my own public repositories.
+- **CV.** `/cv/` is a print page made from the same data. The workflow prints it to `cv.pdf` with headless Chrome.
+- **Feed.** `/feed.xml` is an Atom feed of project updates.
 
-- **Playable exhibits.** Every project card demonstrates the real thing: a live k-NN probe with measured scan times (NanoDB), hold-to-ablate equation terms with ΔRMSE (Climate Equation Discovery), a weekly collaboration graph that surfaces silo risk (Meridian), and an actual logistic model behind sliders with a risk-reactive ECG (Cardiovascular Risk).
-- **Tiered sky.** Tier 2 gets the full WebGL field; tier 1 fewer stars and capped DPR; tier 0, lost contexts, and `prefers-reduced-motion` get an instant CSS starfield. Reduced motion is a parallel design — final states, not missing features.
-- **Motion grammar.** Mechanical elements (stamps, numerals, ticks) swap with no easing; physical elements (rules, ink, needles) arrive on expo/power curves. Gold only ever marks live data.
-- **Discoveries.** Seven hidden finds persist in localStorage and light the footer tray. Start with <kbd>`</kbd> or <kbd>?</kbd> — or open the browser console.
+## When it updates
 
-## Development
+The workflow `.github/workflows/site.yml` builds and deploys the site:
 
-```bash
-npm install
-npm run dev       # dev server (syncs font subsets first)
-npm run build     # tsc -b + vite build → dist/
-npm run lint      # eslint, zero warnings allowed
+- on every push to `main`,
+- every 6 hours,
+- when you start it by hand (Actions tab, "Run workflow").
+
+The build fails if GitHub returns no repositories or a request fails. A failed build does not deploy, so the live site stays as it was.
+
+## What to edit
+
+| What | Where |
+|---|---|
+| Name, bio, links, email | `data/profile.json` |
+| Experience and news | `data/experience.json`, `data/news.json` |
+| Research with no public code | `data/private-work.json` |
+| The `/now` page | `content/now.md` (first line: `updated: YYYY-MM-DD`) |
+| Which repositories show, order, live links | `data/config.json` |
+| Look | `assets/style.css` |
+
+`data/config.json`:
+
+- `exclude`: repository names to hide. The profile repository and this repository are hidden.
+- `pin`: repositories to show first, in this order. The rest follow, newest push first.
+- `ownForks`: forks that are my own work. They get no "fork" chip and can appear in "Recently".
+- `liveOverride`: set the live link for a repository, or `null` to show none.
+
+To change a project's text, change its description on GitHub. The next build picks it up.
+
+## Run it on your computer
+
+Node 22 or newer. There is nothing to install.
+
+```sh
+npm test                    # unit tests
+GITHUB_TOKEN=$(gh auth token) npm run build     # build from the live GitHub API into dist/
+npm run build:offline       # build from saved answers in tests/fixtures
+node scripts/check-links.mjs dist --allow=/cv.pdf
+python3 -m http.server --directory dist 8000    # open http://localhost:8000
 ```
 
-Deployed to GitHub Pages by `.github/workflows/deploy.yml` on every push to `main`; the custom domain rides along in `public/CNAME`.
+`GITHUB_TOKEN` is optional. Without it, GitHub allows 60 requests per hour.
 
-## Colophon
+## Old design
 
-Type: Instrument Serif, Inter, IBM Plex Mono (OFL, via Fontsource). Lunar phase and meteor-shower windows are computed locally — the site makes no network requests beyond its own assets.
+The earlier React and Three.js design is kept in git history. See the tag `archive/observatory-v2`.
 
 ## License
 

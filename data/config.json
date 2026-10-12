@@ -1,0 +1,21 @@
+{
+  "owner": "shlokkvaishnav",
+  "siteUrl": "https://shlokkvaishnav.github.io",
+  "exclude": ["shlokkvaishnav", "shlokkvaishnav.github.io"],
+  "pin": [
+    "llm-inference-engine",
+    "freespace",
+    "quorum",
+    "meridian",
+    "cardiovascular-risk",
+    "layoff-analysis",
+    "lunar-ridge-detection"
+  ],
+  "ownForks": ["layoff-analysis"],
+  "liveOverride": {
+    "layoff-analysis": "https://layoff-analysis.vercel.app",
+    "cardiovascular-risk": "https://cardiovascular-risk.vercel.app",
+    "quorum": null
+  },
+  "recentCount": 3
+}

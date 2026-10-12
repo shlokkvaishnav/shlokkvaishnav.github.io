@@ -1,0 +1,136 @@
+// Builds the whole site into dist/.
+//
+//   node scripts/build.mjs                         read the live GitHub API (set GITHUB_TOKEN to avoid rate limits)
+//   node scripts/build.mjs --offline <dir>         read saved answers from <dir> (used by the tests and CI)
+//   node scripts/build.mjs --out <dir>             write somewhere other than dist/
+//
+// The build writes to a temporary folder first. It replaces the output folder only after every step worked.
+// A failed build therefore never leaves an empty or half-written site.
+
+import { cpSync, existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs'
+import path from 'node:path'
+import { fileURLToPath, pathToFileURL } from 'node:url'
+
+import { createClient } from './lib/github.mjs'
+import { createFixtureClient } from './lib/fixtures.mjs'
+import { renderMarkdown } from './lib/markdown.mjs'
+import { rewriteReadmeHtml } from './lib/readme.mjs'
+import { cvPage, feedXml, indexPage, notFoundPage, nowPage, projectPage, sitemapXml } from './lib/render.mjs'
+import { selectProjects } from './lib/select.mjs'
+
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
+
+// Runs `fn` on every item, with at most `limit` calls at the same time.
+async function mapLimit(items, limit, fn) {
+  const results = new Array(items.length)
+  let next = 0
+  const workers = Array.from({ length: Math.min(limit, items.length) }, async () => {
+    while (next < items.length) {
+      const i = next++
+      results[i] = await fn(items[i])
+    }
+  })
+  await Promise.all(workers)
+  return results
+}
+
+function write(base, file, content) {
+  const target = path.join(base, file)
+  mkdirSync(path.dirname(target), { recursive: true })
+  writeFileSync(target, content)
+}
+
+// content/now.md may start with a line "updated: 2026-10-12".
+function readNow(root) {
+  const file = path.join(root, 'content', 'now.md')
+  if (!existsSync(file)) return { html: '<p>Nothing here yet.</p>', updated: null }
+  let text = readFileSync(file, 'utf8')
+  let updated = null
+  const match = /^updated:\s*(\d{4}-\d{2}-\d{2})\s*\n/i.exec(text)
+  if (match) {
+    updated = `${match[1]}T00:00:00Z`
+    text = text.slice(match[0].length)
+  }
+  return { html: renderMarkdown(text), updated }
+}
+
+export async function build({ client, root = ROOT, outDir = path.join(root, 'dist'), now = new Date() }) {
+  const readJson = (name) => JSON.parse(readFileSync(path.join(root, 'data', name), 'utf8'))
+  const config = readJson('config.json')
+  const profile = readJson('profile.json')
+  const experience = readJson('experience.json')
+  const news = readJson('news.json')
+  const privateWork = readJson('private-work.json')
+
+  const repos = await client.listPublicRepos(config.owner)
+  const projects = selectProjects(repos, config, now)
+  if (projects.length === 0) {
+    throw new Error('GitHub returned no public repositories. Not building an empty site.')
+  }
+
+  const readmes = await mapLimit(projects, 4, (p) => client.getReadmeHtml(config.owner, p.name))
+  const commits = await mapLimit(
+    projects.filter((p) => p.isOwn && !p.archived),
+    4,
+    (p) => client.getLatestCommit(config.owner, p.name),
+  )
+  const recent = commits
+    .filter(Boolean)
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .slice(0, config.recentCount ?? 3)
+
+  const site = {
+    url: config.siteUrl,
+    builtAt: now.toISOString(),
+    sourceUrl: `https://github.com/${config.owner}/${config.owner}.github.io`,
+  }
+  const shared = { site, profile }
+  const tmp = `${outDir}.tmp`
+  rmSync(tmp, { recursive: true, force: true })
+  mkdirSync(tmp, { recursive: true })
+
+  try {
+    write(tmp, 'index.html', indexPage({ ...shared, experience, news, privateWork, projects, recent }))
+    projects.forEach((project, i) => {
+      const readmeHtml = readmes[i]
+        ? rewriteReadmeHtml(readmes[i], { owner: config.owner, repo: project.name, branch: project.defaultBranch })
+        : null
+      write(tmp, `projects/${project.name}/index.html`, projectPage({ ...shared, project, readmeHtml }))
+    })
+    write(tmp, 'now/index.html', nowPage({ ...shared, ...readNow(root) }))
+    write(tmp, 'cv/index.html', cvPage({ ...shared, experience, privateWork, projects }))
+    write(tmp, '404.html', notFoundPage(shared))
+    write(tmp, 'sitemap.xml', sitemapXml({ site, projects }))
+    write(tmp, 'feed.xml', feedXml({ ...shared, projects }))
+    write(tmp, 'robots.txt', `User-agent: *\nAllow: /\nSitemap: ${site.url}/sitemap.xml\n`)
+    write(tmp, '.nojekyll', '')
+    cpSync(path.join(root, 'assets'), path.join(tmp, 'assets'), { recursive: true })
+    cpSync(path.join(root, 'assets', 'favicon.svg'), path.join(tmp, 'favicon.svg'))
+  } catch (error) {
+    rmSync(tmp, { recursive: true, force: true })
+    throw error
+  }
+
+  rmSync(outDir, { recursive: true, force: true })
+  renameSync(tmp, outDir)
+  return { projects: projects.length, recent: recent.length, outDir }
+}
+
+// Command line
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  const args = process.argv.slice(2)
+  const option = (name) => {
+    const i = args.indexOf(name)
+    return i === -1 ? null : args[i + 1]
+  }
+  const offline = option('--offline')
+  const out = option('--out')
+  try {
+    const client = offline ? createFixtureClient(path.resolve(offline)) : createClient()
+    const result = await build({ client, ...(out ? { outDir: path.resolve(out) } : {}) })
+    console.log(`Built ${result.projects} project pages and ${result.recent} recent commits into ${result.outDir}`)
+  } catch (error) {
+    console.error(`Build failed: ${error.message}`)
+    process.exit(1)
+  }
+}

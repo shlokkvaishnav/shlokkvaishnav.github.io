@@ -1,9 +1,9 @@
 name: CI
 
+# Checks pull requests (for example Dependabot) without touching GitHub or the live site.
+
 on:
   pull_request:
-  push:
-    branches: [main]
 
 jobs:
   check:
@@ -14,13 +14,12 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 22
-          cache: npm
 
-      - name: Install packages
-        run: npm ci
+      - name: Run the tests
+        run: node --test "tests/**/*.test.mjs"
 
-      - name: Lint
-        run: npm run lint
+      - name: Build from saved answers
+        run: node scripts/build.mjs --offline tests/fixtures --out "$RUNNER_TEMP/site"
 
-      - name: Type check and build
-        run: npm run build
+      - name: Check the links
+        run: node scripts/check-links.mjs "$RUNNER_TEMP/site" --allow=/cv.pdf

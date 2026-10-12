@@ -1,0 +1,21 @@
+{
+  "name": "Shlok Vaishnav",
+  "role": "Computer science undergraduate · machine learning and systems",
+  "bio": [
+    "I am a computer science undergraduate at Nirma University. I work on machine learning and systems, and I like research ideas that are made fast, reliable and deployable.",
+    "Right now I map castor fields from multispectral satellite imagery at Bull Agritech, and I extract the shape of lunar impact craters from Chandrayaan elevation data on an ISRO-funded research fellowship.",
+    "I build engines from scratch to understand them: a vector database in C++, an LLM inference engine with paged attention, and an agent that rediscovers physics equations."
+  ],
+  "availability": "Open to internships and research collaborations.",
+  "email": "shlok9640@gmail.com",
+  "education": {
+    "institution": "Nirma University",
+    "program": "B.Tech, Computer Science and Engineering",
+    "location": "Ahmedabad, India"
+  },
+  "links": [
+    { "label": "GitHub", "handle": "shlokkvaishnav", "href": "https://github.com/shlokkvaishnav" },
+    { "label": "LinkedIn", "handle": "in/shlok-vaishnav", "href": "https://www.linkedin.com/in/shlok-vaishnav" },
+    { "label": "X", "handle": "@shlokkvaishnav", "href": "https://twitter.com/shlokkvaishnav" }
+  ]
+}

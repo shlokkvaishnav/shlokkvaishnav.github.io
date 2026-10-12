@@ -1,0 +1,177 @@
+[
+  {
+    "name": "quorum",
+    "private": false,
+    "visibility": "public",
+    "fork": false,
+    "archived": false,
+    "disabled": false,
+    "description": "A tool where three AI reviewers check a vendor invoice.",
+    "language": "Python",
+    "topics": [
+      "ai-agents",
+      "llm"
+    ],
+    "homepage": "",
+    "has_pages": true,
+    "html_url": "https://github.com/shlokkvaishnav/quorum",
+    "pushed_at": "2026-10-10T10:00:00Z",
+    "default_branch": "main",
+    "license": {
+      "spdx_id": "MIT"
+    }
+  },
+  {
+    "name": "llm-inference-engine",
+    "private": false,
+    "visibility": "public",
+    "fork": false,
+    "archived": false,
+    "disabled": false,
+    "description": "llm-inference-engine description",
+    "language": "Python",
+    "topics": [
+      "llm-inference",
+      "triton"
+    ],
+    "homepage": "",
+    "has_pages": false,
+    "html_url": "https://github.com/shlokkvaishnav/llm-inference-engine",
+    "pushed_at": "2026-10-08T10:00:00Z",
+    "default_branch": "main",
+    "license": {
+      "spdx_id": "MIT"
+    }
+  },
+  {
+    "name": "kornia",
+    "private": false,
+    "visibility": "public",
+    "fork": true,
+    "archived": false,
+    "disabled": false,
+    "description": "kornia description",
+    "language": "Python",
+    "topics": [],
+    "homepage": "https://kornia.readthedocs.io",
+    "has_pages": false,
+    "html_url": "https://github.com/shlokkvaishnav/kornia",
+    "pushed_at": "2026-09-01T10:00:00Z",
+    "default_branch": "main",
+    "license": {
+      "spdx_id": "Apache-2.0"
+    }
+  },
+  {
+    "name": "layoff-analysis",
+    "private": false,
+    "visibility": "public",
+    "fork": true,
+    "archived": false,
+    "disabled": false,
+    "description": "layoff-analysis description",
+    "language": "Python",
+    "topics": [],
+    "homepage": "https://layoff-analysis.vercel.app",
+    "has_pages": true,
+    "html_url": "https://github.com/shlokkvaishnav/layoff-analysis",
+    "pushed_at": "2026-09-20T10:00:00Z",
+    "default_branch": "main",
+    "license": {
+      "spdx_id": "MIT"
+    }
+  },
+  {
+    "name": "secret-research",
+    "private": true,
+    "visibility": "private",
+    "fork": false,
+    "archived": false,
+    "disabled": false,
+    "description": "secret-research description",
+    "language": "Python",
+    "topics": [],
+    "homepage": "",
+    "has_pages": false,
+    "html_url": "https://github.com/shlokkvaishnav/secret-research",
+    "pushed_at": "2026-10-10T10:00:00Z",
+    "default_branch": "main",
+    "license": {
+      "spdx_id": "MIT"
+    }
+  },
+  {
+    "name": "shlokkvaishnav.github.io",
+    "private": false,
+    "visibility": "public",
+    "fork": false,
+    "archived": false,
+    "disabled": false,
+    "description": "shlokkvaishnav.github.io description",
+    "language": "Python",
+    "topics": [],
+    "homepage": "",
+    "has_pages": true,
+    "html_url": "https://github.com/shlokkvaishnav/shlokkvaishnav.github.io",
+    "pushed_at": "2026-10-10T10:00:00Z",
+    "default_branch": "main",
+    "license": {
+      "spdx_id": "MIT"
+    }
+  },
+  {
+    "name": "shlokkvaishnav",
+    "private": false,
+    "visibility": "public",
+    "fork": false,
+    "archived": false,
+    "disabled": false,
+    "description": "shlokkvaishnav description",
+    "language": "Python",
+    "topics": [],
+    "homepage": "",
+    "has_pages": false,
+    "html_url": "https://github.com/shlokkvaishnav/shlokkvaishnav",
+    "pushed_at": "2026-10-10T10:00:00Z",
+    "default_branch": "main",
+    "license": {
+      "spdx_id": "MIT"
+    }
+  },
+  {
+    "name": "bad name!",
+    "private": false,
+    "visibility": "public",
+    "fork": false,
+    "archived": false,
+    "disabled": false,
+    "description": "bad name! description",
+    "language": "Python",
+    "topics": [],
+    "homepage": "",
+    "has_pages": false,
+    "html_url": "https://github.com/shlokkvaishnav/bad name!",
+    "pushed_at": "2026-10-10T10:00:00Z",
+    "default_branch": "main",
+    "license": {
+      "spdx_id": "MIT"
+    }
+  },
+  {
+    "name": "old-project",
+    "private": false,
+    "visibility": "public",
+    "fork": false,
+    "archived": true,
+    "disabled": false,
+    "description": "<script>alert(\"x\")</script> & \"quotes\"",
+    "language": "Python",
+    "topics": [],
+    "homepage": "",
+    "has_pages": false,
+    "html_url": "https://github.com/shlokkvaishnav/old-project",
+    "pushed_at": "2024-01-01T10:00:00Z",
+    "default_branch": "main",
+    "license": null
+  }
+]

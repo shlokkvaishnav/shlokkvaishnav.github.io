@@ -1,0 +1,68 @@
+name: Build and deploy the site
+
+# The site reads my public GitHub repositories, so it must be rebuilt now and then.
+# It builds on every push, every 6 hours, and when started by hand.
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "23 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Runs wait for each other. A deploy is never cancelled half way.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      - name: Run the tests
+        run: node --test "tests/**/*.test.mjs"
+
+      # The build fails if GitHub returns no repositories or a request fails.
+      # A failed build does not deploy, so the live site stays as it is.
+      - name: Build the site from GitHub
+        run: node scripts/build.mjs
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Print the CV page to cv.pdf
+        run: |
+          python3 -m http.server 8123 --directory dist >/dev/null 2>&1 &
+          server=$!
+          sleep 2
+          google-chrome --headless=new --no-sandbox --disable-gpu --no-pdf-header-footer \
+            --print-to-pdf=dist/cv.pdf http://localhost:8123/cv/
+          kill "$server"
+          test -s dist/cv.pdf
+
+      - name: Check the links
+        run: node scripts/check-links.mjs dist
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

@@ -1,18 +1,10 @@
 version: 2
 updates:
-  - package-ecosystem: "npm"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 5
-    groups:
-      minor-and-patch:
-        update-types: ["minor", "patch"]
+  # The site has no npm packages. Only the workflow actions need updates.
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 5
+      interval: "monthly"
     groups:
-      minor-and-patch:
-        update-types: ["minor", "patch"]
+      actions:
+        patterns: ["*"]
