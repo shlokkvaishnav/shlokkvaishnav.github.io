@@ -42,10 +42,10 @@ test('the live link appears only when there is one', () => {
   assert.doesNotMatch(projectPage({ site, profile, icon, project: none, readmeHtml: '' }), /Live demo/)
 })
 
-test('the sitemap lists the home page, /now/ and every project page', () => {
+test('the sitemap lists the home page and every project page', () => {
   const xml = sitemapXml({ site, projects })
   assert.match(xml, /<loc>https:\/\/example\.test\/<\/loc>/)
-  assert.match(xml, /<loc>https:\/\/example\.test\/now\/<\/loc>/)
+  assert.doesNotMatch(xml, /\/now\//)
   for (const p of projects) assert.ok(xml.includes(`/projects/${p.name}/</loc>`), p.name)
 })
 
@@ -75,7 +75,7 @@ test('the home page has no News, Recently or search bar', () => {
 test('project rows show the language colour, the status and icon links', () => {
   const html = indexPage(ctx)
   assert.match(html, /<i class="dot" style="--dot:#3572A5"><\/i>Python/)
-  assert.match(html, /class="fact status-active"/)
+  assert.doesNotMatch(html, /status-|>active<|>stable<|>dormant</)
   assert.match(html, /<svg class="icon"[^>]*>[\s\S]*?<\/svg> Code/)
 })
 
@@ -110,4 +110,13 @@ test('the home page and the CV show the current roles, not the old ones', () => 
 test('no public page contains the phone number', () => {
   const all = [indexPage(ctx), cvPage(ctx)].join('\n')
   assert.doesNotMatch(all, /7984739443|\+91/)
+})
+
+test('the home page has no Now link', () => {
+  assert.doesNotMatch(indexPage(ctx), /href="\/now\/"|>Now</)
+})
+
+test('the tab title of the home page is just the name', () => {
+  assert.match(indexPage(ctx), /<title>Shlok Vaishnav<\/title>/)
+  assert.match(indexPage(ctx), /<meta property="og:title" content="Shlok Vaishnav">/)
 })

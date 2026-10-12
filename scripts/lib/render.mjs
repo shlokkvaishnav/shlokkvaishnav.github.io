@@ -54,12 +54,11 @@ function chips(project) {
   return out.join('')
 }
 
-// Small facts about a project: language, status, licence, last push. Each fact has a dot or text, no separators.
+// Small facts about a project: language, licence, last push. Each fact has a dot or text, no separators.
 function facts(project, { license = false } = {}) {
   const dot = project.languageColor ? ` style="--dot:${esc(project.languageColor)}"` : ''
   return `<div class="facts">
 ${project.language ? `<span class="fact"><i class="dot"${dot}></i>${esc(project.language)}</span>` : ''}
-<span class="fact status-${project.status}"><i class="dot"></i>${project.status}</span>
 ${license && project.license ? `<span class="fact muted">${esc(project.license)} licence</span>` : ''}
 <span class="fact muted">Updated ${esc(formatDate(project.pushedAt))}</span>
 </div>`
@@ -99,7 +98,6 @@ export function indexPage({ site, profile, icon, experience, privateWork, projec
     `<a class="ilink" href="mailto:${esc(profile.email)}">${icon('envelope')} Email</a>`,
     `<a class="ilink" href="/cv.pdf">${icon('file-earmark-person')} CV</a>`,
     ...profile.links.map((l) => `<a class="ilink" href="${esc(l.href)}">${icon(l.icon)} ${esc(l.label)}</a>`),
-    `<a class="ilink" href="/now/">${icon('compass')} Now</a>`,
   ]
 
   const body = `<div class="layout">
@@ -173,7 +171,7 @@ ${privateWork
     site,
     profile,
     icon,
-    title: `${profile.name} — ${profile.role}`,
+    title: profile.name,
     description: profile.bio[0],
     path: '/',
     bodyClass: 'home',
@@ -202,24 +200,6 @@ ${readmeHtml ?? '<p class="muted">This repository has no README.</p>'}
     title: `${project.name} — ${profile.name}`,
     description: project.description || `${project.name}, a project by ${profile.name}.`,
     path: `/projects/${project.name}/`,
-    body,
-  })
-}
-
-export function nowPage({ site, profile, icon, html, updated }) {
-  const body = `<p class="crumb"><a class="ilink" href="/">${icon('arrow-left')} ${esc(profile.name)}</a></p>
-<h1>Now</h1>
-${updated ? `<p class="meta">Updated ${esc(formatDate(updated))}</p>` : ''}
-<div class="prose">
-${html}
-</div>`
-  return layout({
-    site,
-    profile,
-    icon,
-    title: `Now — ${profile.name}`,
-    description: `What ${profile.name} studies and builds at the moment.`,
-    path: '/now/',
     body,
   })
 }
@@ -310,7 +290,6 @@ export function notFoundPage({ site, profile, icon }) {
 export function sitemapXml({ site, projects }) {
   const urls = [
     { loc: `${site.url}/`, lastmod: site.builtAt },
-    { loc: `${site.url}/now/`, lastmod: site.builtAt },
     ...projects.map((p) => ({ loc: `${site.url}/projects/${p.name}/`, lastmod: p.pushedAt })),
   ]
   return `<?xml version="1.0" encoding="UTF-8"?>

@@ -1,17 +1,8 @@
 // Chooses which repositories appear on the site, and derives what to show for each.
 
-const DAY = 86_400_000
-
 // A repo name becomes a folder name. Allow only plain names.
 export function isSafeSlug(name) {
   return /^[A-Za-z0-9._-]+$/.test(name) && name !== '.' && name !== '..'
-}
-
-export function statusOf(pushedAt, now = new Date()) {
-  const days = (now.getTime() - new Date(pushedAt).getTime()) / DAY
-  if (days < 90) return 'active'
-  if (days < 365) return 'stable'
-  return 'dormant'
 }
 
 // The address of the live demo, or null.
@@ -24,7 +15,7 @@ export function liveUrlOf(repo, config) {
 }
 
 // `colors` maps a language name to a colour, for the dot in the project list.
-export function selectProjects(repos, config, now = new Date(), colors = {}) {
+export function selectProjects(repos, config, _now = new Date(), colors = {}) {
   const exclude = new Set(config.exclude ?? [])
   const ownForks = new Set(config.ownForks ?? [])
   const pin = config.pin ?? []
@@ -32,6 +23,8 @@ export function selectProjects(repos, config, now = new Date(), colors = {}) {
   const projects = repos
     .filter((r) => r.private !== true && r.visibility !== 'private')
     .filter((r) => !r.disabled && !exclude.has(r.name) && isSafeSlug(r.name))
+    // Forks of other people's projects stay hidden. A fork listed in `ownForks` is my own work.
+    .filter((r) => !(config.hideForks && r.fork && !ownForks.has(r.name)))
     .map((r) => ({
       name: r.name,
       description: r.description ?? '',
@@ -46,7 +39,6 @@ export function selectProjects(repos, config, now = new Date(), colors = {}) {
       pushedAt: r.pushed_at,
       license: r.license?.spdx_id && r.license.spdx_id !== 'NOASSERTION' ? r.license.spdx_id : null,
       defaultBranch: r.default_branch ?? 'main',
-      status: statusOf(r.pushed_at, now),
     }))
 
   const rank = (name) => {

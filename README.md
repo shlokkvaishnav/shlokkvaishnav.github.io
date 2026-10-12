@@ -16,7 +16,6 @@ GitHub API    ─┘   (public data only)
 
 - **Projects.** Every public repository becomes a row on the home page. The repository description is the project text. Each repository also gets its own page at `/projects/<repo>/`, made from its README.
 - **Live demo links.** A project shows "Live" if its repository has a GitHub Pages site, or a homepage address.
-- **Status.** `active` means a push in the last 90 days. `stable` means in the last year. Older is `dormant`.
 - **CV.** `/cv/` is a print page made from the same data. The workflow prints it to `cv.pdf` with headless Chrome.
 - **Feed.** `/feed.xml` is an Atom feed of project updates.
 
@@ -37,7 +36,6 @@ The build fails if GitHub returns no repositories or a request fails. A failed b
 | Name, bio, links, email | `data/profile.json` |
 | Experience | `data/experience.json` |
 | Research with no public code | `data/private-work.json` |
-| The `/now` page | `content/now.md` (first line: `updated: YYYY-MM-DD`) |
 | Which repositories show, order, live links | `data/config.json` |
 | Look | `assets/style.css`. Icons, fonts and their licences: `assets/CREDITS.md` |
 
@@ -45,7 +43,8 @@ The build fails if GitHub returns no repositories or a request fails. A failed b
 
 - `exclude`: repository names to hide. The profile repository and this repository are hidden.
 - `pin`: repositories to show first, in this order. The rest follow, newest push first.
-- `ownForks`: forks that are my own work. They get no "fork" chip and can appear in "Recently".
+- `hideForks`: when `true`, forks of other people's projects are not shown.
+- `ownForks`: forks that are my own work. They are shown even when `hideForks` is `true`.
 - `liveOverride`: set the live link for a repository, or `null` to show none.
 
 To change a project's text, change its description on GitHub. The next build picks it up.

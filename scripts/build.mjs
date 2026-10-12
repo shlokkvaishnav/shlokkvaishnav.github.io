@@ -14,9 +14,8 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 import { createClient } from './lib/github.mjs'
 import { createFixtureClient } from './lib/fixtures.mjs'
 import { createIcons } from './lib/icons.mjs'
-import { renderMarkdown } from './lib/markdown.mjs'
 import { rewriteReadmeHtml } from './lib/readme.mjs'
-import { cvPage, feedXml, indexPage, notFoundPage, nowPage, projectPage, sitemapXml } from './lib/render.mjs'
+import { cvPage, feedXml, indexPage, notFoundPage, projectPage, sitemapXml } from './lib/render.mjs'
 import { selectProjects } from './lib/select.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
@@ -39,20 +38,6 @@ function write(base, file, content) {
   const target = path.join(base, file)
   mkdirSync(path.dirname(target), { recursive: true })
   writeFileSync(target, content)
-}
-
-// content/now.md may start with a line "updated: 2026-10-12".
-function readNow(root) {
-  const file = path.join(root, 'content', 'now.md')
-  if (!existsSync(file)) return { html: '<p>Nothing here yet.</p>', updated: null }
-  let text = readFileSync(file, 'utf8')
-  let updated = null
-  const match = /^updated:\s*(\d{4}-\d{2}-\d{2})\s*\n/i.exec(text)
-  if (match) {
-    updated = `${match[1]}T00:00:00Z`
-    text = text.slice(match[0].length)
-  }
-  return { html: renderMarkdown(text), updated }
 }
 
 export async function build({ client, root = ROOT, outDir = path.join(root, 'dist'), now = new Date() }) {
@@ -89,7 +74,6 @@ export async function build({ client, root = ROOT, outDir = path.join(root, 'dis
         : null
       write(tmp, `projects/${project.name}/index.html`, projectPage({ ...shared, project, readmeHtml }))
     })
-    write(tmp, 'now/index.html', nowPage({ ...shared, ...readNow(root) }))
     write(tmp, 'cv/index.html', cvPage({ ...shared, experience, privateWork, projects }))
     write(tmp, '404.html', notFoundPage(shared))
     write(tmp, 'sitemap.xml', sitemapXml({ site, projects }))

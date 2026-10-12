@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { isSafeSlug, liveUrlOf, selectProjects, statusOf } from '../scripts/lib/select.mjs'
+import { isSafeSlug, liveUrlOf, selectProjects } from '../scripts/lib/select.mjs'
 
 const repos = JSON.parse(readFileSync(new URL('./fixtures/repos.json', import.meta.url), 'utf8'))
 const now = new Date('2026-10-12T00:00:00Z')
@@ -10,32 +10,38 @@ const config = {
   exclude: ['shlokkvaishnav', 'shlokkvaishnav.github.io'],
   pin: ['quorum'],
   ownForks: ['layoff-analysis'],
+  hideForks: true,
   liveOverride: { 'layoff-analysis': 'https://layoff-analysis.vercel.app' },
 }
 
 test('keeps public repos and drops private, excluded and unsafe names', () => {
   const names = selectProjects(repos, config, now).map((p) => p.name)
-  assert.deepEqual([...names].sort(), ['kornia', 'layoff-analysis', 'llm-inference-engine', 'old-project', 'quorum'])
+  assert.deepEqual([...names].sort(), ['layoff-analysis', 'llm-inference-engine', 'old-project', 'quorum'])
 })
 
 test('pinned repos come first, the rest by newest push', () => {
   const names = selectProjects(repos, config, now).map((p) => p.name)
   assert.equal(names[0], 'quorum')
-  assert.deepEqual(names.slice(1), ['llm-inference-engine', 'layoff-analysis', 'kornia', 'old-project'])
+  assert.deepEqual(names.slice(1), ['llm-inference-engine', 'layoff-analysis', 'old-project'])
 })
 
-test('a fork shows a fork chip unless it is listed as own work', () => {
-  const byName = Object.fromEntries(selectProjects(repos, config, now).map((p) => [p.name, p]))
-  assert.equal(byName.kornia.isFork, true)
-  assert.equal(byName.kornia.isOwn, false)
-  assert.equal(byName['layoff-analysis'].isFork, false)
-  assert.equal(byName['layoff-analysis'].isOwn, true)
+test('forks of other projects are hidden, but a fork listed as own work stays', () => {
+  const names = selectProjects(repos, config, now).map((p) => p.name)
+  assert.ok(!names.includes('kornia'))
+  assert.ok(names.includes('layoff-analysis'))
+  const own = selectProjects(repos, config, now).find((p) => p.name === 'layoff-analysis')
+  assert.equal(own.isFork, false)
 })
 
-test('status depends on the age of the last push', () => {
-  assert.equal(statusOf('2026-10-01T00:00:00Z', now), 'active')
-  assert.equal(statusOf('2026-03-01T00:00:00Z', now), 'stable')
-  assert.equal(statusOf('2024-01-01T00:00:00Z', now), 'dormant')
+test('with hideForks off, a fork shows with a fork flag', () => {
+  const all = selectProjects(repos, { ...config, hideForks: false }, now)
+  const kornia = all.find((p) => p.name === 'kornia')
+  assert.equal(kornia.isFork, true)
+  assert.equal(kornia.isOwn, false)
+})
+
+test('a project has no status field', () => {
+  for (const p of selectProjects(repos, config, now)) assert.equal('status' in p, false)
 })
 
 test('live address: override, then own Pages site, then homepage, else none', () => {

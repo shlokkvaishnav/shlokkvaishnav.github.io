@@ -12,11 +12,13 @@ const now = new Date('2026-10-12T00:00:00Z')
 test('builds the whole site from saved answers', async () => {
   const outDir = path.join(mkdtempSync(path.join(tmpdir(), 'site-')), 'dist')
   const result = await build({ client: createFixtureClient(fixtures), outDir, now })
-  assert.equal(result.projects, 5)
-  for (const f of ['index.html', '404.html', 'now/index.html', 'cv/index.html', 'sitemap.xml', 'feed.xml', 'robots.txt', 'favicon.svg', 'assets/style.css', 'assets/avatar.jpg', 'assets/fonts/literata.woff2', '.nojekyll', 'projects/quorum/index.html', 'projects/kornia/index.html']) {
+  assert.equal(result.projects, 4) // kornia is a fork, so it is hidden
+  for (const f of ['index.html', '404.html', 'cv/index.html', 'sitemap.xml', 'feed.xml', 'robots.txt', 'favicon.svg', 'assets/style.css', 'assets/avatar.jpg', 'assets/fonts/literata.woff2', '.nojekyll', 'projects/quorum/index.html']) {
     assert.ok(existsSync(path.join(outDir, f)), f)
   }
   assert.ok(!existsSync(path.join(outDir, 'projects/secret-research')))
+  assert.ok(!existsSync(path.join(outDir, 'projects/kornia')), 'forks are hidden')
+  assert.ok(!existsSync(path.join(outDir, 'now')), 'there is no /now/ page')
   assert.ok(!existsSync(`${outDir}.tmp`))
   const quorum = readFileSync(path.join(outDir, 'projects/quorum/index.html'), 'utf8')
   assert.match(quorum, /raw\.githubusercontent\.com\/shlokkvaishnav\/quorum\/main\/docs\/diagram\.png/)

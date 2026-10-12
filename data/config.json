@@ -21,5 +21,6 @@
     "layoff-analysis": "https://layoff-analysis.vercel.app",
     "cardiovascular-risk": "https://cardiovascular-risk.vercel.app",
     "quorum": null
-  }
+  },
+  "hideForks": true
 }
