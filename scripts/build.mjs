@@ -14,25 +14,10 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 import { createClient } from './lib/github.mjs'
 import { createFixtureClient } from './lib/fixtures.mjs'
 import { createIcons } from './lib/icons.mjs'
-import { rewriteReadmeHtml } from './lib/readme.mjs'
-import { feedXml, indexPage, notFoundPage, projectPage, sitemapXml } from './lib/render.mjs'
+import { feedXml, indexPage, notFoundPage, sitemapXml } from './lib/render.mjs'
 import { selectProjects } from './lib/select.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-
-// Runs `fn` on every item, with at most `limit` calls at the same time.
-async function mapLimit(items, limit, fn) {
-  const results = new Array(items.length)
-  let next = 0
-  const workers = Array.from({ length: Math.min(limit, items.length) }, async () => {
-    while (next < items.length) {
-      const i = next++
-      results[i] = await fn(items[i])
-    }
-  })
-  await Promise.all(workers)
-  return results
-}
 
 function write(base, file, content) {
   const target = path.join(base, file)
@@ -55,7 +40,6 @@ export async function build({ client, root = ROOT, outDir = path.join(root, 'dis
     throw new Error('GitHub returned no public repositories. Not building an empty site.')
   }
 
-  const readmes = await mapLimit(projects, 4, (p) => client.getReadmeHtml(config.owner, p.name))
   const site = {
     url: config.siteUrl,
     builtAt: now.toISOString(),
@@ -68,16 +52,10 @@ export async function build({ client, root = ROOT, outDir = path.join(root, 'dis
 
   try {
     write(tmp, 'index.html', indexPage({ ...shared, experience, leadership, privateWork, projects }))
-    projects.forEach((project, i) => {
-      const readmeHtml = readmes[i]
-        ? rewriteReadmeHtml(readmes[i], { owner: config.owner, repo: project.name, branch: project.defaultBranch })
-        : null
-      write(tmp, `projects/${project.name}/index.html`, projectPage({ ...shared, project, readmeHtml }))
-    })
     // The CV link opens my own resume. To update it, replace data/Shlok_Vaishnav_Resume.pdf.
     cpSync(path.join(root, 'data', 'Shlok_Vaishnav_Resume.pdf'), path.join(tmp, 'Shlok_Vaishnav_Resume.pdf'))
     write(tmp, '404.html', notFoundPage(shared))
-    write(tmp, 'sitemap.xml', sitemapXml({ site, projects }))
+    write(tmp, 'sitemap.xml', sitemapXml({ site }))
     write(tmp, 'feed.xml', feedXml({ ...shared, projects }))
     write(tmp, 'robots.txt', `User-agent: *\nAllow: /\nSitemap: ${site.url}/sitemap.xml\n`)
     write(tmp, '.nojekyll', '')

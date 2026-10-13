@@ -60,12 +60,6 @@ function chips(project) {
   return out.join('')
 }
 
-// The only fact shown about a project is its licence, and only on the project page.
-function facts(project, { license = false } = {}) {
-  if (!license || !project.license) return ''
-  return `<div class="facts"><span class="fact muted">${esc(project.license)} licence</span></div>`
-}
-
 // One organization with its roles, newest first, like the Experience section on LinkedIn.
 // Roles are listed newest first. An organization with several roles shows a line with a dot for each role, like
 // LinkedIn, so a promotion is easy to see. An organization with one role is a plain entry. A new position at the
@@ -105,7 +99,6 @@ function projectItem(project, icon) {
   return `<li class="project">
 <div class="head"><a class="name" href="${esc(project.liveUrl ?? project.codeUrl)}">${esc(project.name)}</a>${chips(project)}</div>
 ${project.description ? `<p class="desc">${esc(project.description)}</p>` : ''}
-${facts(project)}
 <div class="actions"><a class="ilink" href="${esc(project.codeUrl)}">${icon('github')} Code</a>${
     project.liveUrl ? `<a class="ilink" href="${esc(project.liveUrl)}">${icon('box-arrow-up-right')} Live demo</a>` : ''
   }</div>
@@ -203,29 +196,6 @@ ${privateWork
   })
 }
 
-export function projectPage({ site, profile, icon, project, readmeHtml }) {
-  const body = `<p class="crumb"><a class="ilink" href="/">${icon('arrow-left')} ${esc(profile.name)}</a></p>
-<h1>${esc(project.name)}${chips(project) ? ` <span class="chips">${chips(project)}</span>` : ''}</h1>
-${project.description ? `<p class="lead">${esc(project.description)}</p>` : ''}
-${facts(project, { license: true })}
-<p class="buttons"><a class="btn" href="${esc(project.codeUrl)}">${icon('github')} Code</a>${
-    project.liveUrl ? `<a class="btn" href="${esc(project.liveUrl)}">${icon('box-arrow-up-right')} Live demo</a>` : ''
-  }</p>
-<article class="readme">
-${readmeHtml ?? '<p class="muted">This repository has no README.</p>'}
-</article>`
-
-  return layout({
-    site,
-    profile,
-    icon,
-    title: `${project.name} — ${profile.name}`,
-    description: project.description || `${project.name}, a project by ${profile.name}.`,
-    path: `/projects/${project.name}/`,
-    body,
-  })
-}
-
 export function notFoundPage({ site, profile, icon }) {
   return layout({
     site,
@@ -240,10 +210,9 @@ export function notFoundPage({ site, profile, icon }) {
   })
 }
 
-export function sitemapXml({ site, projects }) {
+export function sitemapXml({ site }) {
   const urls = [
     { loc: `${site.url}/`, lastmod: site.builtAt },
-    ...projects.map((p) => ({ loc: `${site.url}/projects/${p.name}/`, lastmod: p.pushedAt })),
   ]
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -268,8 +237,8 @@ ${entries
   .map(
     (p) => `<entry>
 <title>${esc(p.name)}</title>
-<id>${esc(site.url)}/projects/${esc(p.name)}/#${esc(p.pushedAt)}</id>
-<link href="${esc(site.url)}/projects/${esc(p.name)}/"/>
+<id>${esc(p.codeUrl)}#${esc(p.pushedAt)}</id>
+<link href="${esc(p.liveUrl ?? p.codeUrl)}"/>
 <updated>${new Date(p.pushedAt).toISOString()}</updated>
 <summary>${esc(p.description || 'Updated.')}</summary>
 </entry>`,

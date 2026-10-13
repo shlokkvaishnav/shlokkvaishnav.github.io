@@ -55,13 +55,5 @@ export function createClient({
       }
       return all
     },
-
-    // The README as HTML that GitHub made safe. Returns null if the repo has no README.
-    getReadmeHtml(owner, repo) {
-      return request(`/repos/${owner}/${repo}/readme`, {
-        accept: 'application/vnd.github.html+json',
-        as: 'text',
-      })
-    },
   }
 }

@@ -13,15 +13,12 @@ test('builds the whole site from saved answers', async () => {
   const outDir = path.join(mkdtempSync(path.join(tmpdir(), 'site-')), 'dist')
   const result = await build({ client: createFixtureClient(fixtures), outDir, now })
   assert.equal(result.projects, 4) // kornia is a fork, so it is hidden
-  for (const f of ['index.html', '404.html', 'Shlok_Vaishnav_Resume.pdf', 'sitemap.xml', 'feed.xml', 'robots.txt', 'favicon.svg', 'assets/style.css', 'assets/avatar.jpg', 'assets/fonts/literata.woff2', '.nojekyll', 'projects/quorum/index.html']) {
+  for (const f of ['index.html', '404.html', 'Shlok_Vaishnav_Resume.pdf', 'sitemap.xml', 'feed.xml', 'robots.txt', 'favicon.svg', 'assets/style.css', 'assets/avatar.jpg', 'assets/fonts/literata.woff2', '.nojekyll']) {
     assert.ok(existsSync(path.join(outDir, f)), f)
   }
-  assert.ok(!existsSync(path.join(outDir, 'projects/secret-research')))
-  assert.ok(!existsSync(path.join(outDir, 'projects/kornia')), 'forks are hidden')
+  assert.ok(!existsSync(path.join(outDir, 'projects')), 'there are no README pages')
   assert.ok(!existsSync(path.join(outDir, 'now')), 'there is no /now/ page')
   assert.ok(!existsSync(`${outDir}.tmp`))
-  const quorum = readFileSync(path.join(outDir, 'projects/quorum/index.html'), 'utf8')
-  assert.match(quorum, /raw\.githubusercontent\.com\/shlokkvaishnav\/quorum\/main\/docs\/diagram\.png/)
   const home = readFileSync(path.join(outDir, 'index.html'), 'utf8')
   assert.doesNotMatch(home, /Recently|News|<script src=/)
   assert.match(home, /<svg class="icon"/) // icons are inline
@@ -32,7 +29,7 @@ test('fails, and keeps the old site, when GitHub returns no repositories', async
   const outDir = path.join(mkdtempSync(path.join(tmpdir(), 'site-')), 'dist')
   mkdirSync(outDir)
   writeFileSync(path.join(outDir, 'index.html'), 'OLD SITE')
-  const empty = { listPublicRepos: async () => [], getReadmeHtml: async () => null, getLatestCommit: async () => null }
+  const empty = { listPublicRepos: async () => [] }
   await assert.rejects(build({ client: empty, outDir, now }), /no public repositories/)
   assert.equal(readFileSync(path.join(outDir, 'index.html'), 'utf8'), 'OLD SITE')
   assert.ok(!existsSync(`${outDir}.tmp`))
@@ -43,7 +40,7 @@ test('fails, and keeps the old site, when a request fails half way', async () =>
   mkdirSync(outDir)
   writeFileSync(path.join(outDir, 'index.html'), 'OLD SITE')
   const base = createFixtureClient(fixtures)
-  const broken = { ...base, getReadmeHtml: async () => { throw new Error('GitHub answered 503') } }
+  const broken = { ...base, listPublicRepos: async () => { throw new Error('GitHub answered 503') } }
   await assert.rejects(build({ client: broken, outDir, now }), /503/)
   assert.equal(readFileSync(path.join(outDir, 'index.html'), 'utf8'), 'OLD SITE')
 })

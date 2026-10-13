@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { feedXml, indexPage, notFoundPage, projectPage, sitemapXml } from '../scripts/lib/render.mjs'
+import { feedXml, indexPage, notFoundPage, sitemapXml } from '../scripts/lib/render.mjs'
 import { createIcons } from '../scripts/lib/icons.mjs'
 import { selectProjects } from '../scripts/lib/select.mjs'
 
@@ -40,27 +40,13 @@ test('text from GitHub is escaped everywhere', () => {
   const html = indexPage(ctx)
   assert.ok(!html.includes('<script>alert("x")</script>'))
   assert.match(html, /&lt;script&gt;alert\(&quot;x&quot;\)&lt;\/script&gt; &amp; &quot;quotes&quot;/)
-  const page = projectPage({ site, profile, icon, project: projects.find((p) => p.name === 'old-project'), readmeHtml: null })
-  assert.ok(!page.includes('<script>alert("x")</script>'))
 })
 
-test('a project page without a README says so', () => {
-  const html = projectPage({ site, profile, icon, project: projects[0], readmeHtml: null })
-  assert.match(html, /no README/)
-})
-
-test('the live link appears only when there is one', () => {
-  const quorum = projects.find((p) => p.name === 'quorum')
-  assert.match(projectPage({ site, profile, icon, project: quorum, readmeHtml: '' }), /Live demo/)
-  const none = projects.find((p) => p.name === 'llm-inference-engine')
-  assert.doesNotMatch(projectPage({ site, profile, icon, project: none, readmeHtml: '' }), /Live demo/)
-})
-
-test('the sitemap lists the home page and every project page', () => {
+test('the sitemap lists only the home page', () => {
   const xml = sitemapXml({ site, projects })
   assert.match(xml, /<loc>https:\/\/example\.test\/<\/loc>/)
   assert.doesNotMatch(xml, /\/now\//)
-  for (const p of projects) assert.ok(xml.includes(`/projects/${p.name}/</loc>`), p.name)
+  assert.doesNotMatch(xml, /\/projects\//)
 })
 
 test('the feed is valid-looking Atom with one entry per project', () => {
@@ -84,12 +70,6 @@ test('project rows show only the name, the text and the links: no language, no d
   const list = html.slice(html.indexOf('<ul class="projects">'), html.indexOf('</ul>', html.indexOf('<ul class="projects">')))
   assert.doesNotMatch(list, /Python|Updated|class="dot"|class="facts"/)
   assert.match(list, /<svg class="icon"[^>]*>[\s\S]*?<\/svg> Code/)
-})
-
-test('a project page shows the licence but no language and no update date', () => {
-  const page = projectPage({ site, profile, icon, project: projects.find((p) => p.name === 'quorum'), readmeHtml: '' })
-  assert.match(page, /MIT licence/)
-  assert.doesNotMatch(page, /Python|Updated|class="dot"/)
 })
 
 test('the portrait has an alt text and a size, so the page does not jump', () => {
@@ -175,7 +155,7 @@ test('periods and durations come from the dates (build date is 12 Oct 2026)', ()
 })
 
 test('projects have no topic tags', () => {
-  const html = indexPage(ctx) + projectPage({ site, profile, icon, project: projects[0], readmeHtml: '' })
+  const html = indexPage(ctx)
   assert.doesNotMatch(html, /class="tags?"|data-topic|ai-agents|paged-attention/)
 })
 

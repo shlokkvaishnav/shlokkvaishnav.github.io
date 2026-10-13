@@ -14,7 +14,7 @@ content/*.md  ─┼─> scripts/build.mjs ──> dist/ ──> GitHub Pages
 GitHub API    ─┘   (public data only)
 ```
 
-- **Projects.** Every public repository becomes a row on the home page. The repository description is the project text. Each repository also gets its own page at `/projects/<repo>/`, made from its README.
+- **Projects.** Every public repository becomes a row on the home page. The repository description is the project text.
 - **Live demo links.** A project shows "Live" if its repository has a GitHub Pages site, or a homepage address.
 - **CV.** The CV link opens my resume, the file `data/Shlok_Vaishnav_Resume.pdf`. To update it, replace that file.
 - **Feed.** `/feed.xml` is an Atom feed of project updates.

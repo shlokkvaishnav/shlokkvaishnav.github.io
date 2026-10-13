@@ -29,13 +29,11 @@ test('gives up after the retries and throws', async () => {
   assert.equal(calls, 3)
 })
 
-test('does not retry a 401, and a 404 means "not found"', async () => {
+test('does not retry a 401', async () => {
   let calls = 0
   const bad = createClient({ sleep: noSleep, fetchImpl: async () => (calls++, reply(401)) })
-  await assert.rejects(bad.getReadmeHtml('me', 'x'), /401/)
+  await assert.rejects(bad.listPublicRepos('me'), /401/)
   assert.equal(calls, 1)
-  const missing = createClient({ sleep: noSleep, fetchImpl: async () => reply(404) })
-  assert.equal(await missing.getReadmeHtml('me', 'x'), null)
 })
 
 test('waits and retries when the rate limit is used up', async () => {
