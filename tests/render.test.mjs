@@ -32,7 +32,7 @@ const section = (html, id) => {
 
 test('the home page lists every selected project and links to its page', () => {
   const html = indexPage(ctx)
-  for (const p of projects) assert.ok(html.includes(`href="/projects/${p.name}/"`), p.name)
+  for (const p of projects) assert.ok(html.includes(`>${p.name}</a>`), p.name)
   assert.ok(!html.includes('secret-research'))
 })
 
@@ -283,4 +283,15 @@ test('the roles of one organization have dots but no connecting line', () => {
   const css = readFileSync(new URL('assets/style.css', root), 'utf8')
   const rule = css.match(/\.positions\.linked \{[^}]*\}/)[0]
   assert.doesNotMatch(rule, /border-left/)
+})
+
+test('the project name opens the live website, or GitHub when there is none; Code opens GitHub', () => {
+  const html = indexPage(ctx)
+  const row = (name) => html.slice(html.indexOf(`>${name}</a>`) - 400, html.indexOf('</li>', html.indexOf(`>${name}</a>`)))
+  const withLive = projects.find((p) => p.liveUrl)
+  const noLive = projects.find((p) => !p.liveUrl)
+  assert.match(row(withLive.name), new RegExp(`class="name" href="${withLive.liveUrl.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&')}">${withLive.name}</a>`))
+  assert.match(row(withLive.name), new RegExp(`href="${withLive.codeUrl.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&')}">[\\s\\S]*?Code</a>`))
+  assert.match(row(noLive.name), new RegExp(`class="name" href="${noLive.codeUrl.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&')}"`))
+  assert.doesNotMatch(html, /class="name" href="\/projects\//) // no name links to a generated page any more
 })

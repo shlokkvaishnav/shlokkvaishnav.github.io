@@ -100,9 +100,10 @@ ${groups.map((g) => orgItem(g, now)).join('\n')}
 </ul>`
 }
 
+// The name opens the live website, or the GitHub repository if there is no website. "Code" always opens GitHub.
 function projectItem(project, icon) {
   return `<li class="project">
-<div class="head"><a class="name" href="/projects/${esc(project.name)}/">${esc(project.name)}</a>${chips(project)}</div>
+<div class="head"><a class="name" href="${esc(project.liveUrl ?? project.codeUrl)}">${esc(project.name)}</a>${chips(project)}</div>
 ${project.description ? `<p class="desc">${esc(project.description)}</p>` : ''}
 ${facts(project)}
 <div class="actions"><a class="ilink" href="${esc(project.codeUrl)}">${icon('github')} Code</a>${
