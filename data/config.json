@@ -17,8 +17,6 @@
   "ownForks": [
     "layoff-analysis"
   ],
-  "liveOverride": {
-    "cardiovascular-risk": "https://cardiovascular-risk.vercel.app"
-  },
+  "liveOverride": {},
   "hideForks": true
 }
