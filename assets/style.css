@@ -38,7 +38,7 @@
     --ok: #5fcf93;
   }
   /* Light text on a dark background looks heavier on macOS. Grayscale smoothing makes it thinner and softer. */
-  body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  .content { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 }
 
 * { box-sizing: border-box; }
@@ -50,10 +50,10 @@ body {
   font: 1rem/1.7 var(--serif);
   text-rendering: optimizeLegibility;
 }
-/* Smoother text. `pretty` stops a single word from sitting alone on the last line and evens the line ends.
-   `balance` makes short headings and the role line break into lines of similar length. */
-p, li { text-wrap: pretty; }
-h1, h2, h3, .role, .subtitle { text-wrap: balance; }
+/* Smoother text in the content column (the side panel is left as it was). `pretty` stops a single word from
+   sitting alone on the last line. `balance` makes short headings break into lines of similar length. */
+.content p, .content li { text-wrap: pretty; }
+.content h2, .content h3, .content .subtitle { text-wrap: balance; }
 main { max-width: 44rem; margin: 0 auto; padding: 3.5rem clamp(1.25rem, 4vw, 2.5rem) 2rem; }
 footer {
   max-width: 44rem; margin: 2rem auto 0; padding: 1.25rem 1.25rem 3.5rem;
@@ -96,9 +96,6 @@ h1 { margin: 0; font: 600 clamp(1.8rem, 5vw, 2.1rem)/1.15 var(--serif); letter-s
 .note { margin: 1.25rem 0 0; font: .88rem/1.5 var(--sans); color: var(--muted); }
 .emoji { font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif; font-style: normal; }
 .subtitle { margin: .25rem 0 1rem; font: .98rem/1.5 var(--serif); color: var(--muted); }
-/* The text in the content column is centered, like the side panel. */
-.content { text-align: center; }
-.content h2 { justify-content: center; }
 .bio p { margin: .8rem 0; }
 .bio { margin-top: -.25rem; }
 .lead { font-size: 1.18rem; line-height: 1.6; }
@@ -114,19 +111,19 @@ h3 .icon { color: var(--accent); }
 .timeline { list-style: none; margin: 0; padding: 0; }
 .org { padding: 1.4rem 0; border-top: 1px solid var(--rule); }
 .timeline .org:last-child { border-bottom: 1px solid var(--rule); }
-.org-head { display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: .1rem .9rem; margin: 0 0 .6rem; font: 600 .9rem/1.4 var(--sans); color: var(--muted); }
+.org-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: .1rem .9rem; margin: 0 0 .6rem; font: 600 .9rem/1.4 var(--sans); color: var(--muted); }
 .org-total, .position-when { font: .85rem/1.5 var(--sans); color: var(--muted); }
 .org-total { font-weight: 400; }
 .org-place { margin: -.45rem 0 .6rem; font: .85rem/1.5 var(--sans); color: var(--muted); }
 .positions { list-style: none; margin: 0; padding: 0; }
 .position { margin: 0 0 1.3rem; }
 .position:last-child { margin-bottom: 0; }
-.position-head { display: flex; flex-direction: column; align-items: center; gap: .1rem; }
+.position-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: .1rem 1rem; }
 .position-title { margin: 0; font: 600 1.18rem/1.35 var(--serif); }
 .position-title strong { font-weight: 600; }
-.position-when { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 .9rem; margin: 0; font-variant-numeric: tabular-nums; }
+.position-when { display: flex; flex-wrap: wrap; gap: 0 .9rem; margin: 0; font-variant-numeric: tabular-nums; }
 .position-org { margin: .05rem 0 0; font: .9rem/1.5 var(--sans); color: var(--muted); }
-.position-text { margin: .5rem auto 0; max-width: 62ch; }
+.position-text { margin: .5rem 0 0; max-width: 62ch; }
 /* A dot after the title of the role I hold now. */
 .position.current .position-title strong::after {
   content: ""; display: inline-block; width: .45rem; height: .45rem; margin-left: .5rem;
@@ -139,9 +136,10 @@ h3 .icon { color: var(--accent); }
 .muted { color: var(--muted); }
 
 .prose ul { padding-left: 1.2rem; }
-/* Research: a list of centered points. There are no bullet marks, because they would sit alone at the left edge. */
-.points { list-style: none; margin: .5rem 0 0; padding: 0; }
-.points li { margin: 1.1rem 0; padding: 0; }
+/* Research: a plain list of points with an accent marker. */
+.points { margin: .5rem 0 0; padding-left: 1.3rem; }
+.points li { margin: .7rem 0; padding-left: .2rem; }
+.points li::marker { color: var(--accent); }
 .points .chip { margin-left: .4rem; vertical-align: .05em; white-space: nowrap; }
 .prose h2 { margin-top: 2rem; }
 
