@@ -8,7 +8,7 @@ Live: <https://shlokkvaishnav.github.io>
 
 ## Overview
 
-The site is one page with no framework and no npm packages. It shows my experience, leadership roles, projects and ongoing research. The projects come from the GitHub API at build time: every public repository becomes a row, and its GitHub description is the project text. A project with a GitHub Pages site or a homepage address gets a "Live" link, so each project page (for example the mini-vLLM scheduler lab) is one click away.
+The site is one page with no framework and no npm packages. It shows my experience, leadership roles and ongoing research. The Projects section is switched off at the moment (`showProjects` is `false` in `data/config.json`). When it is on, the projects come from the GitHub API at build time: every public repository becomes a row, and its GitHub description is the project text. A project with a GitHub Pages site or a homepage address gets a "Live" link, so each project page (for example the mini-vLLM scheduler lab) is one click away.
 
 ## How it works
 
@@ -18,11 +18,11 @@ data/*.json  ─┐
 GitHub API   ─┘   (public data only)
 ```
 
-- **Projects.** Every public repository becomes a row on the home page. The repository description is the project text.
+- **Projects.** Off at the moment. When `showProjects` is `true`, every public repository becomes a row on the home page, and the repository description is the project text.
 - **Live links.** A project shows "Live" if its repository has a GitHub Pages site or a homepage address.
-- **Research.** Work with no public code comes from `data/private-work.json`.
+- **Research.** Each item in `data/private-work.json` is a line in the Research section. The list can also hold work that has public code.
 - **CV.** The CV link opens `data/Shlok_Vaishnav_Resume.pdf`. To update it, replace that file.
-- **Feed.** `/feed.xml` is an Atom feed of project updates.
+- **Feed.** `/feed.xml` is an Atom feed of project updates. It is built only when `showProjects` is `true`.
 
 ### When it updates
 
@@ -52,6 +52,7 @@ The build fails if GitHub returns no repositories or a request fails. A failed b
 
 - `exclude`: repository names to hide. The profile repository and this repository are hidden.
 - `pin`: repositories to show first, in this order. The rest follow, newest push first.
+- `showProjects`: when `false`, the Projects section and the feed are not built, and the GitHub API is not read. The other options below then have no effect.
 - `hideForks`: when `true`, forks of other people's projects are not shown.
 - `ownForks`: forks that are my own work. They show even when `hideForks` is `true`.
 - `liveOverride`: the live link for a repository, or `null` to show none.

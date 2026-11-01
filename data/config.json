@@ -6,17 +6,14 @@
     "shlokkvaishnav.github.io"
   ],
   "pin": [
-    "llm-inference-engine",
+    "layer-skip-refusal",
     "freespace",
-    "quorum",
-    "meridian",
-    "cardiovascular-risk",
-    "layoff-analysis",
     "lunar-ridge-detection"
   ],
   "ownForks": [
     "layoff-analysis"
   ],
   "liveOverride": {},
-  "hideForks": true
+  "hideForks": true,
+  "showProjects": false
 }

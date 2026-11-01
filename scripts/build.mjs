@@ -25,25 +25,32 @@ function write(base, file, content) {
   writeFileSync(target, content)
 }
 
-export async function build({ client, root = ROOT, outDir = path.join(root, 'dist'), now = new Date() }) {
+export async function build({ client, root = ROOT, outDir = path.join(root, 'dist'), now = new Date(), overrides = {} }) {
   const readJson = (name) => JSON.parse(readFileSync(path.join(root, 'data', name), 'utf8'))
-  const config = readJson('config.json')
+  const config = { ...readJson('config.json'), ...overrides } // `overrides` is for the tests
   const profile = readJson('profile.json')
   const experience = readJson('experience.json')
   const leadership = readJson('leadership.json')
   const privateWork = readJson('private-work.json')
   const icon = createIcons(path.join(root, 'assets', 'icons'))
 
-  const repos = await client.listPublicRepos(config.owner)
-  const projects = selectProjects(repos, config)
-  if (projects.length === 0) {
-    throw new Error('GitHub returned no public repositories. Not building an empty site.')
+  // `showProjects: false` in data/config.json hides the Projects section and the project-update feed.
+  // The GitHub API is then not read at all.
+  const showProjects = config.showProjects !== false
+  let projects = []
+  if (showProjects) {
+    const repos = await client.listPublicRepos(config.owner)
+    projects = selectProjects(repos, config)
+    if (projects.length === 0) {
+      throw new Error('GitHub returned no public repositories. Not building an empty site.')
+    }
   }
 
   const site = {
     url: config.siteUrl,
     builtAt: now.toISOString(),
     sourceUrl: `https://github.com/${config.owner}/${config.owner}.github.io`,
+    showProjects,
   }
   const shared = { site, profile, icon }
   const tmp = `${outDir}.tmp`
@@ -56,7 +63,7 @@ export async function build({ client, root = ROOT, outDir = path.join(root, 'dis
     cpSync(path.join(root, 'data', 'Shlok_Vaishnav_Resume.pdf'), path.join(tmp, 'Shlok_Vaishnav_Resume.pdf'))
     write(tmp, '404.html', notFoundPage(shared))
     write(tmp, 'sitemap.xml', sitemapXml({ site }))
-    write(tmp, 'feed.xml', feedXml({ ...shared, projects }))
+    if (showProjects) write(tmp, 'feed.xml', feedXml({ ...shared, projects }))
     write(tmp, 'robots.txt', `User-agent: *\nAllow: /\nSitemap: ${site.url}/sitemap.xml\n`)
     write(tmp, '.nojekyll', '')
     // The icons are put into the pages, so the icon files are not copied.
@@ -87,7 +94,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   try {
     const client = offline ? createFixtureClient(path.resolve(offline)) : createClient()
     const result = await build({ client, ...(out ? { outDir: path.resolve(out) } : {}) })
-    console.log(`Built ${result.projects} project pages into ${result.outDir}`)
+    console.log(`Built the site (${result.projects} projects shown) into ${result.outDir}`)
   } catch (error) {
     console.error(`Build failed: ${error.message}`)
     process.exit(1)

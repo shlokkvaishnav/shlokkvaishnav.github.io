@@ -1,5 +1,10 @@
 [
   {
+    "summary": "I am working on whether skipping layers to make a language model run faster also removes the layers that make it refuse harmful requests, and how much speed I can gain before the refusals drop.",
+    "tag": "Currently ongoing",
+    "emoji": "🔬"
+  },
+  {
     "summary": "I am working on whether a replicated approximate-nearest-neighbour index silently diverges in search quality across replicas under node failure, and whether that divergence persists after recovery.",
     "tag": "Currently ongoing",
     "emoji": "🔬"

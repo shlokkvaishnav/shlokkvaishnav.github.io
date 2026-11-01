@@ -28,8 +28,7 @@ function layout({ site, profile, icon, title, description, path, body, bodyClass
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:url" content="${esc(url)}">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="alternate" type="application/atom+xml" href="/feed.xml" title="Updates">
-<link rel="preload" href="/assets/fonts/literata.woff2" as="font" type="font/woff2" crossorigin>
+${site.showProjects === false ? '' : '<link rel="alternate" type="application/atom+xml" href="/feed.xml" title="Updates">\n'}<link rel="preload" href="/assets/fonts/literata.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/instrument-sans.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/style.css">${
     jsonld ? `\n<script type="application/ld+json">${JSON.stringify(jsonld).replace(/</g, '\\u003c')}</script>` : ''
@@ -44,7 +43,7 @@ ${body}
       ? `
 <footer>
 <p>Last built ${esc(built)}. ${profile.footerLine ? fun(profile.footerLine) : ''}</p>
-<p class="foot-links"><a class="ilink" href="/feed.xml">${icon('rss')} Feed</a> <a class="ilink" href="${esc(site.sourceUrl)}">${icon('github')} Source</a></p>
+<p class="foot-links">${site.showProjects === false ? '' : `<a class="ilink" href="/feed.xml">${icon('rss')} Feed</a> `}<a class="ilink" href="${esc(site.sourceUrl)}">${icon('github')} Source</a></p>
 </footer>`
       : ''
   }
@@ -170,25 +169,31 @@ ${profile.subtitles?.leadership ? `<p class="subtitle">${fun(profile.subtitles.l
 ${timeline(leadership, site.builtAt)}
 </section>
 
-<section id="projects">
+${
+  site.showProjects === false
+    ? ''
+    : `<section id="projects">
 <h2>${icon('braces')} Projects</h2>
 ${profile.subtitles?.projects ? `<p class="subtitle">${fun(profile.subtitles.projects)}</p>` : ''}
 <ul class="projects">
 ${projects.map((p) => projectItem(p, icon)).join('\n')}
 </ul>
-${
+</section>
+`
+}${
   privateWork.length
-    ? `<h3>${icon('lightbulb')} Research</h3>
+    ? `<section id="research">
+<h2>${icon('lightbulb')} Research</h2>
 ${profile.subtitles?.research ? `<p class="subtitle">${fun(profile.subtitles.research)}</p>` : ''}
 <ul class="points">
 ${privateWork
   .map((w) => `<li>${esc(w.summary)} <span class="chip">${fun({ text: w.tag, emoji: w.emoji })}</span></li>`)
   .join('\n')}
-</ul>`
-    : ''
-}
+</ul>
 </section>
-</div>
+`
+    : ''
+}</div>
 </div>`
 
   return layout({

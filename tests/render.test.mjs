@@ -203,10 +203,10 @@ test('a future position at the same organization joins the same timeline', () =>
 
 test('the Research list has a short line and a tag for each item, and no names', () => {
   const html = indexPage(ctx)
-  assert.match(html, /<h3>[\s\S]*?Research<\/h3>/)
+  assert.match(html, /<h2>[\s\S]*?Research<\/h2>/)
   assert.doesNotMatch(html, /Private research|private code/)
   assert.match(html, /I am working on whether a replicated approximate-nearest-neighbour index silently diverges in search quality across replicas under node failure, and whether that divergence persists after recovery\./)
-  assert.equal((html.match(/Currently ongoing/g) ?? []).length, 2)
+  assert.equal((html.match(/Currently ongoing/g) ?? []).length, 3)
   assert.doesNotMatch(html, /Replica recall divergence|Null scaffold audit|replica-recall|null-scaffold/i)
 })
 
@@ -262,7 +262,7 @@ test('the fun lines are optional: without them the page still builds', () => {
 test('Research is a list of points, one bullet per item', () => {
   const html = indexPage(ctx)
   const list = html.slice(html.indexOf('<ul class="points">'), html.indexOf('</ul>', html.indexOf('<ul class="points">')))
-  assert.equal((list.match(/<li>/g) ?? []).length, 2)
+  assert.equal((list.match(/<li>/g) ?? []).length, 3)
   assert.match(list, /<li>I am working on whether a replicated approximate-nearest-neighbour index silently diverges in search quality across replicas under node failure, and whether that divergence persists after recovery\. <span class="chip">Currently ongoing/)
   assert.doesNotMatch(list, /class="project"|class="desc"/)
 })
@@ -276,4 +276,12 @@ test('the project name opens the live website, or GitHub when there is none; Cod
   assert.match(row(withLive.name), new RegExp(`href="${withLive.codeUrl.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&')}">[\\s\\S]*?Code</a>`))
   assert.match(row(noLive.name), new RegExp(`class="name" href="${noLive.codeUrl.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&')}"`))
   assert.doesNotMatch(html, /class="name" href="\/projects\//) // no name links to a generated page any more
+})
+
+test('with showProjects false the page has a Research section and no Projects section or feed link', () => {
+  const html = indexPage({ ...ctx, site: { ...site, showProjects: false } })
+  assert.doesNotMatch(html, /<section id="projects">|class="projects"|feed\.xml|Things I have built/)
+  assert.match(html, /<section id="research">/)
+  assert.ok(html.includes('skipping layers to make a language model run faster'))
+  for (const p of projects) assert.ok(!html.includes(`>${p.name}</a>`), p.name)
 })
