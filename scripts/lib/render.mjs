@@ -14,6 +14,9 @@ function fun(item) {
 function layout({ site, profile, icon, title, description, path, body, bodyClass = '', footer = true, jsonld = null }) {
   const url = `${site.url}${path}`
   const built = formatDate(site.builtAt)
+  // The picture that shows when the address is shared. It is rendered from scripts/social-card.html (see the README).
+  const image = `${site.url}/assets/social.png`
+  const imageAlt = `${profile.name}: ${profile.role}`
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -27,6 +30,16 @@ function layout({ site, profile, icon, title, description, path, body, bodyClass
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:url" content="${esc(url)}">
+<meta property="og:site_name" content="${esc(profile.name)}">
+<meta property="og:image" content="${esc(image)}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="${esc(imageAlt)}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${esc(title)}">
+<meta name="twitter:description" content="${esc(description)}">
+<meta name="twitter:image" content="${esc(image)}">
+<meta name="twitter:image:alt" content="${esc(imageAlt)}">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="/assets/fonts/literata.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/instrument-sans.woff2" as="font" type="font/woff2" crossorigin>

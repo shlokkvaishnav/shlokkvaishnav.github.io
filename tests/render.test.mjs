@@ -240,3 +240,31 @@ test('text in the research list is escaped', () => {
   assert.ok(!html.includes('<script>alert("x")</script>'))
   assert.match(html, /&lt;script&gt;alert\(&quot;x&quot;\)&lt;\/script&gt; &amp; &quot;quotes&quot;/)
 })
+
+// The content of one <meta> tag, found by its property or name.
+const metaContent = (html, key) => html.match(new RegExp(`<meta (?:property|name)="${key}" content="([^"]*)">`))?.[1]
+
+test('the head has a social preview: an absolute image address and a large Twitter card', () => {
+  const html = indexPage(ctx)
+  assert.equal(metaContent(html, 'og:image'), 'https://example.test/assets/social.png')
+  assert.equal(metaContent(html, 'twitter:image'), 'https://example.test/assets/social.png')
+  assert.equal(metaContent(html, 'og:image:width'), '1200')
+  assert.equal(metaContent(html, 'og:image:height'), '630')
+  assert.equal(metaContent(html, 'twitter:card'), 'summary_large_image')
+  assert.equal(metaContent(html, 'og:site_name'), 'Shlok Vaishnav')
+  assert.equal(metaContent(html, 'twitter:title'), 'Shlok Vaishnav')
+  assert.equal(metaContent(html, 'twitter:description'), metaContent(html, 'og:description'))
+  assert.match(metaContent(html, 'og:image:alt'), /^Shlok Vaishnav: /)
+  assert.equal(metaContent(html, 'twitter:image:alt'), metaContent(html, 'og:image:alt'))
+})
+
+test('the 404 page has the social preview too', () => {
+  assert.equal(metaContent(notFoundPage({ site, profile, icon }), 'og:image'), 'https://example.test/assets/social.png')
+})
+
+test('the social preview text is escaped', () => {
+  const html = indexPage({ ...ctx, profile: { ...profile, role: 'A "quoted" <b>role</b>' } })
+  assert.match(metaContent(html, 'og:image:alt'), /A &quot;quoted&quot; &lt;b&gt;role&lt;\/b&gt;/)
+  assert.ok(!html.includes('content="Shlok Vaishnav: A "quoted"'))
+})
+

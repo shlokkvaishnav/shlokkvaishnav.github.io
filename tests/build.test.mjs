@@ -46,3 +46,15 @@ test('fails, and keeps the old site, when a data file is broken', async () => {
   assert.equal(readFileSync(path.join(outDir, 'index.html'), 'utf8'), 'OLD SITE')
   assert.ok(!existsSync(`${outDir}.tmp`))
 })
+
+test('the social preview image is built: a PNG of 1200 x 630 pixels, under 500 KB', async () => {
+  const outDir = tempOut()
+  await build({ outDir, now })
+  const png = readFileSync(path.join(outDir, 'assets/social.png'))
+  assert.deepEqual([...png.subarray(0, 8)], [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]) // the PNG signature
+  assert.equal(png.readUInt32BE(16), 1200) // the width, in the IHDR chunk
+  assert.equal(png.readUInt32BE(20), 630) // the height
+  assert.ok(png.length < 500 * 1024, `${png.length} bytes`)
+  assert.match(readFileSync(path.join(outDir, 'index.html'), 'utf8'), /<meta property="og:image" content="https:\/\/shlokkvaishnav\.github\.io\/assets\/social\.png">/)
+})
+

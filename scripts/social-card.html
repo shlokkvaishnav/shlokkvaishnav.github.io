@@ -1,0 +1,37 @@
+<!doctype html>
+<!-- The source of assets/social.png (1200 x 630), the picture that shows when the site address is shared.
+     It is rendered once and the PNG is committed. The README has the command. Re-render after a change of
+     name, role or avatar. Colors and fonts are the same as in assets/style.css (light theme). -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Social card</title>
+<style>
+@font-face { font-family: "Literata"; src: url("../assets/fonts/literata.woff2") format("woff2"); font-weight: 200 900; }
+@font-face { font-family: "Instrument Sans"; src: url("../assets/fonts/instrument-sans.woff2") format("woff2"); font-weight: 400 700; }
+:root { --paper: #fbfbfc; --ink: #17191f; --muted: #5c6370; --rule: #e2e5ea; --accent: #8c2346; }
+* { box-sizing: border-box; }
+html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; background: var(--paper); color: var(--ink); }
+.card { position: relative; width: 1200px; height: 630px; padding: 84px 96px; display: flex; align-items: center; justify-content: space-between; gap: 64px; }
+.card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 14px; background: var(--accent); }
+.text { flex: 1; min-width: 0; }
+.site { margin: 0 0 28px; font: 600 26px/1.2 "Instrument Sans", system-ui, sans-serif; letter-spacing: .04em; color: var(--accent); }
+h1 { margin: 0; font: 600 92px/1.04 "Literata", Georgia, serif; letter-spacing: -.01em; }
+.role { margin: 30px 0 0; max-width: 600px; font: 400 32px/1.35 "Instrument Sans", system-ui, sans-serif; color: var(--muted); }
+.sections { margin: 46px 0 0; padding-top: 28px; border-top: 2px solid var(--rule); display: flex; gap: 34px; font: 600 24px/1 "Instrument Sans", system-ui, sans-serif; color: var(--ink); }
+.sections span::before { content: ""; display: inline-block; width: 12px; height: 12px; margin-right: 12px; border-radius: 50%; background: var(--accent); vertical-align: 1px; }
+.avatar { flex: none; width: 300px; height: 300px; border-radius: 50%; object-fit: cover; border: 8px solid var(--paper); box-shadow: 0 0 0 4px var(--accent); }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="text">
+    <p class="site">shlokkvaishnav.github.io</p>
+    <h1>Shlok Vaishnav</h1>
+    <p class="role">Computer science undergraduate working on machine learning and quantitative research</p>
+    <div class="sections"><span>Experience</span><span>Leadership</span><span>Research</span></div>
+  </div>
+  <img class="avatar" src="../assets/avatar.jpg" width="300" height="300" alt="">
+</div>
+</body>
+</html>

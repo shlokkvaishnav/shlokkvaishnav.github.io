@@ -59,6 +59,20 @@ npm test                          # unit tests
 node scripts/check-links.mjs dist # every link in the built site
 ```
 
+## Social preview card
+
+When someone shares the site address, LinkedIn, X and Slack show the picture `assets/social.png` (1200 x 630 pixels). The page head points to it with the `og:image` and `twitter:*` tags.
+
+The picture is made once and committed. Its source is `scripts/social-card.html`. Render it again after a change of name, role or avatar. Run this from the repo root (needs Google Chrome):
+
+```sh
+"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless --disable-gpu --hide-scrollbars \
+  --allow-file-access-from-files --virtual-time-budget=4000 --window-size=1200,630 \
+  --screenshot="$PWD/assets/social.png" "file://$PWD/scripts/social-card.html"
+```
+
+Then check the size with `sips -g pixelWidth -g pixelHeight assets/social.png`. A test fails if the picture is not 1200 x 630. The services keep a copy of a preview, so a new picture can take a while to show.
+
 ## Repo layout
 
 | Path | What |
@@ -66,6 +80,7 @@ node scripts/check-links.mjs dist # every link in the built site
 | `scripts/build.mjs` | The build: reads `data/`, writes `dist/` |
 | `scripts/lib/` | HTML rendering and icons |
 | `scripts/check-links.mjs` | Link checker for the built site |
+| `scripts/social-card.html` | Source of `assets/social.png`, the picture for shared links |
 | `data/` | Profile, experience, leadership, research, config, and the CV |
 | `assets/` | Stylesheet, fonts, icons, avatar, and their licences |
 | `tests/` | Unit tests |
