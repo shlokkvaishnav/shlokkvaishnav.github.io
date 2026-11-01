@@ -268,3 +268,25 @@ test('the social preview text is escaped', () => {
   assert.ok(!html.includes('content="Shlok Vaishnav: A "quoted"'))
 })
 
+test('the stylesheet and the image addresses carry a version only when the build gives one', () => {
+  const plain = indexPage(ctx)
+  assert.match(plain, /<link rel="stylesheet" href="\/assets\/style\.css">/)
+  const versioned = indexPage({ ...ctx, site: { ...site, cssVersion: 'abc1234567', imageVersion: 'def7654321' } })
+  assert.match(versioned, /<link rel="stylesheet" href="\/assets\/style\.css\?v=abc1234567">/)
+  assert.equal(metaContent(versioned, 'og:image'), 'https://example.test/assets/social.png?v=def7654321')
+  assert.equal(metaContent(versioned, 'twitter:image'), 'https://example.test/assets/social.png?v=def7654321')
+})
+
+test('the description is the short line, not the whole bio, and it fits a search result', () => {
+  assert.ok(profile.description.length <= 160, `${profile.description.length} characters`)
+  const html = indexPage(ctx)
+  for (const key of ['description', 'og:description', 'twitter:description']) assert.equal(metaContent(html, key), profile.description, key)
+  // Without a short line the page falls back to the first bio paragraph.
+  const { description, ...rest } = profile
+  assert.equal(metaContent(indexPage({ ...ctx, profile: rest }), 'description'), profile.bio[0])
+})
+
+test('the page head links to the touch icon', () => {
+  assert.match(indexPage(ctx), /<link rel="apple-touch-icon" href="\/assets\/apple-touch-icon\.png">/)
+})
+

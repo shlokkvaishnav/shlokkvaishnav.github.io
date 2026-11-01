@@ -32,7 +32,7 @@ A failed build does not deploy, so the live site stays as it was.
 
 | What | Where |
 |---|---|
-| Name, bio, links, email, and the lines with emojis (heading subtitles, 404) | `data/profile.json` |
+| Name, bio, links, email, the short `description` (up to 160 characters, used by search and shared links), and the lines with emojis (heading subtitles, 404) | `data/profile.json` |
 | Experience (organizations and roles) | `data/experience.json` |
 | Leadership (organizations and roles) | `data/leadership.json` |
 | Research | `data/private-work.json` |
@@ -58,6 +58,12 @@ python3 -m http.server --directory dist 8000     # open http://localhost:8000
 npm test                          # unit tests
 node scripts/check-links.mjs dist # every link in the built site
 ```
+
+## Cache and versions
+
+The build adds a version to the address of the stylesheet and of the social picture, for example `/assets/style.css?v=01aa2544c3`. The version is a short hash of the file. A changed file gets a new address, so a browser or a sharing service fetches it at once and never shows an old design. Nothing to do: the build does it.
+
+`assets/apple-touch-icon.png` (180 x 180) is the icon for iPhone home screens. Make it again from the avatar with `sips -z 180 180 -s format png assets/avatar.jpg --out assets/apple-touch-icon.png`.
 
 ## Social preview card
 

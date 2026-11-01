@@ -15,7 +15,9 @@ function layout({ site, profile, icon, title, description, path, body, bodyClass
   const url = `${site.url}${path}`
   const built = formatDate(site.builtAt)
   // The picture that shows when the address is shared. It is rendered from scripts/social-card.html (see the README).
-  const image = `${site.url}/assets/social.png`
+  // The version in the address makes a browser or a sharing service fetch a changed file at once.
+  const versioned = (file, version) => (version ? `${file}?v=${version}` : file)
+  const image = `${site.url}${versioned('/assets/social.png', site.imageVersion)}`
   const imageAlt = `${profile.name}: ${profile.role}`
   return `<!doctype html>
 <html lang="en">
@@ -41,9 +43,10 @@ function layout({ site, profile, icon, title, description, path, body, bodyClass
 <meta name="twitter:image" content="${esc(image)}">
 <meta name="twitter:image:alt" content="${esc(imageAlt)}">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/literata.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/instrument-sans.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/style.css">${
+<link rel="stylesheet" href="${versioned('/assets/style.css', site.cssVersion)}">${
     jsonld ? `\n<script type="application/ld+json">${JSON.stringify(jsonld).replace(/</g, '\\u003c')}</script>` : ''
   }
 </head>
@@ -185,7 +188,7 @@ ${privateWork
     profile,
     icon,
     title: profile.name,
-    description: profile.bio[0],
+    description: profile.description ?? profile.bio[0],
     path: '/',
     bodyClass: 'home',
     body,

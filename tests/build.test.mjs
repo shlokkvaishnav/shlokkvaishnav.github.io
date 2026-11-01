@@ -1,4 +1,5 @@
-import { existsSync, mkdtempSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs'
+import { createHash } from 'node:crypto'
+import { cpSync, existsSync, mkdtempSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import test from 'node:test'
@@ -55,6 +56,36 @@ test('the social preview image is built: a PNG of 1200 x 630 pixels, under 500 K
   assert.equal(png.readUInt32BE(16), 1200) // the width, in the IHDR chunk
   assert.equal(png.readUInt32BE(20), 630) // the height
   assert.ok(png.length < 500 * 1024, `${png.length} bytes`)
-  assert.match(readFileSync(path.join(outDir, 'index.html'), 'utf8'), /<meta property="og:image" content="https:\/\/shlokkvaishnav\.github\.io\/assets\/social\.png">/)
+  assert.match(readFileSync(path.join(outDir, 'index.html'), 'utf8'), /<meta property="og:image" content="https:\/\/shlokkvaishnav\.github\.io\/assets\/social\.png\?v=[0-9a-f]{10}">/)
+})
+
+const shortHash = (file) => createHash('sha256').update(readFileSync(file)).digest('hex').slice(0, 10)
+
+test('the stylesheet and the social image have a version that is a hash of the built file', async () => {
+  const outDir = tempOut()
+  await build({ outDir, now })
+  const home = readFileSync(path.join(outDir, 'index.html'), 'utf8')
+  assert.ok(home.includes(`<link rel="stylesheet" href="/assets/style.css?v=${shortHash(path.join(outDir, 'assets/style.css'))}">`))
+  assert.ok(home.includes(`/assets/social.png?v=${shortHash(path.join(outDir, 'assets/social.png'))}"`))
+  // The version follows the content: a changed stylesheet gets a new address.
+  const root = mkdtempSync(path.join(tmpdir(), 'root-'))
+  cpSync(new URL('../data', import.meta.url).pathname, path.join(root, 'data'), { recursive: true })
+  cpSync(new URL('../assets', import.meta.url).pathname, path.join(root, 'assets'), { recursive: true })
+  const css = path.join(root, 'assets/style.css')
+  writeFileSync(css, `${readFileSync(css, 'utf8')}\n/* changed */\n`)
+  const out2 = tempOut()
+  await build({ root, outDir: out2, now })
+  assert.notEqual(shortHash(css), shortHash(path.join(outDir, 'assets/style.css')))
+  assert.ok(readFileSync(path.join(out2, 'index.html'), 'utf8').includes(`style.css?v=${shortHash(css)}"`))
+})
+
+test('the touch icon is a PNG of 180 x 180 pixels, and the page links to it', async () => {
+  const outDir = tempOut()
+  await build({ outDir, now })
+  const png = readFileSync(path.join(outDir, 'assets/apple-touch-icon.png'))
+  assert.deepEqual([...png.subarray(0, 8)], [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])
+  assert.equal(png.readUInt32BE(16), 180)
+  assert.equal(png.readUInt32BE(20), 180)
+  assert.match(readFileSync(path.join(outDir, 'index.html'), 'utf8'), /<link rel="apple-touch-icon" href="\/assets\/apple-touch-icon\.png">/)
 })
 

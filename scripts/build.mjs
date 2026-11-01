@@ -7,6 +7,7 @@
 // It writes to a temporary folder first. It replaces the output folder only after every step worked.
 // A failed build therefore never leaves an empty or half-written site.
 
+import { createHash } from 'node:crypto'
 import { cpSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
@@ -31,10 +32,15 @@ export async function build({ root = ROOT, outDir = path.join(root, 'dist'), now
   const privateWork = readJson('private-work.json')
   const icon = createIcons(path.join(root, 'assets', 'icons'))
 
+  // A short hash of a file. It goes into the file's address, so a changed file is never served from an old cache.
+  const versionOf = (file) => createHash('sha256').update(readFileSync(path.join(root, 'assets', file))).digest('hex').slice(0, 10)
+
   const site = {
     url: config.siteUrl,
     builtAt: now.toISOString(),
     sourceUrl: `https://github.com/${config.owner}/${config.owner}.github.io`,
+    cssVersion: versionOf('style.css'),
+    imageVersion: versionOf('social.png'),
   }
   const shared = { site, profile, icon }
   const tmp = `${outDir}.tmp`
