@@ -1,19 +1,4 @@
 {
   "owner": "shlokkvaishnav",
-  "siteUrl": "https://shlokkvaishnav.github.io",
-  "exclude": [
-    "shlokkvaishnav",
-    "shlokkvaishnav.github.io"
-  ],
-  "pin": [
-    "layer-skip-refusal",
-    "freespace",
-    "lunar-ridge-detection"
-  ],
-  "ownForks": [
-    "layoff-analysis"
-  ],
-  "liveOverride": {},
-  "hideForks": true,
-  "showProjects": false
+  "siteUrl": "https://shlokkvaishnav.github.io"
 }

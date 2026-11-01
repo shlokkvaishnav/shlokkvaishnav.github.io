@@ -2,12 +2,13 @@
   "name": "shlokkvaishnav-site",
   "private": true,
   "version": "3.0.0",
-  "description": "A minimal personal site. It is built from my public GitHub repositories.",
+  "description": "A minimal personal site. It shows my experience, leadership and research.",
   "type": "module",
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "test": "node --test \"tests/**/*.test.mjs\"",
-    "build": "node scripts/build.mjs",
-    "build:offline": "node scripts/build.mjs --offline tests/fixtures --out /tmp/site-offline"
+    "build": "node scripts/build.mjs"
   }
 }

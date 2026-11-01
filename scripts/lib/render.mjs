@@ -1,5 +1,5 @@
 // Page templates. Each function takes data and returns a string. Nothing here reads files or the network.
-// Every value that comes from outside (the GitHub API, the JSON files) goes through esc().
+// Every value that comes from outside (the JSON files) goes through esc().
 
 import { esc, formatDate, formatDuration, formatMonth, monthsBetween } from './html.mjs'
 
@@ -28,7 +28,7 @@ function layout({ site, profile, icon, title, description, path, body, bodyClass
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:url" content="${esc(url)}">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-${site.showProjects === false ? '' : '<link rel="alternate" type="application/atom+xml" href="/feed.xml" title="Updates">\n'}<link rel="preload" href="/assets/fonts/literata.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/literata.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/instrument-sans.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/style.css">${
     jsonld ? `\n<script type="application/ld+json">${JSON.stringify(jsonld).replace(/</g, '\\u003c')}</script>` : ''
@@ -43,20 +43,13 @@ ${body}
       ? `
 <footer>
 <p>Last built ${esc(built)}. ${profile.footerLine ? fun(profile.footerLine) : ''}</p>
-<p class="foot-links">${site.showProjects === false ? '' : `<a class="ilink" href="/feed.xml">${icon('rss')} Feed</a> `}<a class="ilink" href="${esc(site.sourceUrl)}">${icon('github')} Source</a></p>
+<p class="foot-links"><a class="ilink" href="${esc(site.sourceUrl)}">${icon('github')} Source</a></p>
 </footer>`
       : ''
   }
 </body>
 </html>
 `
-}
-
-function chips(project) {
-  const out = []
-  if (project.archived) out.push('<span class="chip">archived</span>')
-  if (project.isFork) out.push('<span class="chip">fork</span>')
-  return out.join('')
 }
 
 // One organization with its roles, newest first. The role is the main line of each entry: its title with the dates
@@ -101,17 +94,6 @@ ${groups.map((g) => orgItem(g, now)).join('\n')}
 </ul>`
 }
 
-// The name opens the live website, or the GitHub repository if there is no website. "Code" always opens GitHub.
-function projectItem(project, icon) {
-  return `<li class="project">
-<div class="head"><a class="name" href="${esc(project.liveUrl ?? project.codeUrl)}">${esc(project.name)}</a>${chips(project)}</div>
-${project.description ? `<p class="desc">${esc(project.description)}</p>` : ''}
-<div class="actions"><a class="ilink" href="${esc(project.codeUrl)}">${icon('github')} Code</a>${
-    project.liveUrl ? `<a class="ilink" href="${esc(project.liveUrl)}">${icon('box-arrow-up-right')} Live demo</a>` : ''
-  }</div>
-</li>`
-}
-
 function personJsonLd(site, profile) {
   return {
     '@context': 'https://schema.org',
@@ -124,7 +106,7 @@ function personJsonLd(site, profile) {
   }
 }
 
-export function indexPage({ site, profile, icon, experience, leadership, privateWork, projects }) {
+export function indexPage({ site, profile, icon, experience, leadership, privateWork }) {
   const links = [
     `<a class="ilink" href="mailto:${esc(profile.email)}">${icon('envelope')} Email</a>`,
     `<a class="ilink" href="/Shlok_Vaishnav_Resume.pdf">${icon('file-earmark-person')} CV</a>`,
@@ -170,17 +152,6 @@ ${timeline(leadership, site.builtAt)}
 </section>
 
 ${
-  site.showProjects === false
-    ? ''
-    : `<section id="projects">
-<h2>${icon('braces')} Projects</h2>
-${profile.subtitles?.projects ? `<p class="subtitle">${fun(profile.subtitles.projects)}</p>` : ''}
-<ul class="projects">
-${projects.map((p) => projectItem(p, icon)).join('\n')}
-</ul>
-</section>
-`
-}${
   privateWork.length
     ? `<section id="research">
 <h2>${icon('lightbulb')} Research</h2>
@@ -233,30 +204,5 @@ ${urls
   .map((u) => `<url><loc>${esc(u.loc)}</loc><lastmod>${new Date(u.lastmod).toISOString().slice(0, 10)}</lastmod></url>`)
   .join('\n')}
 </urlset>
-`
-}
-
-export function feedXml({ site, profile, projects }) {
-  const entries = [...projects].sort((a, b) => new Date(b.pushedAt) - new Date(a.pushedAt)).slice(0, 20)
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
-<title>${esc(profile.name)} — updates</title>
-<id>${esc(site.url)}/</id>
-<link href="${esc(site.url)}/feed.xml" rel="self"/>
-<link href="${esc(site.url)}/"/>
-<updated>${new Date(site.builtAt).toISOString()}</updated>
-<author><name>${esc(profile.name)}</name></author>
-${entries
-  .map(
-    (p) => `<entry>
-<title>${esc(p.name)}</title>
-<id>${esc(p.codeUrl)}#${esc(p.pushedAt)}</id>
-<link href="${esc(p.liveUrl ?? p.codeUrl)}"/>
-<updated>${new Date(p.pushedAt).toISOString()}</updated>
-<summary>${esc(p.description || 'Updated.')}</summary>
-</entry>`,
-  )
-  .join('\n')}
-</feed>
 `
 }

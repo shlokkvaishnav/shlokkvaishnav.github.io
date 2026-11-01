@@ -1,19 +1,15 @@
 import { readFileSync } from 'node:fs'
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { feedXml, indexPage, notFoundPage, sitemapXml } from '../scripts/lib/render.mjs'
+import { indexPage, notFoundPage, sitemapXml } from '../scripts/lib/render.mjs'
 import { createIcons } from '../scripts/lib/icons.mjs'
-import { selectProjects } from '../scripts/lib/select.mjs'
 
 const root = new URL('../', import.meta.url)
 const json = (p) => JSON.parse(readFileSync(new URL(p, root), 'utf8'))
-const repos = json('tests/fixtures/repos.json')
 const profile = json('data/profile.json')
-const config = { ...json('data/config.json'), pin: ['quorum'], liveOverride: {} }
 const now = new Date('2026-10-12T00:00:00Z')
 const site = { url: 'https://example.test', builtAt: now.toISOString(), sourceUrl: 'https://example.test/src' }
 const icon = createIcons(new URL('assets/icons/', root).pathname)
-const projects = selectProjects(repos, config)
 const ctx = {
   site,
   profile,
@@ -21,7 +17,6 @@ const ctx = {
   experience: json('data/experience.json'),
   leadership: json('data/leadership.json'),
   privateWork: json('data/private-work.json'),
-  projects,
 }
 
 // The HTML of one section of the home page.
@@ -30,46 +25,20 @@ const section = (html, id) => {
   return html.slice(start, html.indexOf('</section>', start))
 }
 
-test('the home page lists every selected project and links to its page', () => {
-  const html = indexPage(ctx)
-  for (const p of projects) assert.ok(html.includes(`>${p.name}</a>`), p.name)
-  assert.ok(!html.includes('secret-research'))
-})
-
-test('text from GitHub is escaped everywhere', () => {
-  const html = indexPage(ctx)
-  assert.ok(!html.includes('<script>alert("x")</script>'))
-  assert.match(html, /&lt;script&gt;alert\(&quot;x&quot;\)&lt;\/script&gt; &amp; &quot;quotes&quot;/)
-})
-
 test('the sitemap lists only the home page', () => {
-  const xml = sitemapXml({ site, projects })
+  const xml = sitemapXml({ site })
   assert.match(xml, /<loc>https:\/\/example\.test\/<\/loc>/)
   assert.doesNotMatch(xml, /\/now\//)
-  assert.doesNotMatch(xml, /\/projects\//)
-})
-
-test('the feed is valid-looking Atom with one entry per project', () => {
-  const xml = feedXml({ site, profile, projects })
-  assert.match(xml, /^<\?xml/)
-  assert.equal((xml.match(/<entry>/g) ?? []).length, projects.length)
 })
 
 test('the site never mentions the old custom domain', () => {
-  const all = [indexPage(ctx), sitemapXml({ site, projects })].join('\n')
+  const all = [indexPage(ctx), sitemapXml({ site })].join('\n')
   assert.doesNotMatch(all, /shlokkvaishnav\.dev/)
 })
 
 test('the home page has no News, Recently or search bar', () => {
   const html = indexPage(ctx)
   assert.doesNotMatch(html, /News|Recently|type="search"|<script src=/)
-})
-
-test('project rows show only the name, the text and the links: no language, no date', () => {
-  const html = indexPage(ctx)
-  const list = html.slice(html.indexOf('<ul class="projects">'), html.indexOf('</ul>', html.indexOf('<ul class="projects">')))
-  assert.doesNotMatch(list, /Python|Updated|class="dot"|class="facts"/)
-  assert.match(list, /<svg class="icon"[^>]*>[\s\S]*?<\/svg> Code/)
 })
 
 test('the portrait has an alt text and a size, so the page does not jump', () => {
@@ -80,9 +49,9 @@ test('the home page has a side panel with the links, and the content next to it'
   const html = indexPage(ctx)
   assert.match(html, /<body class="home">/)
   assert.match(html, /<aside class="profile">[\s\S]*<nav class="links"[\s\S]*<\/aside>\s*<div class="content">/)
-  // The experience and projects are in the content column, not in the side panel.
+  // The experience and research are in the content column, not in the side panel.
   assert.ok(html.indexOf('<div class="content">') < html.indexOf('id="experience"'))
-  assert.ok(html.indexOf('</aside>') < html.indexOf('id="projects"'))
+  assert.ok(html.indexOf('</aside>') < html.indexOf('id="research"'))
 })
 
 test('the home page and the CV show the current roles, not the old ones', () => {
@@ -157,11 +126,6 @@ test('periods and durations come from the dates (build date is 12 Oct 2026)', ()
   assert.match(html, /<span class="org-total">1 yr 2 mos<\/span>/) // the club in total
 })
 
-test('projects have no topic tags', () => {
-  const html = indexPage(ctx)
-  assert.doesNotMatch(html, /class="tags?"|data-topic|ai-agents|paged-attention/)
-})
-
 test('nobody is marked "Promoted"', () => {
   assert.doesNotMatch(indexPage(ctx), /Promoted|chip-accent/)
 })
@@ -224,7 +188,7 @@ test('the fun lines are in the places I agreed on', () => {
   assert.doesNotMatch(html, /class="tagline"|Teaching computers to find craters/) // the line under the name was removed
   assert.doesNotMatch(html, /class="funfact"|Fun fact/) // the fun-fact line was removed
   assert.match(html, /<p class="note">Open to internships and research collaborations&nbsp;<span class="emoji"/)
-  for (const line of ['Where I have worked', 'Clubs I have helped lead', 'Things I have built', 'Questions I am chasing']) {
+  for (const line of ['Where I have worked', 'Clubs I have helped lead', 'Questions I am chasing']) {
     assert.match(html, new RegExp(`<p class="subtitle">${line.replace(/'/g, '&#39;')}&nbsp;<span class="emoji"`), line)
   }
   assert.match(html, /<footer>[\s\S]*Built from GitHub by a script that never sleeps&nbsp;<span class="emoji"/)
@@ -246,10 +210,6 @@ test('every emoji is hidden from screen readers, and none is in the title or des
   assert.doesNotMatch(html, /<meta name="description" content="[^"]*\p{Extended_Pictographic}/u)
 })
 
-test('the removed grey line under Projects is gone', () => {
-  assert.doesNotMatch(indexPage(ctx), /read from my public GitHub repositories/)
-})
-
 test('the fun lines are optional: without them the page still builds', () => {
   const bare = { ...profile }
   for (const k of ['availability', 'subtitles', 'footerLine', 'notFoundLine']) delete bare[k]
@@ -267,21 +227,16 @@ test('Research is a list of points, one bullet per item', () => {
   assert.doesNotMatch(list, /class="project"|class="desc"/)
 })
 
-test('the project name opens the live website, or GitHub when there is none; Code opens GitHub', () => {
+test('the page has an Experience, a Leadership and a Research section, and nothing about projects', () => {
   const html = indexPage(ctx)
-  const row = (name) => html.slice(html.indexOf(`>${name}</a>`) - 400, html.indexOf('</li>', html.indexOf(`>${name}</a>`)))
-  const withLive = projects.find((p) => p.liveUrl)
-  const noLive = projects.find((p) => !p.liveUrl)
-  assert.match(row(withLive.name), new RegExp(`class="name" href="${withLive.liveUrl.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&')}">${withLive.name}</a>`))
-  assert.match(row(withLive.name), new RegExp(`href="${withLive.codeUrl.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&')}">[\\s\\S]*?Code</a>`))
-  assert.match(row(noLive.name), new RegExp(`class="name" href="${noLive.codeUrl.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&')}"`))
-  assert.doesNotMatch(html, /class="name" href="\/projects\//) // no name links to a generated page any more
+  assert.deepEqual([...html.matchAll(/<section id="([a-z]+)">/g)].map((m) => m[1]), ['experience', 'leadership', 'research'])
+  assert.doesNotMatch(html, /id="projects"|class="projects?"|Things I have built|Live demo|feed\.xml/)
+  assert.ok(html.includes('skipping layers to make a language model run faster'))
 })
 
-test('with showProjects false the page has a Research section and no Projects section or feed link', () => {
-  const html = indexPage({ ...ctx, site: { ...site, showProjects: false } })
-  assert.doesNotMatch(html, /<section id="projects">|class="projects"|feed\.xml|Things I have built/)
-  assert.match(html, /<section id="research">/)
-  assert.ok(html.includes('skipping layers to make a language model run faster'))
-  for (const p of projects) assert.ok(!html.includes(`>${p.name}</a>`), p.name)
+test('text in the research list is escaped', () => {
+  const bad = [{ summary: '<script>alert("x")</script> & "quotes"', tag: 'Currently ongoing', emoji: '' }]
+  const html = indexPage({ ...ctx, privateWork: bad })
+  assert.ok(!html.includes('<script>alert("x")</script>'))
+  assert.match(html, /&lt;script&gt;alert\(&quot;x&quot;\)&lt;\/script&gt; &amp; &quot;quotes&quot;/)
 })

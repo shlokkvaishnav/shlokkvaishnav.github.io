@@ -20,7 +20,6 @@ function* walk(dir) {
 }
 
 const problems = []
-const warnings = []
 const external = new Set()
 
 for (const file of walk(dist)) {
@@ -36,9 +35,7 @@ for (const file of walk(dist)) {
     }
     if (value.startsWith('#')) {
       if (value.length > 1 && !ids.has(value.slice(1))) {
-        // A README can link to anchors that do not exist, also on GitHub. That is the repo's own text.
-        const message = `${path.relative(dist, file)}: missing anchor ${value}`
-        ;(path.relative(dist, file).startsWith('projects') ? warnings : problems).push(message)
+        problems.push(`${path.relative(dist, file)}: missing anchor ${value}`)
       }
       continue
     }
@@ -65,7 +62,6 @@ if (checkExternal) {
   problems.push(...results.filter(Boolean).map((r) => `external: ${r}`))
 }
 
-if (warnings.length) console.warn(`Warnings (links inside README text):\n${warnings.join('\n')}\n`)
 if (problems.length) {
   console.error(problems.join('\n'))
   console.error(`\n${problems.length} problem(s) found.`)

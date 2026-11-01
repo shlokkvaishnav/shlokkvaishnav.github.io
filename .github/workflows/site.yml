@@ -1,13 +1,10 @@
 name: Build and deploy the site
 
-# The site reads my public GitHub repositories, so it must be rebuilt now and then.
-# It builds on every push, every 6 hours, and when started by hand.
+# The site is built from the files in data/ and assets/. It builds on every push and when started by hand.
 
 on:
   push:
     branches: [main]
-  schedule:
-    - cron: "23 */6 * * *"
   workflow_dispatch:
 
 permissions:
@@ -33,12 +30,9 @@ jobs:
       - name: Run the tests
         run: node --test "tests/**/*.test.mjs"
 
-      # The build fails if GitHub returns no repositories or a request fails.
       # A failed build does not deploy, so the live site stays as it is.
-      - name: Build the site from GitHub
+      - name: Build the site
         run: node scripts/build.mjs
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
 
       - name: Check the links
         run: node scripts/check-links.mjs dist

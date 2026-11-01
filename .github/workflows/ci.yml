@@ -1,6 +1,6 @@
 name: CI
 
-# Checks pull requests (for example Dependabot) without touching GitHub or the live site.
+# Checks pull requests (for example Dependabot) without touching the live site.
 
 on:
   pull_request:
@@ -18,8 +18,8 @@ jobs:
       - name: Run the tests
         run: node --test "tests/**/*.test.mjs"
 
-      - name: Build from saved answers
-        run: node scripts/build.mjs --offline tests/fixtures --out "$RUNNER_TEMP/site"
+      - name: Build the site
+        run: node scripts/build.mjs --out "$RUNNER_TEMP/site"
 
       - name: Check the links
         run: node scripts/check-links.mjs "$RUNNER_TEMP/site"
