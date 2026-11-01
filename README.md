@@ -32,7 +32,7 @@ A failed build does not deploy, so the live site stays as it was.
 
 | What | Where |
 |---|---|
-| Name, bio, links, email, and the lines with emojis (heading subtitles, footer, 404) | `data/profile.json` |
+| Name, bio, links, email, and the lines with emojis (heading subtitles, 404) | `data/profile.json` |
 | Experience (organizations and roles) | `data/experience.json` |
 | Leadership (organizations and roles) | `data/leadership.json` |
 | Research | `data/private-work.json` |

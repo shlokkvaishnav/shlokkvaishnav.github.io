@@ -42,7 +42,7 @@ ${body}
     footer
       ? `
 <footer>
-<p>Last built ${esc(built)}. ${profile.footerLine ? fun(profile.footerLine) : ''}</p>
+<p>Last built ${esc(built)}.</p>
 <p class="foot-links"><a class="ilink" href="${esc(site.sourceUrl)}">${icon('github')} Source</a></p>
 </footer>`
       : ''

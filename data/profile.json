@@ -49,10 +49,6 @@
       "emoji": "🔍"
     }
   },
-  "footerLine": {
-    "text": "Built from GitHub by a script that never sleeps",
-    "emoji": "☕"
-  },
   "notFoundLine": {
     "text": "This page got lost, like a rover on the Moon",
     "emoji": "🌑"

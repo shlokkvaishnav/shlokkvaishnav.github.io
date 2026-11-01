@@ -191,7 +191,7 @@ test('the fun lines are in the places I agreed on', () => {
   for (const line of ['Where I have worked', 'Clubs I have helped lead', 'Questions I am chasing']) {
     assert.match(html, new RegExp(`<p class="subtitle">${line.replace(/'/g, '&#39;')}&nbsp;<span class="emoji"`), line)
   }
-  assert.match(html, /<footer>[\s\S]*Built from GitHub by a script that never sleeps&nbsp;<span class="emoji"/)
+  assert.doesNotMatch(html, /never sleeps|Built from GitHub/) // the footer has only the build date and the links
   assert.match(html, /Currently ongoing&nbsp;<span class="emoji" aria-hidden="true">🔬<\/span>/)
   const missing = notFoundPage({ site, profile, icon })
   assert.match(missing, /This page got lost, like a rover on the Moon&nbsp;<span class="emoji" aria-hidden="true">🌑<\/span>/)
@@ -212,7 +212,7 @@ test('every emoji is hidden from screen readers, and none is in the title or des
 
 test('the fun lines are optional: without them the page still builds', () => {
   const bare = { ...profile }
-  for (const k of ['availability', 'subtitles', 'footerLine', 'notFoundLine']) delete bare[k]
+  for (const k of ['availability', 'subtitles', 'notFoundLine']) delete bare[k]
   const noEmoji = ctx.privateWork.map(({ emoji, ...rest }) => rest)
   const html = indexPage({ ...ctx, profile: bare, privateWork: noEmoji })
   assert.doesNotMatch(html, /class="subtitle"|class="emoji"/)
