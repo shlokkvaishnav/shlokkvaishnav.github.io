@@ -60,15 +60,17 @@ function chips(project) {
   return out.join('')
 }
 
-// One organization with its roles, newest first, like the Experience section on LinkedIn.
-// Roles are listed newest first. An organization with several roles shows a line with a dot for each role, like
-// LinkedIn, so a promotion is easy to see. An organization with one role is a plain entry. A new position at the
-// same organization is one more entry at the top of its `roles` list, and the line appears.
-function roleItem(role, now) {
+// One organization with its roles, newest first. The role is the main line of each entry: its title with the dates
+// on the same row, then the organization (and place) in a quieter line, then the summary. An organization with
+// several roles shows its name once above them, so a promotion is easy to see. Every role sits on the same left
+// edge, whether it is alone or one of several. A new position at the same organization is one more entry at the top
+// of its `roles` list.
+function roleItem(role, now, byline) {
   const duration = formatDuration(monthsBetween(role.start, role.end, now))
   return `<li class="position${role.end ? '' : ' current'}">
-<p class="position-title"><strong>${esc(role.title)}</strong></p>
-<p class="position-when"><span>${esc(monthOf(role.start))} to ${role.end ? esc(monthOf(role.end)) : 'now'}</span><span>${esc(duration)}</span></p>
+<div class="position-head"><p class="position-title"><strong>${esc(role.title)}</strong></p>
+<p class="position-when"><span>${esc(monthOf(role.start))} to ${role.end ? esc(monthOf(role.end)) : 'now'}</span><span>${esc(duration)}</span></p></div>
+${byline ? `<p class="position-org">${esc(byline)}</p>` : ''}
 <p class="position-text">${esc(role.summary)}</p>
 </li>`
 }
@@ -79,11 +81,17 @@ function orgItem(group, now) {
   const stillOpen = group.roles.some((r) => !r.end)
   const last = stillOpen ? null : group.roles.reduce((a, r) => (r.end > a ? r.end : a), group.roles[0].end)
   const total = multi ? formatDuration(monthsBetween(first, last, now)) : ''
+  // One role: the organization is the line under the title. Several roles: the name heads the group instead.
+  const byline = multi ? '' : [group.org, group.location].filter(Boolean).join(' \u00b7 ')
   return `<li class="org">
-<div class="org-head"><span class="org-name">${esc(group.org)}</span>${total ? `<span class="org-total">${esc(total)}</span>` : ''}</div>
+${
+  multi
+    ? `<div class="org-head"><span class="org-name">${esc(group.org)}</span>${total ? `<span class="org-total">${esc(total)}</span>` : ''}</div>
 ${group.location ? `<p class="org-place">${esc(group.location)}</p>` : ''}
-<ol class="positions${multi ? ' linked' : ''}">
-${group.roles.map((r) => roleItem(r, now)).join('\n')}
+`
+    : ''
+}<ol class="positions">
+${group.roles.map((r) => roleItem(r, now, byline)).join('\n')}
 </ol>
 </li>`
 }

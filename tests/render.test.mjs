@@ -130,19 +130,22 @@ test('Leadership is a separate section with the Data Science Club and IEEE CS', 
 
 test('the Data Science Club shows both roles under one organization, newest first', () => {
   const html = section(indexPage(ctx), 'leadership')
-  const club = html.slice(html.indexOf('Data Science Club'), html.indexOf('IEEE Computer Society'))
+  const club = html.slice(html.indexOf('<li class="org">'), html.lastIndexOf('<li class="org">'))
   assert.equal((club.match(/<li class="position/g) ?? []).length, 2)
   assert.ok(club.indexOf('President') < club.indexOf('Technical Team Member'))
-  assert.match(club, /<ol class="positions linked">/)
+  assert.match(club, /<ol class="positions">/)
+  assert.equal((club.match(/class="org-head"/g) ?? []).length, 1) // the name heads the group once
+  assert.doesNotMatch(club, /class="position-org"/) // so the roles do not repeat it
   assert.match(club, /<li class="position current">/) // the role held now
 })
 
-test('IEEE CS is its own entry with a single role and no connecting line', () => {
+test('IEEE CS is its own entry with a single role, and the organization sits under the title', () => {
   const html = section(indexPage(ctx), 'leadership')
-  const ieee = html.slice(html.indexOf('IEEE Computer Society'))
+  const ieee = html.slice(html.lastIndexOf('<li class="org">'))
   assert.match(ieee, /Founding Board Member/)
   assert.equal((ieee.match(/<li class="position/g) ?? []).length, 1)
-  assert.doesNotMatch(ieee, /positions linked/)
+  assert.match(ieee, /<p class="position-org">IEEE Computer Society, Nirma University<\/p>/)
+  assert.doesNotMatch(ieee, /class="org-head"/)
 })
 
 test('periods and durations come from the dates (build date is 12 Oct 2026)', () => {
@@ -163,15 +166,20 @@ test('nobody is marked "Promoted"', () => {
   assert.doesNotMatch(indexPage(ctx), /Promoted|chip-accent/)
 })
 
-test('only an organization with several roles gets the connecting line', () => {
+test('every role sits on the same left edge, alone or one of several', () => {
   const html = indexPage(ctx)
-  assert.equal((html.match(/<ol class="positions linked">/g) ?? []).length, 1) // the Data Science Club
-  assert.equal((html.match(/<ol class="positions">/g) ?? []).length, 3) // ISRO, Bull Agritech, IEEE CS
+  assert.equal((html.match(/<ol class="positions">/g) ?? []).length, 4) // ISRO, Bull Agritech, the club, IEEE CS
+  assert.doesNotMatch(html, /positions linked/)
+  const css = readFileSync(new URL('assets/style.css', root), 'utf8')
+  assert.doesNotMatch(css, /\.positions\.linked/) // no extra indent for several roles
+  assert.match(css, /\.positions \{[^}]*padding: 0/)
 })
 
-test('a role in a single-role organization has no dot or line to look unfinished', () => {
+test('the title and the dates share a row, and only the role held now has a dot', () => {
+  const html = indexPage(ctx)
+  assert.equal((html.match(/<div class="position-head">/g) ?? []).length, 5) // one per role
   const css = readFileSync(new URL('assets/style.css', root), 'utf8')
-  assert.match(css, /\.positions\.linked \.position::before/) // dots only inside a linked list
+  assert.match(css, /\.position\.current \.position-title strong::after/)
   assert.doesNotMatch(css, /(^|\n)\.position::before/)
 })
 
@@ -257,12 +265,6 @@ test('Research is a list of points, one bullet per item', () => {
   assert.equal((list.match(/<li>/g) ?? []).length, 2)
   assert.match(list, /<li>I am working on whether a replicated approximate-nearest-neighbour index silently diverges in search quality across replicas under node failure, and whether that divergence persists after recovery\. <span class="chip">Currently ongoing/)
   assert.doesNotMatch(list, /class="project"|class="desc"/)
-})
-
-test('the roles of one organization have dots but no connecting line', () => {
-  const css = readFileSync(new URL('assets/style.css', root), 'utf8')
-  const rule = css.match(/\.positions\.linked \{[^}]*\}/)[0]
-  assert.doesNotMatch(rule, /border-left/)
 })
 
 test('the project name opens the live website, or GitHub when there is none; Code opens GitHub', () => {
