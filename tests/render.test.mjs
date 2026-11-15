@@ -171,7 +171,7 @@ test('the Research list has a short line and a tag for each item, and no names',
   assert.doesNotMatch(html, /Private research|private code/)
   assert.match(html, /I am working on whether a replicated approximate-nearest-neighbour index silently diverges in search quality across replicas under node failure, and whether that divergence persists after recovery\./)
   assert.equal((html.match(/Currently ongoing/g) ?? []).length, 3)
-  assert.doesNotMatch(html, /Replica recall divergence|Null scaffold audit|replica-recall|null-scaffold/i)
+  assert.doesNotMatch(html, /Replica recall divergence|Null scaffold audit|replica-recall|null-scaffold|scaffold-equivalence|pruning-refusal|layer-skip-refusal/i)
 })
 
 test('the intro is a single paragraph', () => {
