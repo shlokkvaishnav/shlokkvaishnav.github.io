@@ -1,6 +1,6 @@
 [
   {
-    "summary": "I am working on whether skipping layers to make a language model run faster also removes the layers that make it refuse harmful requests, and how much speed I can gain before the refusals drop.",
+    "summary": "I am working on whether the rules that layer-pruning methods use to pick which layers to skip also pick the layers that make a language model refuse harmful requests, and how much speed I can gain before the refusals drop.",
     "tag": "Currently ongoing",
     "emoji": "🔬"
   },
@@ -10,7 +10,7 @@
     "emoji": "🔬"
   },
   {
-    "summary": "I am working on whether neural architecture search controllers actually beat budget-matched random-search restarts, and whether a scaffold's contribution can be audited mechanically before publication.",
+    "summary": "I am working on whether a pre-registered equivalence test can certify that a search scaffold adds nothing over budget-matched restarts of its own base searcher, and how often such a verdict is wrong.",
     "tag": "Currently ongoing",
     "emoji": "🔬"
   }

@@ -231,7 +231,7 @@ test('the page has an Experience, a Leadership and a Research section, and nothi
   const html = indexPage(ctx)
   assert.deepEqual([...html.matchAll(/<section id="([a-z]+)">/g)].map((m) => m[1]), ['experience', 'leadership', 'research'])
   assert.doesNotMatch(html, /id="projects"|class="projects?"|Things I have built|Live demo|feed\.xml/)
-  assert.ok(html.includes('skipping layers to make a language model run faster'))
+  assert.ok(html.includes('layer-pruning methods use to pick which layers to skip'))
 })
 
 test('text in the research list is escaped', () => {
