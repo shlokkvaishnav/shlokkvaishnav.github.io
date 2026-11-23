@@ -2,14 +2,12 @@
   {
     "name": "Ghostdesk",
     "tagline": "Autonomous paper-trading desk",
-    "tools": "Python, LightGBM, PyTorch, GitHub Actions, Alpaca API",
     "description": "Reads company reports, picks S&P 500 stocks and trades them each month with paper money, with no person at the desk. Each stock-picking model was tested once, under a plan registered before the test data was used.",
     "live": "https://shlokkvaishnav.github.io/ghostdesk/"
   },
   {
     "name": "Pitchvision",
     "tagline": "Players the camera misses",
-    "tools": "Python, PyTorch, ONNX, JavaScript",
     "description": "Fills in the football players that a TV broadcast does not show, with a calibrated region for each one. The model runs in the browser on real Bundesliga clips.",
     "live": "https://shlokkvaishnav.github.io/pitchvision/",
     "repo": "https://github.com/shlokkvaishnav/pitchvision"
@@ -17,17 +15,8 @@
   {
     "name": "Pitwall",
     "tagline": "F1 race-strategy model",
-    "tools": "Python, LightGBM, Docker, JavaScript",
     "description": "Builds a race-strategy model one layer at a time from public lap data, and tests each layer on races it has not seen. The undercut tool runs in the browser.",
     "live": "https://shlokkvaishnav.github.io/pitwall/",
     "repo": "https://github.com/shlokkvaishnav/pitwall"
-  },
-  {
-    "name": "Freespace",
-    "tagline": "3D change detection from phone scans",
-    "tools": "Python, Open3D, PyTorch, CLIP",
-    "description": "Finds the objects that were moved, added or removed between two phone scans of a room. It reports a change only when the sensor rays prove it.",
-    "live": "https://shlokkvaishnav.github.io/freespace/",
-    "repo": "https://github.com/shlokkvaishnav/freespace"
   }
 ]

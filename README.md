@@ -43,7 +43,7 @@ A failed build does not deploy, so the live site stays as it was.
 
 **Add a position.** At an organization that is already listed, add an entry at the top of its `roles` list, with `title`, `start` (`YYYY-MM`), `end` (`YYYY-MM`, or `null` while I still hold it) and `summary`. The roles then show on a connecting line, as on LinkedIn, and the durations come from the dates. An organization with only one role shows as a plain entry. For a new organization, add an object with `org` and `roles`.
 
-**Add a project.** Add an object to `data/projects.json` (newest first) with `name`, `tagline`, `tools`, `description` (one or two plain sentences), `live` (the address of its site) and `repo` (only when the repository is public, so the link never shows a 404 page).
+**Add a project.** Add an object to `data/projects.json` (newest first) with `name`, `tagline`, `description` (one or two plain sentences), `live` (the address of its site) and `repo` (only when the repository is public, so the link never shows a 404 page).
 
 **Add a publication.** Add an object at the top of `data/publications.json` with `title`, an optional one-line `description` (plain English: what the paper does), `authors` (in the paper's order), `me` (my name exactly as it appears in `authors`, shown in bold), `venue`, `place`, `year` and `doi`. The title links to `https://doi.org/<doi>`.
 

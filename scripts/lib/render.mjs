@@ -144,8 +144,8 @@ ${p.description ? `<p class="position-text pub-desc">${esc(p.description)}</p>\n
 }
 
 // One project, in the same markup as a role in Experience: the name and tagline where the role title goes, the
-// links (live site, and the code when the repo is public) where the dates go, the tools where the organization
-// goes, and the description where the summary goes.
+// links (live site, and the code when the repo is public) where the dates go, and the description where the
+// summary goes.
 function project(p) {
   const links = [
     p.live ? `<a href="${esc(p.live)}">Live</a>` : '',
@@ -156,7 +156,7 @@ function project(p) {
 <li class="position">
 <div class="position-head"><p class="position-title"><strong>${esc(p.name)}</strong>${p.tagline ? `<span class="project-tagline">: ${esc(p.tagline)}</span>` : ''}</p>
 ${links.length ? `<p class="position-when project-links">${links.join('')}</p>` : ''}</div>
-${p.tools ? `<p class="position-org">${esc(p.tools)}</p>\n` : ''}<p class="position-text">${esc(p.description)}</p>
+<p class="position-text">${esc(p.description)}</p>
 </li>
 </ol>
 </li>`

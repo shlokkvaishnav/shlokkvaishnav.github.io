@@ -133,7 +133,7 @@ test('nobody is marked "Promoted"', () => {
 
 test('every role sits on the same left edge, alone or one of several', () => {
   const html = indexPage(ctx)
-  assert.equal((html.match(/<ol class="positions">/g) ?? []).length, 8) // Bull Agritech, 4 projects, the club, IEEE CS, the paper
+  assert.equal((html.match(/<ol class="positions">/g) ?? []).length, 7) // Bull Agritech, 3 projects, the club, IEEE CS, the paper
   assert.doesNotMatch(html, /positions linked/)
   const css = readFileSync(new URL('assets/style.css', root), 'utf8')
   assert.doesNotMatch(css, /\.positions\.linked/) // no extra indent for several roles
@@ -142,7 +142,7 @@ test('every role sits on the same left edge, alone or one of several', () => {
 
 test('the title and the dates share a row, and only the role held now has a dot', () => {
   const html = indexPage(ctx)
-  assert.equal((html.match(/<div class="position-head">/g) ?? []).length, 9) // one per role, one per project, and one for the paper
+  assert.equal((html.match(/<div class="position-head">/g) ?? []).length, 8) // one per role, one per project, and one for the paper
   const css = readFileSync(new URL('assets/style.css', root), 'utf8')
   assert.match(css, /\.position\.current \.position-title strong::after/)
   assert.doesNotMatch(css, /(^|\n)\.position::before/)
@@ -345,7 +345,8 @@ test('Projects lists each project with its live link, and a GitHub link only whe
   const html = section(indexPage(ctx), 'projects')
   assert.match(html, /<h2>[\s\S]*Projects<\/h2>/)
   assert.match(html, /<p class="subtitle">Things I have built/)
-  for (const name of ['Ghostdesk', 'Pitchvision', 'Pitwall', 'Freespace']) assert.match(html, new RegExp(`<strong>${name}</strong>`))
+  assert.doesNotMatch(html, /Freespace|class="position-org"/) // no Freespace, and no tools line
+  for (const name of ['Ghostdesk', 'Pitchvision', 'Pitwall']) assert.match(html, new RegExp(`<strong>${name}</strong>`))
   assert.match(html, /<a href="https:\/\/shlokkvaishnav\.github\.io\/pitchvision\/">Live<\/a><a href="https:\/\/github\.com\/shlokkvaishnav\/pitchvision">GitHub<\/a>/)
   const ghostdesk = html.slice(html.indexOf('<strong>Ghostdesk'), html.indexOf('</li>', html.indexOf('<strong>Ghostdesk')))
   assert.match(ghostdesk, />Live<\/a>/)
@@ -354,7 +355,7 @@ test('Projects lists each project with its live link, and a GitHub link only whe
 
 test('project text is escaped, and with no projects the section is left out', () => {
   assert.doesNotMatch(indexPage({ ...ctx, projects: [] }), /id="projects"/)
-  const bad = [{ name: '<i>x</i>', tagline: 'a & b', tools: 'T', description: 'D', live: 'https://e.test/?a="b"' }]
+  const bad = [{ name: '<i>x</i>', tagline: 'a & b', description: 'D', live: 'https://e.test/?a="b"' }]
   const html = section(indexPage({ ...ctx, projects: bad }), 'projects')
   assert.match(html, /&lt;i&gt;x&lt;\/i&gt;/)
   assert.match(html, /a &amp; b/)
