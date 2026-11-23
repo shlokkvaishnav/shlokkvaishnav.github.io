@@ -1,17 +1,5 @@
 [
   {
-    "org": "Space Applications Centre, ISRO",
-    "location": "Ahmedabad, India",
-    "roles": [
-      {
-        "title": "Computer Vision Researcher",
-        "start": "2026-02",
-        "end": null,
-        "summary": "Detecting and characterizing lunar craters from OHRC images and elevation models, using image processing and deep learning. I designed a two-stage detection and segmentation pipeline on Chandrayaan-2 terrain models that reaches 0.83 mIoU on crater tiles."
-      }
-    ]
-  },
-  {
     "org": "Bull Agritech",
     "location": "Ahmedabad, India",
     "roles": [

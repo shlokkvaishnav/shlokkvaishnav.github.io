@@ -27,6 +27,8 @@ function layout({ site, profile, icon, title, description, path, body, bodyClass
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(description)}">
 <meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#fbfbfc" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14151a" media="(prefers-color-scheme: dark)">
 <link rel="canonical" href="${esc(url)}">
 <meta property="og:type" content="website">
 <meta property="og:title" content="${esc(title)}">
@@ -122,10 +124,30 @@ function personJsonLd(site, profile) {
   }
 }
 
-export function indexPage({ site, profile, icon, experience, leadership, privateWork }) {
+// One publication, in the same markup as a role in Experience: the title (a link to its DOI) where the role
+// title goes, the year where the dates go, the authors (my name in bold) where the organization goes, then a
+// one-line description, the venue and the DOI.
+function publication(p) {
+  const authors = (p.authors ?? []).map((a) => (a === p.me ? `<strong>${esc(a)}</strong>` : esc(a))).join(', ')
+  const doiUrl = `https://doi.org/${encodeURI(p.doi ?? '').replace(/#/g, '%23').replace(/\?/g, '%3F')}`
+  const where = [p.venue, p.place].filter(Boolean).join(', ')
+  return `<li class="org">
+<ol class="positions">
+<li class="position">
+<div class="position-head"><p class="position-title"><strong><a class="pub-title" href="${esc(doiUrl)}">${esc(p.title)}</a></strong></p>
+<p class="position-when"><span>${esc(String(p.year))}</span></p></div>
+<p class="position-org pub-authors">${authors}</p>
+${p.description ? `<p class="position-text pub-desc">${esc(p.description)}</p>\n` : ''}${where ? `<p class="pub-meta">${esc(where)}</p>\n` : ''}${p.doi ? `<p class="pub-meta">DOI: <a href="${esc(doiUrl)}">${esc(p.doi)}</a></p>` : ''}
+</li>
+</ol>
+</li>`
+}
+
+export function indexPage({ site, profile, icon, experience, leadership, privateWork, publications = [] }) {
   const links = [
     `<a class="ilink" href="mailto:${esc(profile.email)}">${icon('envelope')} Email</a>`,
     `<a class="ilink" href="/Shlok_Vaishnav_Resume.pdf">${icon('file-earmark-person')} CV</a>`,
+    `<a class="ilink" href="/Shlok_Vaishnav_Resume_Research.pdf">${icon('file-earmark-person')} Research CV</a>`,
     ...profile.links.map((l) => `<a class="ilink" href="${esc(l.href)}">${icon(l.icon)} ${esc(l.label)}</a>`),
   ]
 
@@ -156,26 +178,46 @@ ${profile.bio
 </div>
 
 <section id="experience">
+<header class="section-head">
 <h2>${icon('briefcase')} Experience</h2>
 ${profile.subtitles?.experience ? `<p class="subtitle">${fun(profile.subtitles.experience)}</p>` : ''}
+</header>
 ${timeline(experience, site.builtAt)}
 </section>
 
 <section id="leadership">
+<header class="section-head">
 <h2>${icon('people')} Leadership</h2>
 ${profile.subtitles?.leadership ? `<p class="subtitle">${fun(profile.subtitles.leadership)}</p>` : ''}
+</header>
 ${timeline(leadership, site.builtAt)}
 </section>
 
 ${
   privateWork.length
     ? `<section id="research">
+<header class="section-head">
 <h2>${icon('lightbulb')} Research</h2>
 ${profile.subtitles?.research ? `<p class="subtitle">${fun(profile.subtitles.research)}</p>` : ''}
+</header>
 <ul class="points">
 ${privateWork
   .map((w) => `<li>${esc(w.summary)} <span class="chip">${fun({ text: w.tag, emoji: w.emoji })}</span></li>`)
   .join('\n')}
+</ul>
+</section>
+`
+    : ''
+}${
+  publications.length
+    ? `
+<section id="publications">
+<header class="section-head">
+<h2>${icon('journal-text')} Publications</h2>
+${profile.subtitles?.publications ? `<p class="subtitle">${fun(profile.subtitles.publications)}</p>` : ''}
+</header>
+<ul class="timeline">
+${publications.map(publication).join('\n')}
 </ul>
 </section>
 `

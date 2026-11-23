@@ -8,7 +8,7 @@ Live: <https://shlokkvaishnav.github.io>
 
 ## Overview
 
-The site is one page with no framework and no npm packages. It has three sections: Experience, Leadership and Research. There is no Projects section and no feed. The build uses only the files in this repository. It does not use the network.
+The site is one page with no framework and no npm packages. It has four sections: Experience, Leadership, Research and Publications. There is no Projects section and no feed. The build (`scripts/build.mjs`) uses only the files in this repository and does not use the network. Before it runs, the deploy workflow downloads the latest resume PDFs into `data/` from the private resume repo.
 
 ## How it works
 
@@ -17,7 +17,7 @@ data/*.json  ──> scripts/build.mjs ──> dist/ ──> GitHub Pages
 ```
 
 - **Research.** Each item in `data/private-work.json` is one line in the Research section.
-- **CV.** The CV link opens `data/Shlok_Vaishnav_Resume.pdf`. To update it, replace that file.
+- **CV.** The CV and Research CV links open the PDFs in `data/`. When the private resume repo builds new ones, the site workflow downloads them. The PDFs saved in `data/` are used if the download fails.
 
 ### When it updates
 
@@ -36,10 +36,13 @@ A failed build does not deploy, so the live site stays as it was.
 | Experience (organizations and roles) | `data/experience.json` |
 | Leadership (organizations and roles) | `data/leadership.json` |
 | Research | `data/private-work.json` |
+| Publications | `data/publications.json` |
 | The site address and the GitHub owner | `data/config.json` |
 | Look | `assets/style.css`. Icons, fonts and their licences: `assets/CREDITS.md` |
 
 **Add a position.** At an organization that is already listed, add an entry at the top of its `roles` list, with `title`, `start` (`YYYY-MM`), `end` (`YYYY-MM`, or `null` while I still hold it) and `summary`. The roles then show on a connecting line, as on LinkedIn, and the durations come from the dates. An organization with only one role shows as a plain entry. For a new organization, add an object with `org` and `roles`.
+
+**Add a publication.** Add an object at the top of `data/publications.json` with `title`, an optional one-line `description` (plain English: what the paper does), `authors` (in the paper's order), `me` (my name exactly as it appears in `authors`, shown in bold), `venue`, `place`, `year` and `doi`. The title links to `https://doi.org/<doi>`.
 
 **Add a research item.** Add an object at the top of `data/private-work.json` with `summary`, `tag` and `emoji`. Write the question, not a result.
 

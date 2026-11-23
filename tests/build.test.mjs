@@ -12,7 +12,7 @@ const tempOut = () => path.join(mkdtempSync(path.join(tmpdir(), 'site-')), 'dist
 test('builds the whole site from the files in data/ and assets/', async () => {
   const outDir = tempOut()
   await build({ outDir, now })
-  for (const f of ['index.html', '404.html', 'Shlok_Vaishnav_Resume.pdf', 'sitemap.xml', 'robots.txt', 'favicon.svg', 'assets/style.css', 'assets/avatar.jpg', 'assets/fonts/literata.woff2', '.nojekyll']) {
+  for (const f of ['index.html', '404.html', 'Shlok_Vaishnav_Resume.pdf', 'Shlok_Vaishnav_Resume_Research.pdf', 'sitemap.xml', 'robots.txt', 'favicon.svg', 'assets/style.css', 'assets/avatar.jpg', 'assets/fonts/literata.woff2', '.nojekyll']) {
     assert.ok(existsSync(path.join(outDir, f)), f)
   }
   assert.ok(!existsSync(path.join(outDir, 'feed.xml')), 'there is no feed')

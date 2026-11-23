@@ -54,6 +54,10 @@ body {
    sitting alone on the last line. `balance` makes short headings break into lines of similar length. */
 .content p, .content li { text-wrap: pretty; }
 .content h2, .content h3, .content .subtitle { text-wrap: balance; }
+/* The bio, the role line under my name and the paper's description are justified, so they run to the right edge,
+   with hyphenation so the lines do not open wide gaps between words. All other text (Experience, Leadership and
+   Research descriptions, headings, small lines) is left-aligned; the dates stay at the right edge of each entry. */
+.bio p, .profile .role, .pub-desc { text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
 main { max-width: 44rem; margin: 0 auto; padding: 3.5rem clamp(1.25rem, 4vw, 2.5rem) 2rem; }
 footer {
   max-width: 44rem; margin: 2rem auto 0; padding: 1.25rem 1.25rem 3.5rem;
@@ -85,8 +89,8 @@ a:hover { text-decoration-thickness: 2px; }
 /* The panel stays in view only when the window is tall enough to show all of it. On a short or zoomed window it scrolls with the page, so nothing is cut off. */
 @media (min-height: 46rem) { .profile { position: sticky; top: 3rem; padding-bottom: 0; } }
 .avatar { display: block; width: min(100%, 10rem); height: auto; aspect-ratio: 1 / 1; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 1px var(--rule); }
-.avatar { margin-inline: auto; }
-.who { margin-top: 1.25rem; text-align: center; }
+.avatar { margin-inline: 0 auto; }
+.who { margin-top: 1.25rem; text-align: left; }
 h1 { margin: 0; font: 600 clamp(1.8rem, 5vw, 2.1rem)/1.15 var(--serif); letter-spacing: -.02em; }
 .profile h1 { font-size: 1.75rem; }
 .role { margin: .5rem 0 0; font: 500 .95rem/1.45 var(--sans); color: var(--muted); }
@@ -108,9 +112,31 @@ h3 .icon { color: var(--accent); }
 
 /* Experience and Leadership: organizations with their roles, newest role first. The role is the main line. Every
    role sits on the same left edge, alone or one of several. */
+/* One place for how entries and sections are separated on the whole page. Space does the work: entries sit
+   about 1.8rem apart, sections about 3.25rem apart (research: separate groups with space before lines).
+   --entry-line:   line between entries (none = space only)
+   --entry-gap:    space above and below each entry
+   --section-line: line above each section (none = space only); with a line, set --section-pad to about 1.25rem
+   --section-pad:  space between that line and the heading */
+:root { --entry-line: none; --entry-gap: .9rem; --section-line: none; --section-pad: 0; }
+.org, .points li { margin: 0; padding-block: var(--entry-gap); border-top: var(--entry-line); }
+.timeline .org:last-child, .points li:last-child { border-bottom: var(--entry-line); }
+/* The first entry starts right after the space under the section's header line. */
+.timeline .org:first-child, .points li:first-child { padding-top: 0; }
+.content section { margin-top: 3.25rem; padding-top: var(--section-pad); border-top: var(--section-line); }
+
+/* Each section starts with a header row: the heading, then its subtitle right beside it on the left, and one
+   line under both. The content starts below it after some space. On a narrow screen the subtitle wraps under
+   the heading. --heading-line: the line under the header row (none = no line). */
+:root { --heading-line: 1px solid var(--rule); }
+.content section { scroll-margin-top: 2rem; }
+.section-head {
+  display: flex; flex-wrap: wrap; justify-content: flex-start; align-items: baseline; gap: .25rem 1.25rem;
+  padding-bottom: .65rem; margin-bottom: 1.1rem; border-bottom: var(--heading-line);
+}
+.section-head h2, .section-head .subtitle { margin: 0; }
+
 .timeline { list-style: none; margin: 0; padding: 0; }
-.org { padding: 1.4rem 0; border-top: 1px solid var(--rule); }
-.timeline .org:last-child { border-bottom: 1px solid var(--rule); }
 .org-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: .1rem .9rem; margin: 0 0 .6rem; font: 600 .9rem/1.4 var(--sans); color: var(--muted); }
 .org-total, .position-when { font: .85rem/1.5 var(--sans); color: var(--muted); }
 .org-total { font-weight: 400; }
@@ -118,12 +144,16 @@ h3 .icon { color: var(--accent); }
 .positions { list-style: none; margin: 0; padding: 0; }
 .position { margin: 0 0 1.3rem; }
 .position:last-child { margin-bottom: 0; }
-.position-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: .1rem 1rem; }
+.position-head { display: flex; flex-wrap: nowrap; justify-content: space-between; align-items: baseline; gap: .1rem 1rem; }
+/* A long title wraps beside the dates, so the dates keep their place at the right edge. */
+.position-title { flex: 1 1 auto; min-width: 0; }
+.position-when { flex: none; }
+@media (max-width: 34rem) { .position-head { flex-wrap: wrap; } }
 .position-title { margin: 0; font: 600 1.18rem/1.35 var(--serif); }
 .position-title strong { font-weight: 600; }
 .position-when { display: flex; flex-wrap: wrap; gap: 0 .9rem; margin: 0; font-variant-numeric: tabular-nums; }
 .position-org { margin: .05rem 0 0; font: .9rem/1.5 var(--sans); color: var(--muted); }
-.position-text { margin: .5rem 0 0; max-width: 62ch; }
+.position-text { margin: .5rem 0 0; }
 /* A dot after the title of the role I hold now. */
 .position.current .position-title strong::after {
   content: ""; display: inline-block; width: .45rem; height: .45rem; margin-left: .5rem;
@@ -137,11 +167,19 @@ h3 .icon { color: var(--accent); }
 
 .prose ul { padding-left: 1.2rem; }
 /* Research: a plain list of points with an accent marker. */
-.points { margin: .5rem 0 0; padding-left: 1.3rem; }
-.points li { margin: .7rem 0; padding-left: .2rem; }
+.points { margin: 0; padding-left: 1.3rem; }
+.points li { padding-left: .2rem; }
 .points li::marker { color: var(--accent); }
 .points .chip { margin-left: .4rem; vertical-align: .05em; white-space: nowrap; }
 .prose h2 { margin-top: 2rem; }
+/* Publications use the Experience markup. The title is a link to the paper but looks like a role title;
+   my own name stands out in the author line. */
+.pub-title { color: inherit; text-decoration: none; }
+.pub-title:hover { text-decoration: underline; text-decoration-thickness: 1px; }
+.pub-authors strong { color: var(--ink); font-weight: 600; }
+/* The venue and the DOI: small lines under the description, like the organization line. */
+.pub-meta { margin: .35rem 0 0; font: .9rem/1.5 var(--sans); color: var(--muted); }
+.pub-meta + .pub-meta { margin-top: .1rem; }
 
 @media (max-width: 60rem) {
   /* The side panel moves to the top and becomes a compact header. */
@@ -157,6 +195,10 @@ h3 .icon { color: var(--accent); }
 }
 @media (max-width: 34rem) {
   main { padding-top: 2.25rem; }
+}
+/* On touch screens every link in the side panel and footer is at least 44px tall, so it is easy to tap. */
+@media (pointer: coarse) {
+  .links .ilink, .foot-links .ilink { min-height: 44px; }
 }
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }

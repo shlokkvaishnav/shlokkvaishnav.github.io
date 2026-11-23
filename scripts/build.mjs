@@ -30,6 +30,7 @@ export async function build({ root = ROOT, outDir = path.join(root, 'dist'), now
   const experience = readJson('experience.json')
   const leadership = readJson('leadership.json')
   const privateWork = readJson('private-work.json')
+  const publications = readJson('publications.json')
   const icon = createIcons(path.join(root, 'assets', 'icons'))
 
   // A short hash of a file. It goes into the file's address, so a changed file is never served from an old cache.
@@ -48,9 +49,11 @@ export async function build({ root = ROOT, outDir = path.join(root, 'dist'), now
   mkdirSync(tmp, { recursive: true })
 
   try {
-    write(tmp, 'index.html', indexPage({ ...shared, experience, leadership, privateWork }))
-    // The CV link opens my own resume. To update it, replace data/Shlok_Vaishnav_Resume.pdf.
-    cpSync(path.join(root, 'data', 'Shlok_Vaishnav_Resume.pdf'), path.join(tmp, 'Shlok_Vaishnav_Resume.pdf'))
+    write(tmp, 'index.html', indexPage({ ...shared, experience, leadership, privateWork, publications }))
+    // The CV links open my resumes. The site workflow downloads the latest ones from the resume repo into data/.
+    for (const pdf of ['Shlok_Vaishnav_Resume.pdf', 'Shlok_Vaishnav_Resume_Research.pdf']) {
+      cpSync(path.join(root, 'data', pdf), path.join(tmp, pdf))
+    }
     write(tmp, '404.html', notFoundPage(shared))
     write(tmp, 'sitemap.xml', sitemapXml({ site }))
     write(tmp, 'robots.txt', `User-agent: *\nAllow: /\nSitemap: ${site.url}/sitemap.xml\n`)

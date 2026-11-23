@@ -1,0 +1,21 @@
+[
+  {
+    "title": "FIDES: A Federated Intelligence and Detection with Quantum Security for Financial Institutions",
+    "description": "A federated learning framework that lets several financial institutions train one fraud-detection model without sharing their data, and protects the model updates they exchange with quantum key distribution.",
+    "authors": [
+      "P. Desai",
+      "M. S. Obaidat",
+      "M. Desai",
+      "S. Panwala",
+      "S. Vaishnav",
+      "R. Gupta",
+      "S. Tanwar",
+      "N. Agrawal"
+    ],
+    "me": "S. Vaishnav",
+    "venue": "2026 International Conference on Computer, Information and Telecommunication Systems (CITS)",
+    "place": "Piraeus-Athens, Greece",
+    "year": 2026,
+    "doi": "10.1109/CITS70307.2026.11637348"
+  }
+]

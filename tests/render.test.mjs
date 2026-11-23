@@ -17,6 +17,7 @@ const ctx = {
   experience: json('data/experience.json'),
   leadership: json('data/leadership.json'),
   privateWork: json('data/private-work.json'),
+  publications: json('data/publications.json'),
 }
 
 // The HTML of one section of the home page.
@@ -56,14 +57,14 @@ test('the home page has a side panel with the links, and the content next to it'
 
 test('the home page and the CV show the current roles, not the old ones', () => {
   const all = indexPage(ctx)
-  assert.match(all, /Computer Vision Researcher/)
+  assert.doesNotMatch(all, /Computer Vision Researcher|ISRO/) // the ISRO role was removed
   assert.match(all, /Apr 2026 to Sep 2026/) // the Bull Agritech internship has ended
   assert.doesNotMatch(all, /NanoDB|Climate equation discovery|castor/i)
 })
 
 test('no public page contains the phone number', () => {
   const all = indexPage(ctx)
-  assert.doesNotMatch(all, /7984739443|\+91/)
+  assert.doesNotMatch(all, /\+91|\b\d{10}\b/) // no country code and no 10-digit number (the test itself does not hold the number)
 })
 
 test('the home page has no Now link', () => {
@@ -77,15 +78,15 @@ test('the tab title of the home page is just the name', () => {
 
 test('the CV link opens the resume PDF', () => {
   assert.match(indexPage(ctx), /<a class="ilink" href="\/Shlok_Vaishnav_Resume\.pdf">/)
+  assert.match(indexPage(ctx), /<a class="ilink" href="\/Shlok_Vaishnav_Resume_Research\.pdf">/)
 })
 
-test('Experience has only ISRO and Bull Agritech', () => {
+test('Experience has only Bull Agritech', () => {
   const html = section(indexPage(ctx), 'experience')
   assert.match(html, /<h2>[\s\S]*Experience<\/h2>/)
-  assert.match(html, /Space Applications Centre, ISRO/)
   assert.match(html, /Bull Agritech/)
-  assert.doesNotMatch(html, /Data Science Club|IEEE/)
-  assert.equal((html.match(/class="org"/g) ?? []).length, 2)
+  assert.doesNotMatch(html, /Data Science Club|IEEE|ISRO/)
+  assert.equal((html.match(/class="org"/g) ?? []).length, 1)
 })
 
 test('Leadership is a separate section with the Data Science Club and IEEE CS', () => {
@@ -119,7 +120,6 @@ test('IEEE CS is its own entry with a single role, and the organization sits und
 
 test('periods and durations come from the dates (build date is 12 Oct 2026)', () => {
   const html = indexPage(ctx)
-  assert.match(html, /Feb 2026 to now<\/span><span>9 mos/) // ISRO
   assert.match(html, /Apr 2026 to Sep 2026<\/span><span>6 mos/) // Bull Agritech
   assert.match(html, /Sep 2026 to now<\/span><span>2 mos/) // President
   assert.match(html, /Sep 2025 to Aug 2026<\/span><span>1 yr/) // Technical Team Member and IEEE CS
@@ -132,7 +132,7 @@ test('nobody is marked "Promoted"', () => {
 
 test('every role sits on the same left edge, alone or one of several', () => {
   const html = indexPage(ctx)
-  assert.equal((html.match(/<ol class="positions">/g) ?? []).length, 4) // ISRO, Bull Agritech, the club, IEEE CS
+  assert.equal((html.match(/<ol class="positions">/g) ?? []).length, 4) // Bull Agritech, the club, IEEE CS, the paper
   assert.doesNotMatch(html, /positions linked/)
   const css = readFileSync(new URL('assets/style.css', root), 'utf8')
   assert.doesNotMatch(css, /\.positions\.linked/) // no extra indent for several roles
@@ -141,7 +141,7 @@ test('every role sits on the same left edge, alone or one of several', () => {
 
 test('the title and the dates share a row, and only the role held now has a dot', () => {
   const html = indexPage(ctx)
-  assert.equal((html.match(/<div class="position-head">/g) ?? []).length, 5) // one per role
+  assert.equal((html.match(/<div class="position-head">/g) ?? []).length, 5) // one per role, and one for the paper
   const css = readFileSync(new URL('assets/style.css', root), 'utf8')
   assert.match(css, /\.position\.current \.position-title strong::after/)
   assert.doesNotMatch(css, /(^|\n)\.position::before/)
@@ -169,7 +169,7 @@ test('the Research list has a short line and a tag for each item, and no names',
   const html = indexPage(ctx)
   assert.match(html, /<h2>[\s\S]*?Research<\/h2>/)
   assert.doesNotMatch(html, /Private research|private code/)
-  assert.match(html, /I am working on whether a replicated approximate-nearest-neighbour index silently diverges in search quality across replicas under node failure, and whether that divergence persists after recovery\./)
+  assert.match(html, /I am working on whether the copies of one vector-database shard return the same search results when nothing has failed, and what makes them differ\./)
   assert.equal((html.match(/Currently ongoing/g) ?? []).length, 3)
   assert.doesNotMatch(html, /Replica recall divergence|Null scaffold audit|replica-recall|null-scaffold|scaffold-equivalence|pruning-refusal|layer-skip-refusal/i)
 })
@@ -223,15 +223,15 @@ test('Research is a list of points, one bullet per item', () => {
   const html = indexPage(ctx)
   const list = html.slice(html.indexOf('<ul class="points">'), html.indexOf('</ul>', html.indexOf('<ul class="points">')))
   assert.equal((list.match(/<li>/g) ?? []).length, 3)
-  assert.match(list, /<li>I am working on whether a replicated approximate-nearest-neighbour index silently diverges in search quality across replicas under node failure, and whether that divergence persists after recovery\. <span class="chip">Currently ongoing/)
+  assert.match(list, /<li>I am working on whether the copies of one vector-database shard return the same search results when nothing has failed, and what makes them differ\. <span class="chip">Currently ongoing/)
   assert.doesNotMatch(list, /class="project"|class="desc"/)
 })
 
 test('the page has an Experience, a Leadership and a Research section, and nothing about projects', () => {
   const html = indexPage(ctx)
-  assert.deepEqual([...html.matchAll(/<section id="([a-z]+)">/g)].map((m) => m[1]), ['experience', 'leadership', 'research'])
+  assert.deepEqual([...html.matchAll(/<section id="([a-z]+)">/g)].map((m) => m[1]), ['experience', 'leadership', 'research', 'publications'])
   assert.doesNotMatch(html, /id="projects"|class="projects?"|Things I have built|Live demo|feed\.xml/)
-  assert.ok(html.includes('layer-pruning methods use to pick which layers to skip'))
+  assert.ok(html.includes('automatic judges that score refusals'))
 })
 
 test('text in the research list is escaped', () => {
@@ -288,5 +288,55 @@ test('the description is the short line, not the whole bio, and it fits a search
 
 test('the page head links to the touch icon', () => {
   assert.match(indexPage(ctx), /<link rel="apple-touch-icon" href="\/assets\/apple-touch-icon\.png">/)
+})
+
+test('Publications lists the paper with my name in bold and the title linking to its DOI', () => {
+  const html = section(indexPage(ctx), 'publications')
+  assert.match(html, /<h2>[\s\S]*Publications<\/h2>/)
+  assert.match(html, /<a class="pub-title" href="https:\/\/doi\.org\/10\.1109\/CITS70307\.2026\.11637348">FIDES: /)
+  assert.match(html, /<p class="position-org pub-authors">P\. Desai, [^<]*S\. Panwala, <strong>S\. Vaishnav<\/strong>, R\. Gupta/)
+  const authors = html.slice(html.indexOf('pub-authors'), html.indexOf('</p>', html.indexOf('pub-authors')))
+  assert.equal((authors.match(/<strong>/g) ?? []).length, 1) // only my own name
+  assert.match(html, /<p class="position-when"><span>2026<\/span><\/p>/)
+  assert.match(html, /<p class="pub-meta">2026 International Conference on [^<]*Systems \(CITS\), Piraeus-Athens, Greece<\/p>/)
+  assert.match(html, /<p class="position-text pub-desc">A federated learning framework that lets several financial institutions/)
+  assert.match(html, /<p class="pub-meta">DOI: <a href="https:\/\/doi\.org\/10\.1109\/CITS70307\.2026\.11637348">10\.1109\/CITS70307\.2026\.11637348<\/a><\/p>/)
+  assert.match(html, /<ul class="timeline">\n<li class="org">/) // the same markup as Experience
+  assert.match(html, /<p class="subtitle">Papers I have co-authored/)
+})
+
+test('with no publications the section is left out, and publication text is escaped', () => {
+  assert.doesNotMatch(indexPage({ ...ctx, publications: [] }), /id="publications"/)
+  const bad = [{ title: '<b>x</b>', authors: ['A & B', 'Me'], me: 'Me', venue: 'V', place: 'P', year: 2026, doi: '10.1/x"y' }]
+  const html = section(indexPage({ ...ctx, publications: bad }), 'publications')
+  assert.match(html, /&lt;b&gt;x&lt;\/b&gt;/)
+  assert.match(html, /A &amp; B, <strong>Me<\/strong>/)
+  assert.doesNotMatch(html, /x"y/)
+})
+
+test('the address bar colour follows the page colour in each theme', () => {
+  const html = indexPage(ctx)
+  assert.match(html, /<meta name="theme-color" content="#fbfbfc" media="\(prefers-color-scheme: light\)">/)
+  assert.match(html, /<meta name="theme-color" content="#14151a" media="\(prefers-color-scheme: dark\)">/)
+  const css = readFileSync(new URL('assets/style.css', root), 'utf8')
+  assert.match(css, /--paper: #fbfbfc/) // the light value above must stay the same as the page colour
+  assert.match(css, /--paper: #14151a/) // and the dark one
+})
+
+test('quotes in the page text are curly, not straight', () => {
+  for (const f of ['experience.json', 'leadership.json', 'private-work.json', 'publications.json']) {
+    const text = readFileSync(new URL(`data/${f}`, root), 'utf8')
+    assert.doesNotMatch(text, /\\"/, f) // an escaped straight quote inside a JSON string
+  }
+})
+
+test('a publication with missing fields renders without "undefined", and a DOI with # or ? is encoded in its link', () => {
+  const partial = [{ title: 'T', authors: ['Me'], me: 'Me', venue: 'Journal X', year: 2027, doi: '10.1002/(SICI)1097#x?y' }]
+  const html = section(indexPage({ ...ctx, publications: partial }), 'publications')
+  assert.doesNotMatch(html, /undefined/)
+  assert.match(html, /<p class="pub-meta">Journal X<\/p>/)
+  assert.match(html, /href="https:\/\/doi\.org\/10\.1002\/\(SICI\)1097%23x%3Fy"/)
+  const noAuthors = section(indexPage({ ...ctx, publications: [{ title: 'T', year: 2027 }] }), 'publications')
+  assert.doesNotMatch(noAuthors, /undefined/)
 })
 
