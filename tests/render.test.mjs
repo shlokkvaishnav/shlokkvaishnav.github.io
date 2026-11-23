@@ -348,9 +348,10 @@ test('Projects lists each project with its live link, and a GitHub link only whe
   assert.doesNotMatch(html, /Freespace|class="position-org"/) // no Freespace, and no tools line
   for (const name of ['Ghostdesk', 'Pitchvision', 'Pitwall']) assert.match(html, new RegExp(`<strong>${name}</strong>`))
   assert.match(html, /<a href="https:\/\/shlokkvaishnav\.github\.io\/pitchvision\/">Live<\/a><a href="https:\/\/github\.com\/shlokkvaishnav\/pitchvision">GitHub<\/a>/)
-  const ghostdesk = html.slice(html.indexOf('<strong>Ghostdesk'), html.indexOf('</li>', html.indexOf('<strong>Ghostdesk')))
-  assert.match(ghostdesk, />Live<\/a>/)
-  assert.doesNotMatch(ghostdesk, />GitHub<\/a>/) // its repo is private, so no link that would 404
+  assert.match(html, /<a href="https:\/\/github\.com\/shlokkvaishnav\/ghostdesk">GitHub<\/a>/) // public since 2026-11-24
+  const priv = section(indexPage({ ...ctx, projects: [{ name: 'P', tagline: 't', description: 'd', live: 'https://e.test/' }] }), 'projects')
+  assert.match(priv, />Live<\/a>/)
+  assert.doesNotMatch(priv, />GitHub<\/a>/) // a project with no public repo gets no link that would 404
 })
 
 test('project text is escaped, and with no projects the section is left out', () => {

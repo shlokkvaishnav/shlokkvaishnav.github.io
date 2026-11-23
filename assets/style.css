@@ -50,13 +50,18 @@ body {
   font: 1rem/1.7 var(--serif);
   text-rendering: optimizeLegibility;
 }
-/* Smoother text in the content column (the side panel is left as it was). `pretty` stops a single word from
-   sitting alone on the last line. `balance` makes short headings break into lines of similar length. */
-.content p, .content li { text-wrap: pretty; }
+/* `balance` makes short headings break into lines of similar length. (Paragraph wrapping is set in the central
+   text block below.) */
 .content h2, .content h3, .content .subtitle { text-wrap: balance; }
-/* Only the bio and the role line under my name are justified, so they run to the right edge, with hyphenation so the
-   lines do not open wide gaps between words. All other text is left-aligned; the dates stay at the right edge. */
-.bio p, .profile .role { text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
+/* ONE place for how written text is set.
+   --text-align: the descriptions in Experience, Projects, Leadership, Research and Publications (left).
+   --lead-align: the bio and the role line under my name (justify, with hyphenation).
+   --text-wrap:  `wrap` fills each line to the end of the column before it breaks. (`pretty` would break lines
+                 early to even out the last line, so the text would stop short of the edge.) */
+:root { --text-align: left; --lead-align: justify; --text-wrap: wrap; }
+.content p, .content li, .profile .role { text-wrap: var(--text-wrap); }
+.position-text, .points li { text-align: var(--text-align); }
+.bio p, .profile .role { text-align: var(--lead-align); hyphens: auto; -webkit-hyphens: auto; }
 main { max-width: 44rem; margin: 0 auto; padding: 3.5rem clamp(1.25rem, 4vw, 2.5rem) 2rem; }
 footer {
   max-width: 44rem; margin: 2rem auto 0; padding: 1.25rem 1.25rem 3.5rem;

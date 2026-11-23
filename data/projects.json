@@ -3,7 +3,8 @@
     "name": "Ghostdesk",
     "tagline": "Autonomous paper-trading desk",
     "description": "Reads company reports, picks S&P 500 stocks and trades them each month with paper money, with no person at the desk. Each stock-picking model was tested once, under a plan registered before the test data was used.",
-    "live": "https://shlokkvaishnav.github.io/ghostdesk/"
+    "live": "https://shlokkvaishnav.github.io/ghostdesk/",
+    "repo": "https://github.com/shlokkvaishnav/ghostdesk"
   },
   {
     "name": "Pitchvision",
