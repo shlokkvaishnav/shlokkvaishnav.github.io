@@ -52,7 +52,7 @@ export async function build({ root = ROOT, outDir = path.join(root, 'dist'), now
   try {
     write(tmp, 'index.html', indexPage({ ...shared, experience, projects, leadership, privateWork, publications }))
     // The CV links open my resumes. The site workflow downloads the latest ones from the resume repo into data/.
-    for (const pdf of ['Shlok_Vaishnav_Resume.pdf', 'Shlok_Vaishnav_Resume_Research.pdf']) {
+    for (const pdf of ['Shlok_Vaishnav_Resume.pdf']) {
       cpSync(path.join(root, 'data', pdf), path.join(tmp, pdf))
     }
     write(tmp, '404.html', notFoundPage(shared))

@@ -17,7 +17,7 @@ data/*.json  ──> scripts/build.mjs ──> dist/ ──> GitHub Pages
 ```
 
 - **Research.** Each item in `data/private-work.json` is one line in the Research section.
-- **CV.** The CV and Research CV links open the PDFs in `data/`. When the private resume repo builds new ones, the site workflow downloads them. The PDFs saved in `data/` are used if the download fails.
+- **Resume.** The Resume link opens `data/Shlok_Vaishnav_Resume.pdf`: the full (master) resume, without the phone number. When the private resume repo builds a new one, the site workflow downloads it. The copy saved in `data/` is used if the download fails.
 
 ### When it updates
 

@@ -77,9 +77,9 @@ test('the tab title of the home page is just the name', () => {
   assert.match(indexPage(ctx), /<meta property="og:title" content="Shlok Vaishnav">/)
 })
 
-test('the CV link opens the resume PDF', () => {
-  assert.match(indexPage(ctx), /<a class="ilink" href="\/Shlok_Vaishnav_Resume\.pdf">/)
-  assert.match(indexPage(ctx), /<a class="ilink" href="\/Shlok_Vaishnav_Resume_Research\.pdf">/)
+test('the one Resume link opens the full (master) resume PDF', () => {
+  assert.match(indexPage(ctx), /<a class="ilink" href="\/Shlok_Vaishnav_Resume\.pdf">[\s\S]*?Resume<\/a>/)
+  assert.doesNotMatch(indexPage(ctx), /Research CV|Resume_Research|>[^<]*\bCV<\/a>/) // one link only: the full resume
 })
 
 test('Experience has only Bull Agritech', () => {

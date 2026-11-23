@@ -30,17 +30,18 @@ jobs:
         with:
           node-version: 22
 
-      # Get the latest resume PDFs (only the two the site links to). If this fails, the PDFs saved in data/ are
+      # Get the latest resume PDF (the full master version). If this fails, the PDFs saved in data/ are
       # used and the run shows a warning in its summary (no email).
       - name: Download the latest resumes
         env:
           GH_TOKEN: ${{ secrets.RESUME_TOKEN }}
         run: |
-          if gh release download latest -R shlokkvaishnav/resume -D data --clobber \
-               -p 'Shlok_Vaishnav_Resume.pdf' -p 'Shlok_Vaishnav_Resume_Research.pdf'; then
-            echo "Downloaded the latest resumes."
+          # The site has one resume: the full (master) version, saved as data/Shlok_Vaishnav_Resume.pdf.
+          if gh release download latest -R shlokkvaishnav/resume --clobber \
+               -p 'Shlok_Vaishnav_Resume_Master.pdf' -O data/Shlok_Vaishnav_Resume.pdf; then
+            echo "Downloaded the latest resume."
           else
-            echo "::warning::Could not download the latest resumes (is the RESUME_TOKEN secret set and valid?). Using the PDFs saved in data/."
+            echo "::warning::Could not download the latest resume (is the RESUME_TOKEN secret set and valid?). Using the PDF saved in data/."
           fi
 
       - name: Run the tests

@@ -165,8 +165,7 @@ ${links.length ? `<p class="position-when project-links">${links.join('')}</p>` 
 export function indexPage({ site, profile, icon, experience, projects = [], leadership, privateWork, publications = [] }) {
   const links = [
     `<a class="ilink" href="mailto:${esc(profile.email)}">${icon('envelope')} Email</a>`,
-    `<a class="ilink" href="/Shlok_Vaishnav_Resume.pdf">${icon('file-earmark-person')} CV</a>`,
-    `<a class="ilink" href="/Shlok_Vaishnav_Resume_Research.pdf">${icon('file-earmark-person')} Research CV</a>`,
+    `<a class="ilink" href="/Shlok_Vaishnav_Resume.pdf">${icon('file-earmark-person')} Resume</a>`,
     ...profile.links.map((l) => `<a class="ilink" href="${esc(l.href)}">${icon(l.icon)} ${esc(l.label)}</a>`),
   ]
 

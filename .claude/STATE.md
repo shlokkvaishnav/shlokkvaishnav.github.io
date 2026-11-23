@@ -1,8 +1,8 @@
 # State (2026-11-24)
 
 ## Branch
-- main: pushed. Live: resume PDFs from the private `resume` repo (warns and uses data/*.pdf,
-  phone-free, if the download fails), Research CV link, Projects (Ghostdesk, Pitchvision,
+- main: pushed. Live: one Resume link: the master PDF from the private `resume` repo (warns and uses
+  data/Shlok_Vaishnav_Resume.pdf, phone-free, if the download fails), Projects (Ghostdesk, Pitchvision,
   Pitwall; data/projects.json; no tools line), Publications (FIDES, CITS 2026), ISRO removed.
 - Look: space between entries (--entry-line none), one line under each section header row
   (--heading-line), one central text block: descriptions left, bio and role justified, lines fill the column
