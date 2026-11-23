@@ -18,6 +18,7 @@ const ctx = {
   leadership: json('data/leadership.json'),
   privateWork: json('data/private-work.json'),
   publications: json('data/publications.json'),
+  projects: json('data/projects.json'),
 }
 
 // The HTML of one section of the home page.
@@ -132,7 +133,7 @@ test('nobody is marked "Promoted"', () => {
 
 test('every role sits on the same left edge, alone or one of several', () => {
   const html = indexPage(ctx)
-  assert.equal((html.match(/<ol class="positions">/g) ?? []).length, 4) // Bull Agritech, the club, IEEE CS, the paper
+  assert.equal((html.match(/<ol class="positions">/g) ?? []).length, 8) // Bull Agritech, 4 projects, the club, IEEE CS, the paper
   assert.doesNotMatch(html, /positions linked/)
   const css = readFileSync(new URL('assets/style.css', root), 'utf8')
   assert.doesNotMatch(css, /\.positions\.linked/) // no extra indent for several roles
@@ -141,7 +142,7 @@ test('every role sits on the same left edge, alone or one of several', () => {
 
 test('the title and the dates share a row, and only the role held now has a dot', () => {
   const html = indexPage(ctx)
-  assert.equal((html.match(/<div class="position-head">/g) ?? []).length, 5) // one per role, and one for the paper
+  assert.equal((html.match(/<div class="position-head">/g) ?? []).length, 9) // one per role, one per project, and one for the paper
   const css = readFileSync(new URL('assets/style.css', root), 'utf8')
   assert.match(css, /\.position\.current \.position-title strong::after/)
   assert.doesNotMatch(css, /(^|\n)\.position::before/)
@@ -227,10 +228,10 @@ test('Research is a list of points, one bullet per item', () => {
   assert.doesNotMatch(list, /class="project"|class="desc"/)
 })
 
-test('the page has an Experience, a Leadership and a Research section, and nothing about projects', () => {
+test('the page has Experience, Projects, Leadership, Research and Publications, in that order', () => {
   const html = indexPage(ctx)
-  assert.deepEqual([...html.matchAll(/<section id="([a-z]+)">/g)].map((m) => m[1]), ['experience', 'leadership', 'research', 'publications'])
-  assert.doesNotMatch(html, /id="projects"|class="projects?"|Things I have built|Live demo|feed\.xml/)
+  assert.deepEqual([...html.matchAll(/<section id="([a-z]+)">/g)].map((m) => m[1]), ['experience', 'projects', 'leadership', 'research', 'publications'])
+  assert.doesNotMatch(html, /feed\.xml/)
   assert.ok(html.includes('automatic judges that score refusals'))
 })
 
@@ -338,5 +339,25 @@ test('a publication with missing fields renders without "undefined", and a DOI w
   assert.match(html, /href="https:\/\/doi\.org\/10\.1002\/\(SICI\)1097%23x%3Fy"/)
   const noAuthors = section(indexPage({ ...ctx, publications: [{ title: 'T', year: 2027 }] }), 'publications')
   assert.doesNotMatch(noAuthors, /undefined/)
+})
+
+test('Projects lists each project with its live link, and a GitHub link only when the repo is public', () => {
+  const html = section(indexPage(ctx), 'projects')
+  assert.match(html, /<h2>[\s\S]*Projects<\/h2>/)
+  assert.match(html, /<p class="subtitle">Things I have built/)
+  for (const name of ['Ghostdesk', 'Pitchvision', 'Pitwall', 'Freespace']) assert.match(html, new RegExp(`<strong>${name}</strong>`))
+  assert.match(html, /<a href="https:\/\/shlokkvaishnav\.github\.io\/pitchvision\/">Live<\/a><a href="https:\/\/github\.com\/shlokkvaishnav\/pitchvision">GitHub<\/a>/)
+  const ghostdesk = html.slice(html.indexOf('<strong>Ghostdesk'), html.indexOf('</li>', html.indexOf('<strong>Ghostdesk')))
+  assert.match(ghostdesk, />Live<\/a>/)
+  assert.doesNotMatch(ghostdesk, />GitHub<\/a>/) // its repo is private, so no link that would 404
+})
+
+test('project text is escaped, and with no projects the section is left out', () => {
+  assert.doesNotMatch(indexPage({ ...ctx, projects: [] }), /id="projects"/)
+  const bad = [{ name: '<i>x</i>', tagline: 'a & b', tools: 'T', description: 'D', live: 'https://e.test/?a="b"' }]
+  const html = section(indexPage({ ...ctx, projects: bad }), 'projects')
+  assert.match(html, /&lt;i&gt;x&lt;\/i&gt;/)
+  assert.match(html, /a &amp; b/)
+  assert.doesNotMatch(html, /a="b"/)
 })
 

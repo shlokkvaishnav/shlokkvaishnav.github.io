@@ -143,7 +143,26 @@ ${p.description ? `<p class="position-text pub-desc">${esc(p.description)}</p>\n
 </li>`
 }
 
-export function indexPage({ site, profile, icon, experience, leadership, privateWork, publications = [] }) {
+// One project, in the same markup as a role in Experience: the name and tagline where the role title goes, the
+// links (live site, and the code when the repo is public) where the dates go, the tools where the organization
+// goes, and the description where the summary goes.
+function project(p) {
+  const links = [
+    p.live ? `<a href="${esc(p.live)}">Live</a>` : '',
+    p.repo ? `<a href="${esc(p.repo)}">GitHub</a>` : '',
+  ].filter(Boolean)
+  return `<li class="org">
+<ol class="positions">
+<li class="position">
+<div class="position-head"><p class="position-title"><strong>${esc(p.name)}</strong>${p.tagline ? `<span class="project-tagline">: ${esc(p.tagline)}</span>` : ''}</p>
+${links.length ? `<p class="position-when project-links">${links.join('')}</p>` : ''}</div>
+${p.tools ? `<p class="position-org">${esc(p.tools)}</p>\n` : ''}<p class="position-text">${esc(p.description)}</p>
+</li>
+</ol>
+</li>`
+}
+
+export function indexPage({ site, profile, icon, experience, projects = [], leadership, privateWork, publications = [] }) {
   const links = [
     `<a class="ilink" href="mailto:${esc(profile.email)}">${icon('envelope')} Email</a>`,
     `<a class="ilink" href="/Shlok_Vaishnav_Resume.pdf">${icon('file-earmark-person')} CV</a>`,
@@ -185,6 +204,20 @@ ${profile.subtitles?.experience ? `<p class="subtitle">${fun(profile.subtitles.e
 ${timeline(experience, site.builtAt)}
 </section>
 
+${
+  projects.length
+    ? `<section id="projects">
+<header class="section-head">
+<h2>${icon('kanban')} Projects</h2>
+${profile.subtitles?.projects ? `<p class="subtitle">${fun(profile.subtitles.projects)}</p>` : ''}
+</header>
+<ul class="timeline">
+${projects.map(project).join('\n')}
+</ul>
+</section>
+`
+    : ''
+}
 <section id="leadership">
 <header class="section-head">
 <h2>${icon('people')} Leadership</h2>

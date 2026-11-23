@@ -1,6 +1,6 @@
 # shlokkvaishnav.github.io: notes for the agent
 
-The owner's personal site: one plain page (Experience, Leadership, Research, Publications) built by
+The owner's personal site: one plain page (Experience, Projects, Leadership, Research, Publications) built by
 `scripts/build.mjs` from `data/*.json`. No framework and no npm packages. Live at
 https://shlokkvaishnav.github.io.
 

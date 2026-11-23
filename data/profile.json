@@ -41,6 +41,10 @@
       "text": "Where I have worked",
       "emoji": "💼"
     },
+    "projects": {
+      "text": "Things I have built",
+      "emoji": "🛠️"
+    },
     "leadership": {
       "text": "Clubs I have helped lead",
       "emoji": "🤝"

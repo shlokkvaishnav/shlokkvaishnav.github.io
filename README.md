@@ -8,7 +8,7 @@ Live: <https://shlokkvaishnav.github.io>
 
 ## Overview
 
-The site is one page with no framework and no npm packages. It has four sections: Experience, Leadership, Research and Publications. There is no Projects section and no feed. The build (`scripts/build.mjs`) uses only the files in this repository and does not use the network. Before it runs, the deploy workflow downloads the latest resume PDFs into `data/` from the private resume repo.
+The site is one page with no framework and no npm packages. It has five sections: Experience, Projects, Leadership, Research and Publications. There is no feed. The build (`scripts/build.mjs`) uses only the files in this repository and does not use the network. Before it runs, the deploy workflow downloads the latest resume PDFs into `data/` from the private resume repo.
 
 ## How it works
 
@@ -36,11 +36,14 @@ A failed build does not deploy, so the live site stays as it was.
 | Experience (organizations and roles) | `data/experience.json` |
 | Leadership (organizations and roles) | `data/leadership.json` |
 | Research | `data/private-work.json` |
+| Projects | `data/projects.json` |
 | Publications | `data/publications.json` |
 | The site address and the GitHub owner | `data/config.json` |
 | Look | `assets/style.css`. Icons, fonts and their licences: `assets/CREDITS.md` |
 
 **Add a position.** At an organization that is already listed, add an entry at the top of its `roles` list, with `title`, `start` (`YYYY-MM`), `end` (`YYYY-MM`, or `null` while I still hold it) and `summary`. The roles then show on a connecting line, as on LinkedIn, and the durations come from the dates. An organization with only one role shows as a plain entry. For a new organization, add an object with `org` and `roles`.
+
+**Add a project.** Add an object to `data/projects.json` (newest first) with `name`, `tagline`, `tools`, `description` (one or two plain sentences), `live` (the address of its site) and `repo` (only when the repository is public, so the link never shows a 404 page).
 
 **Add a publication.** Add an object at the top of `data/publications.json` with `title`, an optional one-line `description` (plain English: what the paper does), `authors` (in the paper's order), `me` (my name exactly as it appears in `authors`, shown in bold), `venue`, `place`, `year` and `doi`. The title links to `https://doi.org/<doi>`.
 

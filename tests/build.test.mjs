@@ -20,7 +20,7 @@ test('builds the whole site from the files in data/ and assets/', async () => {
   assert.ok(!existsSync(path.join(outDir, 'now')), 'there is no /now/ page')
   assert.ok(!existsSync(`${outDir}.tmp`))
   const home = readFileSync(path.join(outDir, 'index.html'), 'utf8')
-  assert.doesNotMatch(home, /Recently|News|<script src=|id="projects"|feed\.xml/)
+  assert.doesNotMatch(home, /Recently|News|<script src=|feed\.xml/)
   assert.match(home, /<section id="research">/)
   assert.match(home, /<svg class="icon"/) // icons are inline
   assert.ok(!existsSync(path.join(outDir, 'assets/icons')), 'icon files are inlined, not copied')

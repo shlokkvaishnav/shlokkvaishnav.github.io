@@ -54,10 +54,9 @@ body {
    sitting alone on the last line. `balance` makes short headings break into lines of similar length. */
 .content p, .content li { text-wrap: pretty; }
 .content h2, .content h3, .content .subtitle { text-wrap: balance; }
-/* The bio, the role line under my name and the paper's description are justified, so they run to the right edge,
-   with hyphenation so the lines do not open wide gaps between words. All other text (Experience, Leadership and
-   Research descriptions, headings, small lines) is left-aligned; the dates stay at the right edge of each entry. */
-.bio p, .profile .role, .pub-desc { text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
+/* Only the bio and the role line under my name are justified, so they run to the right edge, with hyphenation so the
+   lines do not open wide gaps between words. All other text is left-aligned; the dates stay at the right edge. */
+.bio p, .profile .role { text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
 main { max-width: 44rem; margin: 0 auto; padding: 3.5rem clamp(1.25rem, 4vw, 2.5rem) 2rem; }
 footer {
   max-width: 44rem; margin: 2rem auto 0; padding: 1.25rem 1.25rem 3.5rem;
@@ -174,6 +173,12 @@ h3 .icon { color: var(--accent); }
 .prose h2 { margin-top: 2rem; }
 /* Publications use the Experience markup. The title is a link to the paper but looks like a role title;
    my own name stands out in the author line. */
+/* Projects use the Experience markup too: the tagline follows the name in a lighter weight, and the links sit where
+   the dates go. */
+.project-tagline { font-weight: 400; }
+.project-links { font-weight: 500; }
+.project-links a { text-decoration: none; }
+.project-links a:hover { text-decoration: underline; }
 .pub-title { color: inherit; text-decoration: none; }
 .pub-title:hover { text-decoration: underline; text-decoration-thickness: 1px; }
 .pub-authors strong { color: var(--ink); font-weight: 600; }
