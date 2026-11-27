@@ -1,8 +1,8 @@
 [
   {
     "name": "Ghostdesk",
-    "tagline": "Quantitative trading platform",
-    "description": "Builds and tests stock-forecasting models on the S&P 500 as it was on each date, turns the forecasts into risk-limited portfolios, and runs a paper-money desk. Order execution is currently switched off.",
+    "tagline": "Quant ML platform for next-day stock forecasts",
+    "description": "Builds stock-forecasting models on the S&P 500 as it was on each date, turns their forecasts into risk-limited portfolios, and records every night's predictions in an append-only ledger that is scored forward. Order execution is turned off.",
     "live": "https://shlokkvaishnav.github.io/ghostdesk/",
     "repo": "https://github.com/shlokkvaishnav/ghostdesk"
   },
